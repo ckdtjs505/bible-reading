@@ -1,22 +1,28 @@
 "use client";
 import { Calendar as RCalender } from "react-calendar";
 import "../../app/calender.css";
+import React from "react";
 
-const Calender = () => {
-  const tileContent = ({ date, view }) => {
-    console.log(date, view);
-    return (
-      <div>
-        창세기
-        <br />
-        1장 ~ 4절
-      </div>
-    );
+type Props = {
+  planInfo: [];
+};
+
+const Calender: React.FC<Props> = ({ planInfo }) => {
+  const tileContent = ({ date }) => {
+    if (true) {
+      return (
+        <div>
+          창세기
+          <br />
+          1장 ~ 4절
+        </div>
+      );
+    }
   };
+
   return (
     <RCalender
-      formatDay={(locale, date) => {
-        console.log(date);
+      formatDay={(_, date) => {
         return date
           .toLocaleString("ko-KR", { day: "2-digit" })
           .replace("일", "");
