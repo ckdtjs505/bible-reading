@@ -19,3 +19,65 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+:root {
+  --reading-color: #ffafcc; /* 오늘 읽어야 할 말씀의 색상 */
+  --read-color: #cbf1f5; /* 이미 읽은 말씀의 색상 */
+}
+
+.highlight {
+  background-color: yellow;
+}
+
+#userContent {
+  font-size: large;
+  text-align: left;
+  top: 0;
+}
+
+#name {
+}
+
+#name:hover {
+  border-bottom: 1px solid;
+  cursor: pointer;
+}
+
+#nameInput {
+}
+
+#prayOption {
+  border-bottom: 1px solid;
+}
+
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.skeleton-text {
+  height: 20px;
+  width: 80%;
+  margin: 10px auto;
+}
+
+@keyframes loading {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #c0c0c0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+.skeleton {
+  animation: loading 1.5s infinite;
+}
+
+.active {
+  background-color: #cbf1f5;
+}

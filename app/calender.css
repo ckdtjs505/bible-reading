@@ -1,0 +1,80 @@
+a {
+  color: #000000;
+  text-decoration: none;
+}
+
+table {
+  width: 100%; /* 테이블 전체 너비를 부모 요소에 맞춤 */
+  table-layout: fixed; /* 셀의 너비를 고정 */
+}
+
+.scriptCalendar {
+  text-align: center;
+}
+.scriptCalendar > thead > tr > td {
+  height: 50px;
+}
+.scriptCalendar > thead > tr:first-child > td {
+  font-weight: bold;
+}
+.scriptCalendar > thead > tr:last-child > td {
+  background-color: #71c9ce;
+}
+.scriptCalendar > tbody > tr > td {
+  border-radius: 1rem;
+  border-width: 1.2px; /* 또는 원하는 두께 */
+  border: white;
+  border-style: solid; /* 또는 다른 스타일 */
+  width: 50px;
+  height: 50px;
+}
+.calendarBtn {
+  cursor: pointer;
+}
+
+.scriptCalendar {
+  width: 100%;
+}
+html {
+  padding: 0.5rem;
+}
+
+.choiceDay {
+  background-color: var(--reading-color) !important;
+}
+
+.finish {
+  background-color: var(--read-color);
+  border-radius: 1.3rem;
+  border-width: 1.2px; /* 또는 원하는 두께 */
+  border: white;
+  border-style: solid; /* 또는 다른 스타일 */
+}
+
+.cell {
+  /* margin: 0.1rem;
+    background-color: #a2d2ff;
+    border-radius: 2rem; */
+}
+
+.calendar-day {
+  cursor: pointer;
+}
+
+.calendar-day.sunday {
+  color: #ff4d4d; /* 일요일 셀에 대한 스타일 */
+}
+
+.calendar-day.saturday {
+  color: #4d4dff; /* 토요일 셀에 대한 스타일 */
+}
+
+.calendar-day.next-month {
+  color: #a9a9a9; /* 다음달 셀에 대한 스타일 */
+  cursor: default;
+}
+
+.calendar-day.last-month {
+  color: #a9a9a9; /* 이전달 셀에 대한 스타일 */
+  cursor: default;
+}
