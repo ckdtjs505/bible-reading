@@ -5,6 +5,7 @@ import "./calender.css";
 // Hahmlet
 const hahmlet = Hahmlet({
   subsets: ["latin"],
+  weight: "600",
 });
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={`${hahmlet.className} antialiased`}>{children}</body>
     </html>
   );
