@@ -2,7 +2,7 @@
 import { Calendar as RCalender } from "react-calendar";
 import "../../app/calender.css";
 import React, { useEffect, useState } from "react";
-import { getBiblePlan } from "@/services/api/biblePlan";
+import { getBiblePlan, getDailyVerse } from "@/services/api/biblePlan";
 import { BiblePlan } from "@/type/biblePlan";
 
 const Calender: React.FC = () => {
@@ -32,6 +32,24 @@ const Calender: React.FC = () => {
     }
   };
 
+  const handleClickDay = (date) => {
+    const currentDate = new Date(date);
+    const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+    const planInd = planInfo?.findIndex(
+      (plan) => plan.date === currentDateYYYYMMDD,
+    );
+
+    if (planInd >= 0) {
+      getDailyVerse({
+        book: planInfo[planInd].book,
+        start: planInfo[planInd].start,
+        end: planInfo[planInd].end,
+      }).then((data) => {
+        console.log(data);
+      });
+    }
+  };
+
   return (
     <RCalender
       formatDay={(_, date) => {
@@ -43,11 +61,11 @@ const Calender: React.FC = () => {
       showWeekNumbers={false}
       next2Label={""}
       prev2Label={""}
-      next2AriaLabel="jump forward"
       prevLabel={"<"}
       nextLabel={">"}
       showNeighboringMonth={false}
       tileContent={tileContent}
+      onClickDay={handleClickDay}
     ></RCalender>
   );
 };
