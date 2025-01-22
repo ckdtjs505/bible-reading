@@ -1,20 +1,32 @@
 "use client";
 import { Calendar as RCalender } from "react-calendar";
 import "../../app/calender.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getBiblePlan } from "@/services/api/biblePlan";
+import { BiblePlan } from "@/type/biblePlan";
 
-type Props = {
-  planInfo: [];
-};
+const Calender: React.FC = () => {
+  const [planInfo, setPlanInfo] = useState<BiblePlan>([]);
 
-const Calender: React.FC<Props> = ({ planInfo }) => {
+  useEffect(() => {
+    getBiblePlan().then(({ data }) => {
+      setPlanInfo(data as BiblePlan);
+    });
+  }, []);
+
   const tileContent = ({ date }) => {
-    if (true) {
+    const currentDate = new Date(date);
+    const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+    const planInd = planInfo?.findIndex(
+      (plan) => plan.date === currentDateYYYYMMDD,
+    );
+
+    if (planInd >= 0) {
       return (
         <div>
-          창세기
+          {planInfo[planInd].book}
           <br />
-          1장 ~ 4절
+          {planInfo[planInd].start}-{planInfo[planInd].end}장
         </div>
       );
     }

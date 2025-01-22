@@ -1,7 +1,9 @@
+import { BiblePlan } from "@/type/biblePlan";
+
 const GOOGLE_DOMAIN = "https://script.google.com";
 const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
 
-export const getBiblePlan = async () => {
+export const getBiblePlan = (): Promise<BiblePlan> => {
   const queryParam = new URLSearchParams({
     type: "admin",
     userName: "오창선",
