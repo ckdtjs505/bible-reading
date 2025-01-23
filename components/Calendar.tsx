@@ -46,8 +46,8 @@ const Calendar: React.FC = () => {
     if (planInd >= 0) {
       const data = getDailyVerse({
         book: planInfo[planInd].book,
-        start: planInfo[planInd].start,
-        end: planInfo[planInd].end,
+        start: Number(planInfo[planInd].start),
+        end: Number(planInfo[planInd].end),
       });
 
       setVerse({ book: planInfo[planInd].book, data });

@@ -3,8 +3,8 @@ import { bookKeyNumber } from "@/constants/bibleNumber";
 import { Verse } from "@/type/biblePlan";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const GOOGLE_DOMAIN = "https://script.google.com";
-const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
+//const GOOGLE_DOMAIN = "https://script.google.com";
+//const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
 
 type DailyVeserParams = {
   book: string;
@@ -47,12 +47,12 @@ export const getDailyVerse = ({
 */
     const result: Verse[] = [];
 
-    bible.forEach(  ({ book, chapter, content, verse}, index) =>  {
+    bible.forEach(  ({ book, chapter, content, verse}) =>  {
       // book - 어떤 성경인지  
-      if( bookNumber == book &&  ( start <=  Number(chapter) && end >=Number( chapter) ) ) {
+      if( bookNumber == Number(book) &&  ( start <=  Number(chapter) && end >=Number( chapter) ) ) {
         result.push({
-          chapter,
-          verse,
+          chapter: Number(chapter),
+          verse: Number(verse),
           message : content
         });
       }
@@ -73,6 +73,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     })
       res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
   } catch (error) {
-    res.status(500).json({ message: "Error fetching Bible plans" });
+    res.status(500).json({ message: "Error fetching Bible plans" + error });
   }
 };

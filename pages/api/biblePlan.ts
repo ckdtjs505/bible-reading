@@ -1,22 +1,22 @@
 import { plan } from "@/constants/plan";
-import { BiblePlan } from "@/type/biblePlan";
+import { Plan } from "@/type/biblePlan";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const GOOGLE_DOMAIN = "https://script.google.com";
-const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
+// const GOOGLE_DOMAIN = "https://script.google.com";
+// const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
 
-type Response = {
-  result: string;
-  row: object;
-  data: BiblePlan;
-};
+// type Response = {
+//   result: string;
+//   row: object;
+//   data: BiblePlan;
+// };
 
-export const getBiblePlan = (): BiblePlan => {
+export const getBiblePlan = (): Plan[] => {
   try {
-    const queryParam = new URLSearchParams({
-      type: "admin",
-      userName: "오창선",
-    });
+    // const queryParam = new URLSearchParams({
+    //   type: "admin",
+    //   userName: "오창선",
+    // });
 
     /*
     const response = await fetch(
@@ -41,11 +41,11 @@ export const getBiblePlan = (): BiblePlan => {
   }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const BiblePlans = await getBiblePlan();
+    const BiblePlans = getBiblePlan();
     res.status(200).json(BiblePlans);
   } catch (error) {
-    res.status(500).json({ message: "error fetching" });
+    res.status(500).json({ message: "error fetching" + error });
   }
 };
