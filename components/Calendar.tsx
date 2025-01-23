@@ -13,7 +13,7 @@ const Calendar: React.FC = () => {
   const [verse, setVerse] = useState<{ book?: string; data?: Verse[] }>({});
   const [img, setImg] = useState<string>("");
   const [videoId, setVideoId] = useState<string>("");
-  const { fontLevel, setFontLevel } = useFontLevel();
+  const { fontLevel  } = useFontLevel();
 
   useEffect(() => {
     const value = getBiblePlan();
@@ -71,6 +71,10 @@ const Calendar: React.FC = () => {
     }
   };
 
+  const handleClickMessage = () => { 
+
+    
+  }
   return (
     <div className="flex justify-center flex-col">
       <RCalendar
@@ -106,7 +110,7 @@ const Calendar: React.FC = () => {
         {verse.data?.map(({ chapter, verse, message }, index) => {
           return (
             <div key={index}>
-              <div className={`${fontLevel}`}>
+              <div className={`${fontLevel}`} onClick={ handleClickMessage}>
                 {chapter}:{verse} {message}
               </div>
               <br />
