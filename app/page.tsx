@@ -1,4 +1,5 @@
-import Calender from "@/client/components/ClientCalender";
+import Calender from "@/components/Calendar";
+
 export default function Home() {
   return (
     <>

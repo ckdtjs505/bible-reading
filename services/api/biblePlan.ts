@@ -1,4 +1,4 @@
-import { BiblePlan, bookKeyNumber } from "@/type/biblePlan";
+import { BiblePlan } from "@/type/biblePlan";
 
 const GOOGLE_DOMAIN = "https://script.google.com";
 const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;

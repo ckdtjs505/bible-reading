@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Hahmlet } from "next/font/google";
 import "./globals.css";
-import "./calender.css";
 // Hahmlet
 const hahmlet = Hahmlet({
   subsets: ["latin"],
