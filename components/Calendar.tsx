@@ -12,9 +12,8 @@ const Calendar: React.FC = () => {
   const [verse, setVerse] = useState<{ book?: string; data?: Verse[] }>({});
 
   useEffect(() => {
-    getBiblePlan().then((value) => {
+   const value =  getBiblePlan()
       setPlanInfo(value);
-    });
   }, []);
 
   const foramtDate = (date: Date) =>
@@ -43,6 +42,7 @@ const Calendar: React.FC = () => {
       (plan) => plan.date === currentDateYYYYMMDD,
     );
 
+    console.log(planInfo[planInd])
     if (planInd >= 0) {
       const data = getDailyVerse({
         book: planInfo[planInd].book,

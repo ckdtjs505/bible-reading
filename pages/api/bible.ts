@@ -49,7 +49,7 @@ export const getDailyVerse = ({
 
     bible.forEach(  ({ book, chapter, content, verse}, index) =>  {
       // book - 어떤 성경인지  
-      if( bookNumber == book &&  ( start <=  chapter && end >= chapter ) ) {
+      if( bookNumber == book &&  ( start <=  Number(chapter) && end >=Number( chapter) ) ) {
         result.push({
           chapter,
           verse,
@@ -71,9 +71,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       start:1,
       end: 5
     })
-  
-    console.log(dailyVerse);
-    res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
+      res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
   } catch (error) {
     res.status(500).json({ message: "Error fetching Bible plans" });
   }

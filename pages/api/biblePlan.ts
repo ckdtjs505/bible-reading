@@ -1,3 +1,4 @@
+import { plan } from "@/constants/plan";
 import { BiblePlan } from "@/type/biblePlan";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -10,13 +11,14 @@ type Response = {
   data: BiblePlan;
 };
 
-export const getBiblePlan = async (): Promise<BiblePlan> => {
+export const getBiblePlan = (): BiblePlan => {
   try {
     const queryParam = new URLSearchParams({
       type: "admin",
       userName: "오창선",
     });
 
+    /*
     const response = await fetch(
       `${GOOGLE_DOMAIN}/macros/s/${GOOGLE_KEY}/exec?${queryParam}`,
       {
@@ -31,7 +33,9 @@ export const getBiblePlan = async (): Promise<BiblePlan> => {
     }
 
     const res: Response = await response.json();
-    return res?.data;
+  */  
+
+    return plan;
   } catch (e) {
     throw e;
   }
