@@ -14,4 +14,10 @@ type Plan = {
   videoId?: string;
 };
 
+export type Verse = {
+  chapter: number;
+  verse: number;
+  message?: string;
+};
+
 export type BiblePlan = Plan[];

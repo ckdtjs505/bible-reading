@@ -1,23 +1,23 @@
 "use client";
 
 import "./Calendar.css";
-import { Calendar as RCalender } from "react-calendar";
+import { Calendar as RCalendar } from "react-calendar";
 import React, { useEffect, useState } from "react";
-import { BiblePlan } from "@/type/biblePlan";
+import { BiblePlan, Verse } from "@/type/biblePlan";
 import { getBiblePlan } from "@/pages/api/biblePlan";
 import { getDailyVerse } from "@/pages/api/bible";
 
-const Calender: React.FC = () => {
+const Calendar: React.FC = () => {
   const [planInfo, setPlanInfo] = useState<BiblePlan>([]);
-  const [verse, setVerse] = useState([]);
+  const [verse, setVerse] = useState<Verse[]>([]);
 
   useEffect(() => {
-    getBiblePlan().then(({ data }) => {
-      setPlanInfo(data as BiblePlan);
+    getBiblePlan().then((value) => {
+      setPlanInfo(value);
     });
   }, []);
 
-  const tileContent = ({ date }) => {
+  const tileContent = ({ date }: { date: Date }) => {
     const currentDate = new Date(date);
     const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
     const planInd = planInfo?.findIndex(
@@ -35,7 +35,7 @@ const Calender: React.FC = () => {
     }
   };
 
-  const handleClickDay = (date) => {
+  const handleClickDay = (date: Date) => {
     const currentDate = new Date(date);
     const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
     const planInd = planInfo?.findIndex(
@@ -55,7 +55,7 @@ const Calender: React.FC = () => {
 
   return (
     <div>
-      <RCalender
+      <RCalendar
         formatDay={(_, date) => {
           return date
             .toLocaleString("ko-KR", { day: "2-digit" })
@@ -70,9 +70,9 @@ const Calender: React.FC = () => {
         showNeighboringMonth={false}
         tileContent={tileContent}
         onClickDay={handleClickDay}
-      ></RCalender>
+      ></RCalendar>
       <div>
-        {verse.map(({ chapter, verse, message }, index) => {
+        {verse.map(({ verse, message }, index) => {
           return (
             <div key={index}>
               {verse} {message}
@@ -84,4 +84,4 @@ const Calender: React.FC = () => {
   );
 };
 
-export default Calender;
+export default Calendar;

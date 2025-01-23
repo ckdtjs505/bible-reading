@@ -4,27 +4,37 @@ import { NextApiRequest, NextApiResponse } from "next";
 const GOOGLE_DOMAIN = "https://script.google.com";
 const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
 
-export const getBiblePlan = async (): Promise<BiblePlan> => {
-  const queryParam = new URLSearchParams({
-    type: "admin",
-    userName: "오창선",
-  });
+type Response = {
+  result: string;
+  row: object;
+  data: BiblePlan;
+};
 
-  return await fetch(
-    `${GOOGLE_DOMAIN}/macros/s/${GOOGLE_KEY}/exec?${queryParam}`,
-    {
-      headers: {
-        "content-Type": "text/plain;charset=utf-8",
-      },
-    },
-  )
-    .then((response) => {
-      const res = response.json();
-      return res;
-    })
-    .catch((e) => {
-      console.log(e);
+export const getBiblePlan = async (): Promise<BiblePlan> => {
+  try {
+    const queryParam = new URLSearchParams({
+      type: "admin",
+      userName: "오창선",
     });
+
+    const response = await fetch(
+      `${GOOGLE_DOMAIN}/macros/s/${GOOGLE_KEY}/exec?${queryParam}`,
+      {
+        headers: {
+          "content-Type": "text/plain;charset=utf-8",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP ERROR! ");
+    }
+
+    const res: Response = await response.json();
+    return res?.data;
+  } catch (e) {
+    throw e;
+  }
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
