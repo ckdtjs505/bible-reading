@@ -6,15 +6,25 @@ import React, { useEffect, useState } from "react";
 import { Plan, Verse } from "@/type/biblePlan";
 import { getBiblePlan } from "@/pages/api/biblePlan";
 import { getDailyVerse } from "@/pages/api/bible";
+import { useFontLevel } from "@/stores/font";
 
 const Calendar: React.FC = () => {
   const [planInfo, setPlanInfo] = useState<Plan[]>([]);
   const [verse, setVerse] = useState<{ book?: string; data?: Verse[] }>({});
+  const [img, setImg] = useState<string>("");
+  const [videoId, setVideoId] = useState<string>("");
+  const { fontLevel, setFontLevel } = useFontLevel();
 
   useEffect(() => {
-   const value =  getBiblePlan()
-      setPlanInfo(value);
+    const value = getBiblePlan();
+    setPlanInfo(value);
   }, []);
+
+  useEffect(() => {
+    if (planInfo) {
+      handleClickDay(new Date());
+    }
+  }, [planInfo]);
 
   const foramtDate = (date: Date) =>
     `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -42,7 +52,7 @@ const Calendar: React.FC = () => {
       (plan) => plan.date === currentDateYYYYMMDD,
     );
 
-    console.log(planInfo[planInd])
+    console.log(planInfo[planInd]);
     if (planInd >= 0) {
       const data = getDailyVerse({
         book: planInfo[planInd].book,
@@ -50,12 +60,14 @@ const Calendar: React.FC = () => {
         end: Number(planInfo[planInd].end),
       });
 
+      setVideoId(planInfo[planInd].videoId);
+      setImg(planInfo[planInd].img);
       setVerse({ book: planInfo[planInd].book, data });
     }
   };
 
   return (
-    <div>
+    <div className="flex justify-center flex-col">
       <RCalendar
         formatDay={(_, date) => {
           return date
@@ -72,12 +84,24 @@ const Calendar: React.FC = () => {
         tileContent={tileContent}
         onClickDay={handleClickDay}
       ></RCalendar>
+
+      {videoId && (
+        <iframe
+          width={"100%"}
+          height="315"
+          className="p-2 "
+          src={`https://www.youtube.com/embed/${videoId}`}
+          title="함온성"
+        ></iframe>
+      )}
+      {img && <img src={img} alt="img" className="p-2 w-full"></img>}
+
       <div className="m-2 text-2xl">
         <div>{verse.book}</div>
         {verse.data?.map(({ chapter, verse, message }, index) => {
           return (
             <div key={index}>
-              <div className="text-xl font-light">
+              <div className={`${fontLevel}`}>
                 {chapter}:{verse} {message}
               </div>
               <br />
