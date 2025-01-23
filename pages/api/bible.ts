@@ -1,4 +1,5 @@
 import { bookKeyNumber } from "@/constants/bibleNumber";
+import { Verse } from "@/type/biblePlan";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const GOOGLE_DOMAIN = "https://script.google.com";
@@ -9,40 +10,40 @@ type DailyVeserParams = {
   start: number;
   end: number;
 };
+
+type Response = Verse[];
+
 export const getDailyVerse = async ({
   book,
   start,
   end,
-}: DailyVeserParams): Promise<T> => {
-  const queryParam = new URLSearchParams({
-    type: "getBible",
-    book: bookKeyNumber(book),
-    start: start,
-    end: end,
-  });
-
-  return await fetch(
-    `${GOOGLE_DOMAIN}/macros/s/${GOOGLE_KEY}/exec?${queryParam}`,
-    {
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-    },
-  )
-    .then((response) => {
-      const res = response.json();
-      return res;
-    })
-    .then((res) => {
-      //    return res.map(
-      //    (data) => new DailyVerseModel(data.chapter, data.message, data.verse),
-      //);
-      //
-      return res;
-    })
-    .catch((e) => {
-      console.error(e);
+}: DailyVeserParams): Promise<Response> => {
+  try {
+    const queryParam = new URLSearchParams({
+      type: "getBible",
+      book: String(bookKeyNumber(book)),
+      start: String(start),
+      end: String(end),
     });
+
+    const response = await fetch(
+      `${GOOGLE_DOMAIN}/macros/s/${GOOGLE_KEY}/exec?${queryParam}`,
+      {
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP ERROR");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    throw e;
+  }
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

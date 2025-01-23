@@ -3,13 +3,13 @@
 import "./Calendar.css";
 import { Calendar as RCalendar } from "react-calendar";
 import React, { useEffect, useState } from "react";
-import { BiblePlan, Verse } from "@/type/biblePlan";
+import { Plan, Verse } from "@/type/biblePlan";
 import { getBiblePlan } from "@/pages/api/biblePlan";
 import { getDailyVerse } from "@/pages/api/bible";
 
 const Calendar: React.FC = () => {
-  const [planInfo, setPlanInfo] = useState<BiblePlan>([]);
-  const [verse, setVerse] = useState<Verse[]>([]);
+  const [planInfo, setPlanInfo] = useState<Plan[]>([]);
+  const [verse, setVerse] = useState<{ book?: string; data?: Verse[] }>({});
 
   useEffect(() => {
     getBiblePlan().then((value) => {
@@ -17,9 +17,11 @@ const Calendar: React.FC = () => {
     });
   }, []);
 
+  const foramtDate = (date: Date) =>
+    `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
   const tileContent = ({ date }: { date: Date }) => {
-    const currentDate = new Date(date);
-    const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+    const currentDateYYYYMMDD = foramtDate(new Date(date));
     const planInd = planInfo?.findIndex(
       (plan) => plan.date === currentDateYYYYMMDD,
     );
@@ -35,21 +37,20 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const handleClickDay = (date: Date) => {
-    const currentDate = new Date(date);
-    const currentDateYYYYMMDD = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+  const handleClickDay = async (date: Date) => {
+    const currentDateYYYYMMDD = foramtDate(new Date(date));
     const planInd = planInfo?.findIndex(
       (plan) => plan.date === currentDateYYYYMMDD,
     );
 
     if (planInd >= 0) {
-      getDailyVerse({
+      const data = await getDailyVerse({
         book: planInfo[planInd].book,
         start: planInfo[planInd].start,
         end: planInfo[planInd].end,
-      }).then((data) => {
-        setVerse(data);
       });
+
+      setVerse({ book: planInfo[planInd].book, data });
     }
   };
 
@@ -71,11 +72,15 @@ const Calendar: React.FC = () => {
         tileContent={tileContent}
         onClickDay={handleClickDay}
       ></RCalendar>
-      <div>
-        {verse.map(({ verse, message }, index) => {
+      <div className="m-2 text-2xl">
+        <div>{verse.book}</div>
+        {verse.data?.map(({ chapter, verse, message }, index) => {
           return (
             <div key={index}>
-              {verse} {message}
+              <div className="text-xl font-light">
+                {chapter}:{verse} {message}
+              </div>
+              <br />
             </div>
           );
         })}
