@@ -1,11 +1,12 @@
 .react-calendar {
   margin: auto;
-  width: 95%;
+  width: 100%;
   max-width: 100%;
   border: 1px solid #a0a096;
   border-right: 0px;
   border-left: 0px;
   border-top: 0px;
+  padding: 0.5rem;
 }
 
 .react-calendar--doubleView {

@@ -63,6 +63,11 @@ const Calendar: React.FC = () => {
       setVideoId(planInfo[planInd].videoId);
       setImg(planInfo[planInd].img);
       setVerse({ book: planInfo[planInd].book, data });
+    } else {
+      setVideoId('');
+      setImg('');
+      setVerse({ book: '', data : [] });
+
     }
   };
 
