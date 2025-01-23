@@ -37,14 +37,14 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const handleClickDay = async (date: Date) => {
+  const handleClickDay = (date: Date) => {
     const currentDateYYYYMMDD = foramtDate(new Date(date));
     const planInd = planInfo?.findIndex(
       (plan) => plan.date === currentDateYYYYMMDD,
     );
 
     if (planInd >= 0) {
-      const data = await getDailyVerse({
+      const data = getDailyVerse({
         book: planInfo[planInd].book,
         start: planInfo[planInd].start,
         end: planInfo[planInd].end,

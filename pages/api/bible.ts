@@ -1,3 +1,4 @@
+import { bible } from "@/constants/bible";
 import { bookKeyNumber } from "@/constants/bibleNumber";
 import { Verse } from "@/type/biblePlan";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -13,13 +14,15 @@ type DailyVeserParams = {
 
 type Response = Verse[];
 
-export const getDailyVerse = async ({
+export const getDailyVerse = ({
   book,
   start,
   end,
-}: DailyVeserParams): Promise<Response> => {
+}: DailyVeserParams): Response => {
   try {
-    const queryParam = new URLSearchParams({
+     const bookNumber = bookKeyNumber(book);
+    /*
+ * const queryParam = new URLSearchParams({
       type: "getBible",
       book: String(bookKeyNumber(book)),
       start: String(start),
@@ -40,20 +43,35 @@ export const getDailyVerse = async ({
     }
 
     const data = await response.json();
-    return data;
+  
+*/
+    const result: Verse[] = [];
+
+    bible.forEach(  ({ book, chapter, content, verse}, index) =>  {
+      // book - 어떤 성경인지  
+      if( bookNumber == book &&  ( start <=  chapter && end >= chapter ) ) {
+        result.push({
+          chapter,
+          verse,
+          message : content
+        });
+      }
+    });
+  
+    return result;  
   } catch (e) {
     throw e;
   }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const dailyVerse = await getDailyVerse({
-      book: "창세기",
-      start: 1,
-      end: 2,
-    });
-
+    const dailyVerse = getDailyVerse({
+      book: '창세기',
+      start:1,
+      end: 5
+    })
+  
     console.log(dailyVerse);
     res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
   } catch (error) {
