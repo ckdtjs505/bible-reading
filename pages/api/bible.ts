@@ -9,7 +9,7 @@ type DailyVeserParams = {
   start: number;
   end: number;
 };
-const getDailyVerse = async ({
+export const getDailyVerse = async ({
   book,
   start,
   end,

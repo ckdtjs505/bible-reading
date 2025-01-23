@@ -3,11 +3,13 @@
 import "./Calendar.css";
 import { Calendar as RCalender } from "react-calendar";
 import React, { useEffect, useState } from "react";
-import { getBiblePlan, getDailyVerse } from "@/services/api/biblePlan";
 import { BiblePlan } from "@/type/biblePlan";
+import { getBiblePlan } from "@/pages/api/biblePlan";
+import { getDailyVerse } from "@/pages/api/bible";
 
 const Calender: React.FC = () => {
   const [planInfo, setPlanInfo] = useState<BiblePlan>([]);
+  const [verse, setVerse] = useState([]);
 
   useEffect(() => {
     getBiblePlan().then(({ data }) => {
@@ -46,28 +48,39 @@ const Calender: React.FC = () => {
         start: planInfo[planInd].start,
         end: planInfo[planInd].end,
       }).then((data) => {
-        console.log(data);
+        setVerse(data);
       });
     }
   };
 
   return (
-    <RCalender
-      formatDay={(_, date) => {
-        return date
-          .toLocaleString("ko-KR", { day: "2-digit" })
-          .replace("일", "");
-      }}
-      calendarType="gregory"
-      showWeekNumbers={false}
-      next2Label={""}
-      prev2Label={""}
-      prevLabel={"<"}
-      nextLabel={">"}
-      showNeighboringMonth={false}
-      tileContent={tileContent}
-      onClickDay={handleClickDay}
-    ></RCalender>
+    <div>
+      <RCalender
+        formatDay={(_, date) => {
+          return date
+            .toLocaleString("ko-KR", { day: "2-digit" })
+            .replace("일", "");
+        }}
+        calendarType="gregory"
+        showWeekNumbers={false}
+        next2Label={""}
+        prev2Label={""}
+        prevLabel={"<"}
+        nextLabel={">"}
+        showNeighboringMonth={false}
+        tileContent={tileContent}
+        onClickDay={handleClickDay}
+      ></RCalender>
+      <div>
+        {verse.map(({ chapter, verse, message }, index) => {
+          return (
+            <div key={index}>
+              {verse} {message}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
