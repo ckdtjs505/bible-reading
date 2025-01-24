@@ -80,6 +80,11 @@ const Calendar: React.FC = () => {
 
     if (target.classList.contains("active")) {
       target.classList.remove("active");
+      setSelectList(
+        selectList.filter((value) => {
+          return !(value === target.innerText);
+        }),
+      );
     } else {
       target.classList.add("active");
       setSelectList([...selectList, target.innerText]);
