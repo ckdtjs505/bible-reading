@@ -5,7 +5,7 @@ import { useTodayMessage } from "@/stores/todayMessage";
 import useVerses from "@/stores/verses";
 
 const Verses = () => {
-  const { fontLevel } = useFontLevel();
+  const { fontLevel, setFontLevel, level } = useFontLevel();
   const { verses, book } = useVerses();
   const { add, remove } = useTodayMessage();
 
@@ -23,17 +23,62 @@ const Verses = () => {
 
   return (
     <div className="p-4 text-2xl">
-      <div>{book}</div>
-      {verses?.map(({ chapter, verse, message }, index) => {
-        return (
-          <div key={index}>
-            <div className={`${fontLevel}`} onClick={handleClickMessage}>
-              {chapter}:{verse} {message}
+      <div className="flex justify-end text-sm h-8">
+        {/* 성경 타입 버튼 그룹 */}
+        <div id="bibleType" className="flex text-[0.7rem]">
+          <button
+            id="kiv"
+            className="rounded-full mr-2  border-none bg-transparent hover:bg-gray-100 transition"
+          >
+            개역개정
+          </button>
+          <button
+            id="korean"
+            className=" rounded-full mr-2 border-none bg-blue-100 text-blue-600 hover:bg-blue-200 transition active"
+          >
+            우리말 성경
+          </button>
+        </div>
+
+        {/* 글꼴 크기 버튼 그룹 */}
+        <div id="fontSize" className="flex w-20">
+          <button
+            id="larger"
+            className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
+            onClick={() => {
+              console.log(level, fontLevel);
+
+              setFontLevel(level + 1);
+            }}
+          >
+            +
+          </button>
+          <button
+            id="smaller"
+            className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
+            onClick={() => {
+              console.log(level, fontLevel);
+              setFontLevel(level - 1);
+            }}
+          >
+            -
+          </button>
+        </div>
+      </div>
+
+      <div className={fontLevel}>
+        <div>{book}</div>
+        {verses?.map(({ chapter, verse, message }, index) => {
+          return (
+            <div key={index}>
+              <div onClick={handleClickMessage}>
+                {chapter}:{verse} {message}
+              </div>
+              <br />
             </div>
-            <br />
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

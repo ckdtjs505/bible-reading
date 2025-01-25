@@ -5,7 +5,7 @@ import { usePlan } from "@/stores/plan";
 export const YoutubeVideo = () => {
   const { selectDayPlan } = usePlan();
   return (
-    selectDayPlan.videoId && (
+    selectDayPlan?.videoId && (
       <iframe
         width={"100%"}
         height="315"

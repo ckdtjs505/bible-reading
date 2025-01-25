@@ -40,9 +40,25 @@ export const usePlan = create<PlanState>((set) => ({
           `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
       );
 
-      return {
-        selectDayPlan: plan[planInd],
-      };
+      if (plan[planInd]) {
+        return {
+          selectDayPlan: plan[planInd],
+        };
+      } else {
+        return {
+          selectDayPlan: {
+            index: "",
+            start: "",
+            end: "",
+            daycount: "",
+            img: "",
+            videoId: "",
+            date: "",
+            book: "",
+            lang: "",
+          },
+        };
+      }
     });
   },
   setPlan: (data) => set({ plan: data }),

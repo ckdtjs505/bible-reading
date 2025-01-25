@@ -6,7 +6,7 @@ const SummeryImg = () => {
   const { selectDayPlan } = usePlan();
 
   return (
-    selectDayPlan.img && (
+    selectDayPlan?.img && (
       <img src={selectDayPlan.img} alt="img" className="p-4 w-full"></img>
     )
   );

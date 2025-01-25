@@ -26,6 +26,7 @@ const Calendar: React.FC = () => {
         updateDayPlan(date);
       } else {
         initVerses();
+        updateDayPlan(date);
       }
     },
     [plan, fetchVerses, initVerses, updateDayPlan],
