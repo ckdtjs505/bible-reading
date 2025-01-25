@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 //const GOOGLE_DOMAIN = "https://script.google.com";
 //const GOOGLE_KEY = `AKfycbx59b6woS9-hkh8jkk93zrBUOSwbiI6JvBQT0-wdP-zxD_dNFrnL_t5WNvuulvzNtOq`;
 
-type DailyVeserParams = {
+export type DailyVeserParams = {
   book: string;
   start: number;
   end: number;
@@ -20,7 +20,7 @@ export const getDailyVerse = ({
   end,
 }: DailyVeserParams): Response => {
   try {
-     const bookNumber = bookKeyNumber(book);
+    const bookNumber = bookKeyNumber(book);
     /*
  * const queryParam = new URLSearchParams({
       type: "getBible",
@@ -47,18 +47,22 @@ export const getDailyVerse = ({
 */
     const result: Verse[] = [];
 
-    bible.forEach(  ({ book, chapter, content, verse}) =>  {
-      // book - 어떤 성경인지  
-      if( bookNumber == Number(book) &&  ( start <=  Number(chapter) && end >=Number( chapter) ) ) {
+    bible.forEach(({ book, chapter, content, verse }) => {
+      // book - 어떤 성경인지
+      if (
+        bookNumber == Number(book) &&
+        start <= Number(chapter) &&
+        end >= Number(chapter)
+      ) {
         result.push({
           chapter: Number(chapter),
           verse: Number(verse),
-          message : content
+          message: content,
         });
       }
     });
-  
-    return result;  
+
+    return result;
   } catch (e) {
     throw e;
   }
@@ -67,11 +71,11 @@ export const getDailyVerse = ({
 export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const dailyVerse = getDailyVerse({
-      book: '창세기',
-      start:1,
-      end: 5
-    })
-      res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
+      book: "창세기",
+      start: 1,
+      end: 5,
+    });
+    res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
   } catch (error) {
     res.status(500).json({ message: "Error fetching Bible plans" + error });
   }

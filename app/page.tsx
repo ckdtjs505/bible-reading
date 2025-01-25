@@ -1,4 +1,8 @@
 import Calender from "@/components/Calendar";
+import PlayerJournal from "@/components/PrayerJournal";
+import SummeryImg from "@/components/summeryImg";
+import Verses from "@/components/Verses";
+import { YoutubeVideo } from "@/components/YoutubeVideo";
 
 export default function Home() {
   return (
@@ -7,7 +11,14 @@ export default function Home() {
         함 온 성
       </div>
       <Calender></Calender>
-      <br />
+
+      <YoutubeVideo />
+
+      <SummeryImg />
+
+      <Verses />
+
+      <PlayerJournal />
     </>
   );
 }
