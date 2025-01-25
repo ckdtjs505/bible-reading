@@ -2,18 +2,17 @@
 
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
+import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
 import { useState } from "react";
 
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] = useState(
-    JSON.parse(localStorage.getItem("isShowPlayForUserCheckBox") || "false"),
+    getLocalStorage("isShowPlayForUserCheckBox"),
   );
 
-  const [isShowPray, setIsShowPray] = useState(
-    JSON.parse(localStorage.getItem("isShowPray") || "false"),
-  );
+  const [isShowPray, setIsShowPray] = useState(getLocalStorage("isShowPray"));
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
@@ -62,10 +61,7 @@ const PlayerJournal = () => {
               checked={isShowPlayForUserCheckBox}
               onChange={() =>
                 setIsShowPlayForUserCheckBox((isShow: boolean) => {
-                  localStorage.setItem(
-                    "isShowPrayForUser",
-                    JSON.stringify(!isShow),
-                  );
+                  setLocalStorage("isShowPrayForUser", !isShow);
 
                   return !isShow;
                 })
@@ -80,7 +76,7 @@ const PlayerJournal = () => {
               checked={isShowPray}
               onChange={() =>
                 setIsShowPray((isShow: boolean) => {
-                  localStorage.setItem("isShowPray", JSON.stringify(!isShow));
+                  setLocalStorage("isShowPray", JSON.stringify(!isShow));
                   return !isShow;
                 })
               }
