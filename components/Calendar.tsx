@@ -66,6 +66,7 @@ const Calendar: React.FC = () => {
             .toLocaleString("ko-KR", { day: "2-digit" })
             .replace("일", "");
         }}
+        locale="ko-KR"
         calendarType="gregory"
         showWeekNumbers={false}
         next2Label={""}
