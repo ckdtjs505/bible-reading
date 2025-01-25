@@ -4,7 +4,7 @@ import "./globals.css";
 // Hahmlet
 const hahmlet = Hahmlet({
   subsets: ["latin"],
-  weight: "600",
+  weight: "variable",
 });
 
 export const metadata: Metadata = {

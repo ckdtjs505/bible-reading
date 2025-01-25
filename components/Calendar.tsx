@@ -59,7 +59,7 @@ const Calendar: React.FC = () => {
   }, [plan, fetchPlan, handleClickDay]);
 
   return (
-    <div className="flex justify-center flex-col">
+    <div className="flex justify-center flex-col font-bold">
       <RCalendar
         formatDay={(_, date) => {
           return date

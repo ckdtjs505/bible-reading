@@ -7,11 +7,46 @@ import { useState } from "react";
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
+  const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] = useState(
+    JSON.parse(localStorage.getItem("isShowPlayForUserCheckBox") || "false"),
+  );
 
-  const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
-    useState(false);
+  const [isShowPray, setIsShowPray] = useState(
+    JSON.parse(localStorage.getItem("isShowPray") || "false"),
+  );
+  const [prayForUser, setPrayForUser] = useState("");
+  const [pray, setPray] = useState("");
 
-  const [isShowPray, setIsShowPray] = useState(false);
+  const handleSaveButton = () => {
+    const myMessage = message.join("\n");
+    const copyData =
+      (isShowPlayForUserCheckBox
+        ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
+        : "") +
+      `🌸 이름 : 오창선 \n\n` +
+      `📖 오늘 내게 주신 말씀 \n${myMessage}\n\n` +
+      (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
+      `제 ${selectDayPlan.daycount}일차 완료했습니다.`;
+
+    navigator.clipboard
+      .writeText(copyData)
+      .then(() => {
+        console.log("클립보드에 복사되었습니다: \n" + copyData);
+        //if (!name) return;
+        if (!myMessage) return;
+        // BibleReadingSaveService.setSaveMessage({
+        //   prayForUser,
+        //  name,
+        // myMessage,
+        // day: AppState.getInstance().readingPlan[0]?.dayCount,
+        //pray,
+        // });
+      })
+      .catch((err) => {
+        console.error("클립보드 복사에 실패했습니다: ", err);
+      });
+  };
+
   return (
     <div>
       <div className="p-4 border-b border-t border-black">
@@ -24,7 +59,17 @@ const PlayerJournal = () => {
             <input
               type="checkbox"
               id="prayForUserCheckBox"
-              onClick={() => setIsShowPlayForUserCheckBox((isShow) => !isShow)}
+              checked={isShowPlayForUserCheckBox}
+              onChange={() =>
+                setIsShowPlayForUserCheckBox((isShow: boolean) => {
+                  localStorage.setItem(
+                    "isShowPrayForUser",
+                    JSON.stringify(!isShow),
+                  );
+
+                  return !isShow;
+                })
+              }
             />
             <label htmlFor="prayForUserCheckBox"> 💝앞사람을 위한 기도</label>
           </div>
@@ -32,7 +77,13 @@ const PlayerJournal = () => {
             <input
               type="checkbox"
               id="prayCheckBox"
-              onClick={() => setIsShowPray((isShow) => !isShow)}
+              checked={isShowPray}
+              onChange={() =>
+                setIsShowPray((isShow: boolean) => {
+                  localStorage.setItem("isShowPray", JSON.stringify(!isShow));
+                  return !isShow;
+                })
+              }
             />
             <label htmlFor="prayCheckBox"> 🌼 한줄 기도하기</label>
           </div>
@@ -44,7 +95,11 @@ const PlayerJournal = () => {
             <div id="prayForUser">
               💝앞사람을 위한 기도 :
               <textarea
+                value={prayForUser}
                 id="prayForUserText"
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setPrayForUser(e.target.value)
+                }
                 className="w-full h-20 border border-black"
               ></textarea>
             </div>
@@ -66,16 +121,20 @@ const PlayerJournal = () => {
             <div id="prayBox">
               🙏 한줄 기도 :
               <textarea
+                value={pray}
                 id="pray"
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setPray(e.target.value)
+                }
                 className="w-full h-20 border border-black"
               ></textarea>
             </div>
           )}
-          제 <span id="day">{selectDayPlan.daycount}</span> 일차 완료했습니다.{" "}
+          제 <span id="day">{selectDayPlan.daycount}</span> 일차 완료했습니다.
           <br />
         </div>
 
-        <button id="saveButton" type="button">
+        <button id="saveButton" type="button" onClick={handleSaveButton}>
           복사하기
         </button>
         <button id="changeName" type="button">

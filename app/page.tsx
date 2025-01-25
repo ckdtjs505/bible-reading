@@ -7,7 +7,7 @@ import { YoutubeVideo } from "@/components/YoutubeVideo";
 export default function Home() {
   return (
     <>
-      <div id="title" className="text-center text-2xl mt-4">
+      <div id="title" className="text-center text-3xl mt-4 font-bold">
         함 온 성
       </div>
       <Calender></Calender>
