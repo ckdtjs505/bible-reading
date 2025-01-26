@@ -9,10 +9,12 @@ const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] = useState(
-    getLocalStorage("isShowPlayForUserCheckBox"),
+    getLocalStorage<boolean>("isShowPlayForUserCheckBox") || false,
   );
 
-  const [isShowPray, setIsShowPray] = useState(getLocalStorage("isShowPray"));
+  const [isShowPray, setIsShowPray] = useState(
+    getLocalStorage<boolean>("isShowPray") || false,
+  );
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
