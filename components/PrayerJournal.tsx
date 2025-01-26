@@ -3,20 +3,26 @@
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
 import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
-  const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] = useState(
-    getLocalStorage<boolean>("isShowPlayForUserCheckBox") || false,
-  );
+  const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
+    useState(false);
 
-  const [isShowPray, setIsShowPray] = useState(
-    getLocalStorage<boolean>("isShowPray") || false,
-  );
+  const [isShowPray, setIsShowPray] = useState(false);
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsShowPlayForUserCheckBox(
+        getLocalStorage<boolean>("isShowPlayForUserCheckBox") || false,
+      );
+      setIsShowPray(getLocalStorage<boolean>("isShowPray") || false);
+    }
+  }, []);
 
   const handleSaveButton = () => {
     const myMessage = message.join("\n");
@@ -63,7 +69,7 @@ const PlayerJournal = () => {
               checked={isShowPlayForUserCheckBox}
               onChange={() =>
                 setIsShowPlayForUserCheckBox((isShow: boolean) => {
-                  setLocalStorage("isShowPrayForUser", !isShow);
+                  setLocalStorage("isShowPlayForUserCheckBox", !isShow);
 
                   return !isShow;
                 })
@@ -78,7 +84,7 @@ const PlayerJournal = () => {
               checked={isShowPray}
               onChange={() =>
                 setIsShowPray((isShow: boolean) => {
-                  setLocalStorage("isShowPray", JSON.stringify(!isShow));
+                  setLocalStorage("isShowPray", !isShow);
                   return !isShow;
                 })
               }
@@ -128,7 +134,9 @@ const PlayerJournal = () => {
               ></textarea>
             </div>
           )}
-          제 <span id="day">{selectDayPlan.daycount}</span> 일차 완료했습니다.
+          <div>
+            제 <span id="day">{selectDayPlan.daycount}</span> 일차 완료했습니다.
+          </div>
           <br />
         </div>
 
