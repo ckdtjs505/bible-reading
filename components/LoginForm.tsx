@@ -13,6 +13,7 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     setInputName(userName);
   }, [userName]);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputName(e.target.value);
   };

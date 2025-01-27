@@ -3,6 +3,7 @@
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
+import useStore from "@/stores/useStore";
 import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +11,9 @@ import { useEffect, useState } from "react";
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
-  const { userName } = useUserInfo();
+
+  const userName = useStore(useUserInfo, (state) => state.userName);
+  const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -29,8 +32,12 @@ const PlayerJournal = () => {
   }, []);
 
   useEffect(() => {
-    if (!userName) {
-      router.push("/login");
+    if (!hasHydrated) {
+      console.log("loading ");
+    } else {
+      if (!userName) {
+        router.push("/login");
+      }
     }
   }, [userName, router]);
 
