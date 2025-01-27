@@ -4,6 +4,7 @@ interface todayMessage {
   message: string[];
   add: (data: string) => void;
   remove: (data: string) => void;
+  initMessage: () => void;
 }
 
 export const useTodayMessage = create<todayMessage>((set) => ({
@@ -14,6 +15,11 @@ export const useTodayMessage = create<todayMessage>((set) => ({
   remove: (messageToRemove) => {
     set((state) => ({
       message: state.message.filter((msg) => msg !== messageToRemove),
+    }));
+  },
+  initMessage: () => {
+    set(() => ({
+      message: [],
     }));
   },
 }));

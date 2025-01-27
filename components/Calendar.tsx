@@ -5,11 +5,12 @@ import { Calendar as RCalendar } from "react-calendar";
 import React, { useCallback, useEffect } from "react";
 import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
+import { useTodayMessage } from "@/stores/todayMessage";
 
 const Calendar: React.FC = () => {
   const { fetchVerses, initVerses } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
-
+  const { initMessage } = useTodayMessage();
   const handleClickDay = useCallback(
     (date: Date) => {
       const planInd = plan?.findIndex(
@@ -24,11 +25,11 @@ const Calendar: React.FC = () => {
           start: Number(plan[planInd].start),
           end: Number(plan[planInd].end),
         });
-        updateDayPlan(date);
       } else {
         initVerses();
-        updateDayPlan(date);
       }
+      initMessage();
+      updateDayPlan(date);
     },
     [plan, fetchVerses, initVerses, updateDayPlan],
   );

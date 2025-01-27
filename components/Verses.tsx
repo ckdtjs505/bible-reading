@@ -7,16 +7,14 @@ import useVerses from "@/stores/verses";
 const Verses = () => {
   const { fontLevel, setFontLevel, level } = useFontLevel();
   const { verses, book, bible, updateBible } = useVerses();
-  const { add, remove } = useTodayMessage();
+  const { message: messages, add, remove } = useTodayMessage();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event?.target as HTMLElement;
 
     if (target.classList.contains("active")) {
-      target.classList.remove("active");
       remove(target.innerText);
     } else {
-      target.classList.add("active");
       add(target.innerText);
     }
   };
@@ -81,8 +79,17 @@ const Verses = () => {
         {verses?.map(({ chapter, verse, message }, index) => {
           return (
             <div key={index}>
-              <div onClick={handleClickMessage}>
-                {chapter}:{verse} {message}
+              <div>
+                <span
+                  className={
+                    messages.includes(`${chapter}:${verse} ${message}`)
+                      ? "active"
+                      : ""
+                  }
+                  onClick={handleClickMessage}
+                >
+                  {chapter}:{verse} {message}
+                </span>
               </div>
               <br />
             </div>
