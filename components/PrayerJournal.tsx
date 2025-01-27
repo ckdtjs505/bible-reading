@@ -2,15 +2,19 @@
 
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
+import useUserInfo from "@/stores/userInfo";
 import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
   const { message } = useTodayMessage();
+  const { userName } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
+  const router = useRouter();
   const [isShowPray, setIsShowPray] = useState(false);
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
@@ -24,13 +28,19 @@ const PlayerJournal = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!userName) {
+      router.push("/login");
+    }
+  }, [userName, router]);
+
   const handleSaveButton = () => {
     const myMessage = message.join("\n");
     const copyData =
       (isShowPlayForUserCheckBox
         ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
         : "") +
-      `🌸 이름 : 오창선 \n\n` +
+      `🌸 이름 : ${userName} \n\n` +
       `📖 오늘 내게 주신 말씀 \n${myMessage}\n\n` +
       (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
       `제 ${selectDayPlan.daycount}일차 완료했습니다.`;
@@ -109,7 +119,7 @@ const PlayerJournal = () => {
             </div>
           )}
           <div>
-            🌼 이름 : <span id="name">오창선</span>
+            🌼 이름 : <span id="name">{userName}</span>
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
@@ -140,10 +150,21 @@ const PlayerJournal = () => {
           <br />
         </div>
 
-        <button id="saveButton" type="button" onClick={handleSaveButton}>
+        <button
+          id="saveButton"
+          className="bg-blue-200"
+          type="button"
+          onClick={handleSaveButton}
+        >
           복사하기
         </button>
-        <button id="changeName" type="button">
+        <button
+          id="changeName"
+          type="button"
+          onClick={() => {
+            router.push("./login");
+          }}
+        >
           이름바꾸기
         </button>
       </div>
