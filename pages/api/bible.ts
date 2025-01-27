@@ -88,12 +88,13 @@ export const getDailyVerse = ({
   }
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const dailyVerse = getDailyVerse({
       book: "창세기",
       start: 1,
       end: 5,
+      bible: "koreanBible",
     });
     res.status(200).json(dailyVerse); // 외부 API로부터 받은 데이터를 클라이언트로 전달
   } catch (error) {

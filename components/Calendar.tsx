@@ -12,9 +12,10 @@ const Calendar: React.FC = () => {
 
   const handleClickDay = useCallback(
     (date: Date) => {
-      const currentDateYYYYMMDD = foramtDate(new Date(date));
       const planInd = plan?.findIndex(
-        (_plan) => _plan.date === currentDateYYYYMMDD,
+        (_plan) =>
+          _plan.date ===
+          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
       );
 
       if (planInd >= 0) {
@@ -32,13 +33,11 @@ const Calendar: React.FC = () => {
     [plan, fetchVerses, initVerses, updateDayPlan],
   );
 
-  const foramtDate = (date: Date) =>
-    `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-
   const tileContent = ({ date }: { date: Date }) => {
-    const currentDateYYYYMMDD = foramtDate(new Date(date));
     const planInd = plan?.findIndex(
-      (_plan) => _plan.date === currentDateYYYYMMDD,
+      (_plan) =>
+        _plan.date ===
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     );
 
     if (planInd >= 0) {
