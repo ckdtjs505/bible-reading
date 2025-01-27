@@ -6,7 +6,7 @@ import useVerses from "@/stores/verses";
 
 const Verses = () => {
   const { fontLevel, setFontLevel, level } = useFontLevel();
-  const { verses, book } = useVerses();
+  const { verses, book, updateBible } = useVerses();
   const { add, remove } = useTodayMessage();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -29,12 +29,23 @@ const Verses = () => {
           <button
             id="kiv"
             className="rounded-full mr-2  border-none bg-transparent hover:bg-gray-100 transition"
+            onClick={() => {
+              updateBible({
+                bible: "newBible",
+              });
+              // bible의 typed을 바꾸면 fetch도 같이 진행 될수 있도록 하기
+            }}
           >
             개역개정
           </button>
           <button
             id="korean"
-            className=" rounded-full mr-2 border-none bg-blue-100 text-blue-600 hover:bg-blue-200 transition active"
+            className=" rounded-full mr-2 border-none transition active"
+            onClick={() => {
+              updateBible({
+                bible: "koreanBible",
+              });
+            }}
           >
             우리말 성경
           </button>
