@@ -1,15 +1,18 @@
 "use client";
 import useUserInfo from "@/stores/userInfo";
-import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
+import useStore from "@/stores/useStore";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 
 const LoginForm: React.FC = () => {
-  const { userName, updateUserInfo } = useUserInfo();
+  const userName = useStore(useUserInfo, (state) => state.userName) || "";
+  const { updateUserInfo } = useUserInfo();
   const [inputName, setInputName] = useState<string>(userName);
-
   const router = useRouter();
 
+  useEffect(() => {
+    setInputName(userName);
+  }, [userName]);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputName(e.target.value);
   };
@@ -25,7 +28,6 @@ const LoginForm: React.FC = () => {
       </div>
       <button
         onClick={() => {
-          setLocalStorage("userName", userName);
           updateUserInfo({ userName: inputName });
           router.push("/");
         }}

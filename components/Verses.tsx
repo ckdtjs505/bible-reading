@@ -54,8 +54,6 @@ const Verses = () => {
             id="larger"
             className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
             onClick={() => {
-              console.log(level, fontLevel);
-
               setFontLevel(level + 1);
             }}
           >
@@ -65,7 +63,6 @@ const Verses = () => {
             id="smaller"
             className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
             onClick={() => {
-              console.log(level, fontLevel);
               setFontLevel(level - 1);
             }}
           >
