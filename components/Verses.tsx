@@ -2,10 +2,14 @@
 
 import { useFontLevel } from "@/stores/font";
 import { useTodayMessage } from "@/stores/todayMessage";
+import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
 
 const Verses = () => {
-  const { fontLevel, setFontLevel, level } = useFontLevel();
+  const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
+  const level = useStore(useFontLevel, (state) => state.level) || 0;
+
+  const { setFontLevel } = useFontLevel();
   const { verses, book, bible, updateBible } = useVerses();
   const { message: messages, add, remove } = useTodayMessage();
 
