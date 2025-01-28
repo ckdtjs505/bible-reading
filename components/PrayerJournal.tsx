@@ -15,7 +15,7 @@ const PlayerJournal = () => {
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
-  const { setComplteDayCountList } = useUserInfo();
+  const { addCompleteDayCountList } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -37,7 +37,6 @@ const PlayerJournal = () => {
     if (!hasHydrated) {
       console.log("loading ");
     } else {
-      console.log(userName);
       if (userName === "") {
         router.push("/login");
       }
@@ -70,7 +69,7 @@ const PlayerJournal = () => {
           daycnt: Number(selectDayPlan.daycount),
         });
 
-        setComplteDayCountList([Number(selectDayPlan.daycount)]);
+        addCompleteDayCountList(Number(selectDayPlan.daycount));
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);

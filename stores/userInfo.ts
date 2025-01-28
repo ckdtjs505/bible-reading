@@ -6,6 +6,7 @@ type userInfoParam = {
   setUserName: (data: string) => void;
   completedDayCountList: number[];
   setComplteDayCountList: (daycounts: number[]) => void;
+  addCompleteDayCountList: (daycount: number) => void;
   _hasHydrated: boolean;
   setHasHydrated: (data: boolean) => void;
 };
@@ -19,8 +20,14 @@ const useUserInfo = create<userInfoParam>()(
       },
       completedDayCountList: [],
       setComplteDayCountList: (daycounts: number[]) => {
+        // 이름 변경 후 진입시 이전에 저장했던 정보가 남아 있음
+        set(() => ({
+          completedDayCountList: [...daycounts],
+        }));
+      },
+      addCompleteDayCountList: (daycount: number) => {
         set((state) => ({
-          completedDayCountList: [...state.completedDayCountList, ...daycounts],
+          completedDayCountList: [...state.completedDayCountList, daycount],
         }));
       },
       _hasHydrated: false,
@@ -36,6 +43,7 @@ const useUserInfo = create<userInfoParam>()(
         return () => state.setHasHydrated(true);
       },
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ userName: state.userName }),
     },
   ),
 );
