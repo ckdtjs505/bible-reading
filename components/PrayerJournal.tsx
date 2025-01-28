@@ -1,6 +1,6 @@
 "use client";
 
-import { setReadBible } from "@/pages/api/userInfo";
+import { getUserProgressInfo, setReadBible } from "@/pages/api/userInfo";
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
@@ -15,7 +15,7 @@ const PlayerJournal = () => {
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
-  const { addCompleteDayCountList } = useUserInfo();
+  const { addCompleteDayCountList, setComplteDayCountList } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -39,6 +39,17 @@ const PlayerJournal = () => {
     } else {
       if (userName === "") {
         router.push("/login");
+      } else {
+        const fetchData = async () => {
+          try {
+            const info = await getUserProgressInfo(userName || "");
+            setComplteDayCountList(info.row);
+          } catch (err) {
+            console.log(err);
+          }
+        };
+
+        fetchData();
       }
     }
   }, [userName, router, hasHydrated]);

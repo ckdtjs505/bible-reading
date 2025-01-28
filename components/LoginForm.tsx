@@ -1,5 +1,4 @@
 "use client";
-import { getUserProgressInfo } from "@/pages/api/userInfo";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,7 @@ const LoginForm: React.FC = () => {
 
   const router = useRouter();
 
-  const { setUserName, setComplteDayCountList } = useUserInfo();
+  const { setUserName } = useUserInfo();
   useEffect(() => {
     setInputName(userName);
   }, [userName]);
@@ -36,8 +35,6 @@ const LoginForm: React.FC = () => {
             return;
           }
 
-          const info = await getUserProgressInfo(inputName);
-          setComplteDayCountList(info.row);
           setUserName(inputName);
           router.push("/");
         }}
