@@ -1,60 +1,43 @@
-import { getDailyVerse } from "@/pages/api/bible";
 import { Verse } from "@/type/biblePlan";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type VersesState = {
-  bible: string;
-  book: string;
-  start: number;
-  end: number;
+type Bible = "revised" | "woorimal";
+
+interface VersesState {
+  bible: Bible;
   verses: Verse[];
-  fetchVerses: (data: { book: string; start: number; end: number }) => void;
-  initVerses: () => void;
-  updateBible: (data: { bible: string }) => void;
-};
+  book: string;
+  setBible: (data: Bible) => void;
+  setVerses: (data: Verse[]) => void;
+  setBook: (data: string) => void;
+}
 
-const useVerses = create<VersesState>((set) => ({
-  bible: "koreanBible",
-  book: "",
-  start: 0,
-  end: 0,
-  verses: [],
-  fetchVerses: ({ book, start, end }) => {
-    try {
-      set((state) => {
-        const response = getDailyVerse({
-          book,
-          start,
-          end,
-          bible: state.bible,
-        });
-
-        return { verses: response, book: book, start: start, end: end };
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  },
-
-  updateBible: ({ bible }) => {
-    try {
-      set((state) => {
-        const response = getDailyVerse({
-          book: state.book,
-          start: state.start,
-          end: state.end,
+const useVerses = create<VersesState>()(
+  persist(
+    (set) => ({
+      bible: "revised",
+      verses: [],
+      book: "",
+      setBible: (bible: Bible) => {
+        set(() => ({
           bible: bible,
-        });
-
-        return { verses: response, bible: bible };
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  initVerses: () => {
-    set({ verses: [], book: "" });
-  },
-}));
-
+        }));
+      },
+      setVerses: (verses: Verse[]) => {
+        set(() => ({
+          verses: verses,
+        }));
+      },
+      setBook: (data: string) => {
+        set(() => ({
+          book: data,
+        }));
+      },
+    }),
+    {
+      name: "verses",
+    },
+  ),
+);
 export default useVerses;

@@ -7,9 +7,10 @@ import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import { useTodayMessage } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
+import { getDailyVerse } from "@/pages/api/bible";
 
 const Calendar: React.FC = () => {
-  const { fetchVerses, initVerses } = useVerses();
+  const { bible, setVerses, setBook } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
   const { initMessage } = useTodayMessage();
 
@@ -24,18 +25,22 @@ const Calendar: React.FC = () => {
       );
 
       if (planInd >= 0) {
-        fetchVerses({
+        const verse = getDailyVerse({
           book: plan[planInd].book,
           start: Number(plan[planInd].start),
           end: Number(plan[planInd].end),
+          bible: bible,
         });
+
+        setVerses(verse);
+        setBook(plan[planInd].book);
       } else {
-        initVerses();
+        setVerses([]);
       }
       initMessage();
       updateDayPlan(date);
     },
-    [plan, fetchVerses, initVerses, updateDayPlan],
+    [plan, updateDayPlan],
   );
 
   const tileContent = ({ date }: { date: Date }) => {

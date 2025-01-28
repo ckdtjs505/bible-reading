@@ -1,6 +1,8 @@
 "use client";
 
+import { getDailyVerse } from "@/pages/api/bible";
 import { useFontLevel } from "@/stores/font";
+import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
@@ -10,7 +12,8 @@ const Verses = () => {
   const level = useStore(useFontLevel, (state) => state.level) || 0;
 
   const { setFontLevel } = useFontLevel();
-  const { verses, book, bible, updateBible } = useVerses();
+  const { verses, book, bible, setBible, setVerses } = useVerses();
+  const { selectDayPlan } = usePlan();
   const { message: messages, add, remove } = useTodayMessage();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -30,22 +33,35 @@ const Verses = () => {
         <div id="bibleType" className="flex text-[0.7rem]">
           <button
             id="kiv"
-            className={`rounded-full mr-2  border-none bg-transparent transition ${bible === "newBible" ? "active" : ""}`}
+            className={`rounded-full mr-2  border-none bg-transparent transition ${bible === "revised" ? "active" : ""}`}
             onClick={() => {
-              updateBible({
-                bible: "newBible",
+              setBible("revised");
+              const verses = getDailyVerse({
+                bible: bible,
+                start: Number(selectDayPlan.start),
+                end: Number(selectDayPlan.end),
+                book: selectDayPlan.book,
               });
+
+              setVerses(verses);
             }}
           >
             개역개정
           </button>
           <button
             id="korean"
-            className={`rounded-full mr-2 border-none transition ${bible === "koreanBible" ? "active" : ""}`}
+            className={`rounded-full  mr-2 border-none transition ${bible === "woorimal" ? "active" : ""}`}
             onClick={() => {
-              updateBible({
-                bible: "koreanBible",
+              setBible("woorimal");
+
+              const verses = getDailyVerse({
+                bible: bible,
+                start: Number(selectDayPlan.start),
+                end: Number(selectDayPlan.end),
+                book: selectDayPlan.book,
               });
+
+              setVerses(verses);
             }}
           >
             우리말 성경
