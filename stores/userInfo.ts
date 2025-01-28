@@ -1,10 +1,10 @@
-import { getUserProgressInfo } from "@/pages/userInfo";
+import { getUserProgressInfo } from "@/pages/api/userInfo";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 type userInfoParam = {
   userName: string;
-  completedDayCountList: [];
+  completedDayCountList: number[];
   updateUserInfo: (data: { userName: string }) => void;
   _hasHydrated: boolean;
   setHasHydrated: (data: boolean) => void;
