@@ -1,4 +1,5 @@
 "use client";
+import { getUserProgressInfo } from "@/pages/api/userInfo";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
 import { useRouter } from "next/navigation";
@@ -6,10 +7,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 const LoginForm: React.FC = () => {
   const userName = useStore(useUserInfo, (state) => state.userName) || "";
-  const { updateUserInfo } = useUserInfo();
   const [inputName, setInputName] = useState<string>(userName);
+
   const router = useRouter();
 
+  const { setUserName, setComplteDayCountList } = useUserInfo();
   useEffect(() => {
     setInputName(userName);
   }, [userName]);
@@ -28,8 +30,15 @@ const LoginForm: React.FC = () => {
         />
       </div>
       <button
-        onClick={() => {
-          updateUserInfo({ userName: inputName });
+        onClick={async () => {
+          if (!inputName) {
+            alert("이름을 입력해주세요!");
+            return;
+          }
+
+          const info = await getUserProgressInfo(inputName);
+          setComplteDayCountList(info.row);
+          setUserName(inputName);
           router.push("/");
         }}
       >

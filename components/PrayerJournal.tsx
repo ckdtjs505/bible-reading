@@ -1,5 +1,6 @@
 "use client";
 
+import { setReadBible } from "@/pages/api/userInfo";
 import { usePlan } from "@/stores/plan";
 import { useTodayMessage } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
@@ -22,6 +23,7 @@ const PlayerJournal = () => {
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
+  const { updateUserInfo } = useUserInfo();
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsShowPlayForUserCheckBox(
@@ -35,11 +37,12 @@ const PlayerJournal = () => {
     if (!hasHydrated) {
       console.log("loading ");
     } else {
-      if (!userName) {
+      console.log(userName);
+      if (userName === "") {
         router.push("/login");
       }
     }
-  }, [userName, router]);
+  }, [userName, router, hasHydrated]);
 
   const handleSaveButton = () => {
     const myMessage = message.join("\n");
@@ -58,13 +61,14 @@ const PlayerJournal = () => {
         console.log("클립보드에 복사되었습니다: \n" + copyData);
         //if (!name) return;
         if (!myMessage) return;
-        // BibleReadingSaveService.setSaveMessage({
-        //   prayForUser,
-        //  name,
-        // myMessage,
-        // day: AppState.getInstance().readingPlan[0]?.dayCount,
-        //pray,
-        // });
+
+        setReadBible({
+          name: userName || "",
+          pray: pray,
+          myMessage: myMessage,
+          prayForUser: prayForUser,
+          daycnt: Number(selectDayPlan.daycount),
+        });
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);
