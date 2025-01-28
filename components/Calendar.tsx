@@ -62,6 +62,16 @@ const Calendar: React.FC = () => {
   };
 
   const handleTileClassName = ({ date }: { date: Date }) => {
+    let className: string = "";
+
+    const day = date.getDay() + 1;
+    if (day === 1) {
+      className = className + " sunday";
+    }
+    if (day === 7) {
+      className = className + " saturday";
+    }
+
     const planInd = plan?.findIndex(
       (_plan) =>
         _plan.date ===
@@ -69,8 +79,10 @@ const Calendar: React.FC = () => {
     );
     if (planInd >= 0) {
       if (completedDayCountList.includes(Number(plan[planInd].daycount)))
-        return "active";
+        className = className + " active";
     }
+
+    return className;
   };
 
   useEffect(() => {
