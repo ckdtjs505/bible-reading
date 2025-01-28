@@ -15,6 +15,7 @@ const PlayerJournal = () => {
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
+  const { setComplteDayCountList } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -23,7 +24,6 @@ const PlayerJournal = () => {
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
-  const { updateUserInfo } = useUserInfo();
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsShowPlayForUserCheckBox(
@@ -69,6 +69,8 @@ const PlayerJournal = () => {
           prayForUser: prayForUser,
           daycnt: Number(selectDayPlan.daycount),
         });
+
+        setComplteDayCountList([Number(selectDayPlan.daycount)]);
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);
