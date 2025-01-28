@@ -43,7 +43,6 @@ const useUserInfo = create<userInfoParam>()(
         return () => state.setHasHydrated(true);
       },
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ userName: state.userName }),
     },
   ),
 );

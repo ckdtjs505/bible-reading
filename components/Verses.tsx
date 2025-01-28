@@ -37,7 +37,7 @@ const Verses = () => {
             onClick={() => {
               setBible("revised");
               const verses = getDailyVerse({
-                bible: bible,
+                bible: "revised",
                 start: Number(selectDayPlan.start),
                 end: Number(selectDayPlan.end),
                 book: selectDayPlan.book,
@@ -55,7 +55,7 @@ const Verses = () => {
               setBible("woorimal");
 
               const verses = getDailyVerse({
-                bible: bible,
+                bible: "woorimal",
                 start: Number(selectDayPlan.start),
                 end: Number(selectDayPlan.end),
                 book: selectDayPlan.book,

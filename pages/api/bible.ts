@@ -50,7 +50,7 @@ export const getDailyVerse = ({
 */
     const result: Verse[] = [];
 
-    if (bible === "koreanBible") {
+    if (bible === "woorimal") {
       koreanBible.forEach(({ book, chapter, content, verse }) => {
         // book - 어떤 성경인지
         if (
