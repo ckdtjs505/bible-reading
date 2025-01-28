@@ -103,10 +103,11 @@
 .react-calendar__tile {
   max-width: 100%;
   padding: 10px 6.6667px;
-  background: none;
   text-align: center;
   font: inherit;
   font-size: 1rem;
+  border: 1rem solid black;
+  border-radius: 0.8rem;
 }
 
 .react-calendar__tile div {
@@ -116,11 +117,14 @@
   line-height: 1.4;
 }
 
+.react-calendar__tile.active {
+  border: 0.1rem solid white;
+}
+
 .react-calendar__tile:disabled {
   background-color: #f0f0f0;
   color: #ababab;
 }
-
 .react-calendar__month-view__days__day--neighboringMonth:disabled,
 .react-calendar__decade-view__years__year--neighboringDecade:disabled,
 .react-calendar__century-view__decades__decade--neighboringCentury:disabled {

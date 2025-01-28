@@ -6,11 +6,15 @@ import React, { useCallback, useEffect } from "react";
 import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import { useTodayMessage } from "@/stores/todayMessage";
+import useUserInfo from "@/stores/userInfo";
 
 const Calendar: React.FC = () => {
   const { fetchVerses, initVerses } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
   const { initMessage } = useTodayMessage();
+
+  const { completedDayCountList } = useUserInfo();
+
   const handleClickDay = useCallback(
     (date: Date) => {
       const planInd = plan?.findIndex(
@@ -52,6 +56,18 @@ const Calendar: React.FC = () => {
     }
   };
 
+  const handleTileClassName = ({ date }: { date: Date }) => {
+    const planInd = plan?.findIndex(
+      (_plan) =>
+        _plan.date ===
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    );
+    if (planInd >= 0) {
+      if (completedDayCountList.includes(Number(plan[planInd].daycount)))
+        return "active";
+    }
+  };
+
   useEffect(() => {
     if (!plan) {
       fetchPlan();
@@ -77,6 +93,7 @@ const Calendar: React.FC = () => {
         showNeighboringMonth={false}
         tileContent={tileContent}
         onClickDay={handleClickDay}
+        tileClassName={handleTileClassName}
       ></RCalendar>
     </div>
   );
