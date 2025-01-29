@@ -5,14 +5,14 @@ import { Calendar as RCalendar } from "react-calendar";
 import React, { useCallback, useEffect } from "react";
 import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
-import { useTodayMessage } from "@/stores/todayMessage";
+import { useTodayMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
 import { getDailyVerse } from "@/pages/api/bible";
 
 const Calendar: React.FC = () => {
   const { bible, setVerses, setBook } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
-  const { initMessage } = useTodayMessage();
+  const { clearMessages } = useTodayMessages();
 
   const { completedDayCountList } = useUserInfo();
 
@@ -37,7 +37,7 @@ const Calendar: React.FC = () => {
       } else {
         setVerses([]);
       }
-      initMessage();
+      clearMessages();
       updateDayPlan(date);
     },
     [plan, updateDayPlan],

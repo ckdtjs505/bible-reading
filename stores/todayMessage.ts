@@ -1,25 +1,24 @@
 import { create } from "zustand";
 
-interface todayMessage {
-  message: string[];
-  add: (data: string) => void;
-  remove: (data: string) => void;
-  initMessage: () => void;
+interface todayMessagesState {
+  messages: string[];
+  addMessage: (data: string) => void;
+  removeMessage: (data: string) => void;
+  clearMessages: () => void;
 }
-
-export const useTodayMessage = create<todayMessage>((set) => ({
-  message: [],
-  add: (newMessage: string) => {
-    set((state) => ({ message: [...state.message, newMessage] }));
+// 오늘 내게 주신 말씀
+export const useTodayMessages = create<todayMessagesState>((set) => ({
+  messages: [],
+  addMessage: (newMessage: string) => {
+    set((state) => ({ messages: [...state.messages, newMessage] }));
   },
-  remove: (messageToRemove) => {
+  removeMessage: (messageToRemove) => {
     set((state) => ({
-      message: state.message.filter((msg) => msg !== messageToRemove),
+      messages: state.messages.filter((msg) => msg !== messageToRemove),
     }));
   },
-  initMessage: () => {
-    set(() => ({
-      message: [],
-    }));
-  },
+  clearMessages: () =>
+    set({
+      messages: [],
+    }),
 }));

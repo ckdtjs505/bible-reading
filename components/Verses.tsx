@@ -3,7 +3,7 @@
 import { getDailyVerse } from "@/pages/api/bible";
 import { useFontLevel } from "@/stores/font";
 import { usePlan } from "@/stores/plan";
-import { useTodayMessage } from "@/stores/todayMessage";
+import { useTodayMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
 
@@ -14,15 +14,15 @@ const Verses = () => {
   const { setFontLevel } = useFontLevel();
   const { verses, book, bible, setBible, setVerses } = useVerses();
   const { selectDayPlan } = usePlan();
-  const { message: messages, add, remove } = useTodayMessage();
+  const { messages, addMessage, removeMessage } = useTodayMessages();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event?.target as HTMLElement;
 
     if (target.classList.contains("select")) {
-      remove(target.innerText);
+      removeMessage(target.innerText);
     } else {
-      add(target.innerText);
+      addMessage(target.innerText);
     }
   };
 
