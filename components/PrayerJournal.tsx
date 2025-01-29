@@ -2,7 +2,7 @@
 
 import { getUserProgressInfo, setReadBible } from "@/pages/api/userInfo";
 import { usePlan } from "@/stores/plan";
-import { useTodayMessages } from "@/stores/todayMessage";
+import { useReceivedMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
 import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 const PlayerJournal = () => {
   const { selectDayPlan } = usePlan();
-  const { messages } = useTodayMessages();
+  const { messages } = useReceivedMessages();
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
@@ -55,7 +55,7 @@ const PlayerJournal = () => {
   }, [userName, router, hasHydrated]);
 
   const handleSaveButton = () => {
-    const myMessage = messages.join("\n");
+    const myMessage = messages[selectDayPlan.date].join("\n");
     const copyData =
       (isShowPlayForUserCheckBox
         ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
@@ -146,10 +146,10 @@ const PlayerJournal = () => {
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
-            {messages.map((value, index) => {
+            {messages?.[selectDayPlan.date]?.map(({ message }, index) => {
               return (
                 <div key={index}>
-                  {value} <br />
+                  {message} <br />
                 </div>
               );
             })}

@@ -5,7 +5,6 @@ import { Calendar as RCalendar } from "react-calendar";
 import React, { useEffect } from "react";
 import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
-import { useTodayMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
 import { getDailyVerse } from "@/pages/api/bible";
 import useStore from "@/stores/useStore";
@@ -15,7 +14,6 @@ const Calendar: React.FC = () => {
   const bible = useStore(useVerses, (state) => state.bible) || "";
   const { setVerses, setBook } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
-  const { clearMessages } = useTodayMessages();
 
   const { completedDayCountList } = useUserInfo();
 
@@ -39,7 +37,7 @@ const Calendar: React.FC = () => {
     } else {
       setVerses([]);
     }
-    clearMessages();
+
     updateDayPlan(date);
   };
 

@@ -3,7 +3,7 @@
 import { getDailyVerse } from "@/pages/api/bible";
 import { useFontLevel } from "@/stores/font";
 import { usePlan } from "@/stores/plan";
-import { useTodayMessages } from "@/stores/todayMessage";
+import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
 
@@ -14,15 +14,18 @@ const Verses = () => {
   const { setFontLevel } = useFontLevel();
   const { verses, book, setBible, setVerses } = useVerses();
   const { selectDayPlan } = usePlan();
-  const { messages, addMessage, removeMessage } = useTodayMessages();
+
+  const messages = useStore(useReceivedMessages, (state) => state.messages);
+
+  const { addMessage, removeMessage } = useReceivedMessages();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event?.target as HTMLElement;
 
     if (target.classList.contains("select")) {
-      removeMessage(target.innerText);
+      removeMessage(selectDayPlan.date, target.innerText);
     } else {
-      addMessage(target.innerText);
+      addMessage(selectDayPlan.date, target.innerText);
     }
   };
 
@@ -93,19 +96,21 @@ const Verses = () => {
 
       <div className={fontLevel}>
         <div>{book}</div>
-        {verses?.map(({ chapter, verse, message }, index) => {
+        {verses?.map(({ chapter, verse, message: content }, index) => {
           return (
             <div key={index}>
               <div>
                 <span
                   className={
-                    messages.includes(`${chapter}:${verse} ${message}`)
+                    messages?.[selectDayPlan.date]
+                      ?.map(({ message }) => message)
+                      .includes(`${chapter}:${verse} ${content}`)
                       ? "select"
                       : ""
                   }
                   onClick={handleClickMessage}
                 >
-                  {chapter}:{verse} {message}
+                  {chapter}:{verse} {content}
                 </span>
               </div>
               <br />
