@@ -2,46 +2,46 @@
 
 import "./Calendar.css";
 import { Calendar as RCalendar } from "react-calendar";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { usePlan } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import { useTodayMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
 import { getDailyVerse } from "@/pages/api/bible";
+import useStore from "@/stores/useStore";
 
 const Calendar: React.FC = () => {
-  const { bible, setVerses, setBook } = useVerses();
+  const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
+  const bible = useStore(useVerses, (state) => state.bible) || "";
+  const { setVerses, setBook } = useVerses();
   const { plan, updateDayPlan, fetchPlan } = usePlan();
   const { clearMessages } = useTodayMessages();
 
   const { completedDayCountList } = useUserInfo();
 
-  const handleClickDay = useCallback(
-    (date: Date) => {
-      const planInd = plan?.findIndex(
-        (_plan) =>
-          _plan.date ===
-          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-      );
+  const handleClickDay = (date: Date) => {
+    const planInd = plan?.findIndex(
+      (_plan) =>
+        _plan.date ===
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    );
 
-      if (planInd >= 0) {
-        const verse = getDailyVerse({
-          book: plan[planInd].book,
-          start: Number(plan[planInd].start),
-          end: Number(plan[planInd].end),
-          bible: bible,
-        });
+    if (planInd >= 0) {
+      const verse = getDailyVerse({
+        book: plan[planInd].book,
+        start: Number(plan[planInd].start),
+        end: Number(plan[planInd].end),
+        bible: bible,
+      });
 
-        setVerses(verse);
-        setBook(plan[planInd].book);
-      } else {
-        setVerses([]);
-      }
-      clearMessages();
-      updateDayPlan(date);
-    },
-    [plan, updateDayPlan],
-  );
+      setVerses(verse);
+      setBook(plan[planInd].book);
+    } else {
+      setVerses([]);
+    }
+    clearMessages();
+    updateDayPlan(date);
+  };
 
   const tileContent = ({ date }: { date: Date }) => {
     const planInd = plan?.findIndex(
@@ -86,11 +86,13 @@ const Calendar: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!hasHydrated) {
+      return;
+    }
     if (!plan) {
       fetchPlan();
     }
-    handleClickDay(new Date());
-  }, [plan, fetchPlan, handleClickDay]);
+  }, [plan, fetchPlan, hasHydrated]);
 
   return (
     <div className="flex justify-center flex-col font-bold">

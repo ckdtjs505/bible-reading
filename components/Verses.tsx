@@ -10,9 +10,9 @@ import useVerses from "@/stores/verses";
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
   const level = useStore(useFontLevel, (state) => state.level) || 0;
-
+  const bible = useStore(useVerses, (state) => state.bible);
   const { setFontLevel } = useFontLevel();
-  const { verses, book, bible, setBible, setVerses } = useVerses();
+  const { verses, book, setBible, setVerses } = useVerses();
   const { selectDayPlan } = usePlan();
   const { messages, addMessage, removeMessage } = useTodayMessages();
 

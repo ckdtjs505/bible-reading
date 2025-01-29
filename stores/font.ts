@@ -28,7 +28,6 @@ export const useFontLevel = create<FontLevel>()(
         set(() => {
           const newLevel = Math.max(0, Math.min(level, fontLevels.length - 1)); // level 범위 제한
 
-          console.log(level);
           return {
             level: newLevel,
             fontLevel: fontLevels[newLevel],

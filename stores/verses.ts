@@ -5,6 +5,8 @@ import { persist } from "zustand/middleware";
 type Bible = "revised" | "woorimal";
 
 interface VersesState {
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
   bible: Bible;
   verses: Verse[];
   book: string;
@@ -16,7 +18,13 @@ interface VersesState {
 const useVerses = create<VersesState>()(
   persist(
     (set) => ({
-      bible: "revised",
+      _hasHydrated: false,
+      setHasHydrated: (state: boolean) => {
+        set({
+          _hasHydrated: state,
+        });
+      },
+      bible: "woorimal",
       verses: [],
       book: "",
       setBible: (bible: Bible) => {
@@ -37,6 +45,12 @@ const useVerses = create<VersesState>()(
     }),
     {
       name: "verses",
+      onRehydrateStorage: (state) => {
+        return () => state.setHasHydrated(true);
+      },
+      partialize: (state) => ({
+        bible: state.bible,
+      }),
     },
   ),
 );
