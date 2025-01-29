@@ -10,6 +10,16 @@ const hahmlet = Hahmlet({
 export const metadata: Metadata = {
   title: "함온성",
   description: "함께하는 온라인 성경통독",
+  openGraph: {
+    title: "함온성",
+    description: "함꼐하는 온라인 성경통독",
+    type: "website",
+    images: [
+      {
+        url: "https://bible-reading-nu.vercel.app/mainlogo.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
