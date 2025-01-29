@@ -81,3 +81,7 @@ body {
 .active {
   background-color: #cbf1f5;
 }
+
+.select {
+  background-color: yellow;
+}

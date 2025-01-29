@@ -19,7 +19,7 @@ const Verses = () => {
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event?.target as HTMLElement;
 
-    if (target.classList.contains("active")) {
+    if (target.classList.contains("select")) {
       remove(target.innerText);
     } else {
       add(target.innerText);
@@ -100,7 +100,7 @@ const Verses = () => {
                 <span
                   className={
                     messages.includes(`${chapter}:${verse} ${message}`)
-                      ? "active"
+                      ? "select"
                       : ""
                   }
                   onClick={handleClickMessage}
