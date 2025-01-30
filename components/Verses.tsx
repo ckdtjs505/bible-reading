@@ -2,18 +2,19 @@
 
 import { getDailyVerse } from "@/pages/api/bible";
 import { useFontLevel } from "@/stores/font";
-import { usePlan } from "@/stores/plan";
+import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
+import { useEffect } from "react";
 
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
   const level = useStore(useFontLevel, (state) => state.level) || 0;
   const bible = useStore(useVerses, (state) => state.bible);
   const { setFontLevel } = useFontLevel();
-  const { verses, book, setBible, setVerses } = useVerses();
-  const { selectDayPlan } = usePlan();
+  const { verses, book, setBible, setVerses, setBook } = useVerses();
+  const { currentPlan } = usePlans();
 
   const messages = useStore(useReceivedMessages, (state) => state.messages);
 
@@ -23,11 +24,34 @@ const Verses = () => {
     const target = event?.target as HTMLElement;
 
     if (target.classList.contains("select")) {
-      removeMessage(selectDayPlan.date, target.innerText);
+      removeMessage(currentPlan.date, target.innerText);
     } else {
-      addMessage(selectDayPlan.date, target.innerText);
+      addMessage(currentPlan.date, target.innerText);
     }
   };
+
+  useEffect(() => {
+    const { index, book, start, end } = currentPlan;
+
+    if (index !== "-1") {
+      const verses = getDailyVerse({
+        book,
+        start: Number(start),
+        end: Number(end),
+        bible: bible || "revised",
+      });
+
+      setVerses(verses);
+      setBook(book);
+    } else {
+      setVerses([]);
+      setBook("");
+    }
+  }, [bible, currentPlan, setVerses, setBook]);
+
+  if (currentPlan.index === "-1") {
+    return <div className="p-4"> 함온성이 없는 날 입니다. </div>;
+  }
 
   return (
     <div className="p-4 text-2xl">
@@ -39,14 +63,6 @@ const Verses = () => {
             className={`rounded-full mr-2  border-none bg-transparent transition ${bible === "revised" ? "active" : ""}`}
             onClick={() => {
               setBible("revised");
-              const verses = getDailyVerse({
-                bible: "revised",
-                start: Number(selectDayPlan.start),
-                end: Number(selectDayPlan.end),
-                book: selectDayPlan.book,
-              });
-
-              setVerses(verses);
             }}
           >
             개역개정
@@ -56,15 +72,6 @@ const Verses = () => {
             className={`rounded-full  mr-2 border-none transition ${bible === "woorimal" ? "active" : ""}`}
             onClick={() => {
               setBible("woorimal");
-
-              const verses = getDailyVerse({
-                bible: "woorimal",
-                start: Number(selectDayPlan.start),
-                end: Number(selectDayPlan.end),
-                book: selectDayPlan.book,
-              });
-
-              setVerses(verses);
             }}
           >
             우리말 성경
@@ -102,7 +109,7 @@ const Verses = () => {
               <div>
                 <span
                   className={
-                    messages?.[selectDayPlan.date]
+                    messages?.[currentPlan.date]
                       ?.map(({ message }) => message)
                       .includes(`${chapter}:${verse} ${content}`)
                       ? "select"

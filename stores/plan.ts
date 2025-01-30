@@ -2,64 +2,40 @@ import { plan } from "@/constants/plan";
 import { Plan } from "@/type/biblePlan";
 import { create } from "zustand";
 
-interface PlanState {
-  plan: Plan[];
-  selectDayPlan: Plan;
-  updateDayPlan: (date: Date) => void;
-  fetchPlan: () => Promise<void>;
-  setPlan: (data: Plan[]) => void;
+interface PlansState {
+  plans: Plan[];
+  currentPlan: Plan;
+  setCurrentPlan: (date: Date) => void;
 }
 
-export const usePlan = create<PlanState>((set) => ({
-  plan: plan,
-  fetchPlan: async () => {
-    try {
-      const date = new Date();
-      set((state) => {
-        const planInd = state.plan?.findIndex(
-          (_plan) =>
-            _plan.date ===
-            `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-        );
+const defaultPlan: Plan = {
+  index: "-1",
+  start: "",
+  end: "",
+  daycount: "",
+  img: "",
+  videoId: "",
+  date: "",
+  book: "",
+  lang: "",
+};
 
-        return {
-          plan: plan,
-          selectDayPlan: plan[planInd],
-        };
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  selectDayPlan: plan[0],
-  updateDayPlan: (date: Date) => {
-    set((state) => {
-      const planInd = state.plan?.findIndex(
-        (_plan) =>
-          _plan.date ===
-          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-      );
+const findPlan = (date: Date) => {
+  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const currentPlanIdx = plan.findIndex(
+    (dayPlan) => dayPlan.date === formattedDate,
+  );
 
-      if (plan[planInd]) {
-        return {
-          selectDayPlan: plan[planInd],
-        };
-      } else {
-        return {
-          selectDayPlan: {
-            index: "",
-            start: "",
-            end: "",
-            daycount: "",
-            img: "",
-            videoId: "",
-            date: "",
-            book: "",
-            lang: "",
-          },
-        };
-      }
-    });
-  },
-  setPlan: (data) => set({ plan: data }),
+  return currentPlanIdx !== -1 ? plan[currentPlanIdx] : defaultPlan;
+};
+
+export const usePlans = create<PlansState>((set) => ({
+  plans: plan,
+  currentPlan: findPlan(new Date()),
+  setCurrentPlan: (date) =>
+    set(() => {
+      return {
+        currentPlan: findPlan(date),
+      };
+    }),
 }));

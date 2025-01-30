@@ -3,46 +3,22 @@
 import "./Calendar.css";
 import { Calendar as RCalendar } from "react-calendar";
 import React, { useEffect } from "react";
-import { usePlan } from "@/stores/plan";
+import { usePlans } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import useUserInfo from "@/stores/userInfo";
-import { getDailyVerse } from "@/pages/api/bible";
 import useStore from "@/stores/useStore";
 
 const Calendar: React.FC = () => {
   const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
-  const bible = useStore(useVerses, (state) => state.bible) || "";
-  const { setVerses, setBook } = useVerses();
-  const { plan, updateDayPlan, fetchPlan } = usePlan();
-
+  const { setCurrentPlan, plans } = usePlans();
   const { completedDayCountList } = useUserInfo();
 
   const handleClickDay = (date: Date) => {
-    const planInd = plan?.findIndex(
-      (_plan) =>
-        _plan.date ===
-        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-    );
-
-    if (planInd >= 0) {
-      const verse = getDailyVerse({
-        book: plan[planInd].book,
-        start: Number(plan[planInd].start),
-        end: Number(plan[planInd].end),
-        bible: bible,
-      });
-
-      setVerses(verse);
-      setBook(plan[planInd].book);
-    } else {
-      setVerses([]);
-    }
-
-    updateDayPlan(date);
+    setCurrentPlan(date);
   };
 
   const tileContent = ({ date }: { date: Date }) => {
-    const planInd = plan?.findIndex(
+    const planInd = plans?.findIndex(
       (_plan) =>
         _plan.date ===
         `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
@@ -51,9 +27,9 @@ const Calendar: React.FC = () => {
     if (planInd >= 0) {
       return (
         <div>
-          {plan[planInd].book}
+          {plans[planInd].book}
           <br />
-          {plan[planInd].start}-{plan[planInd].end}장
+          {plans[planInd].start}-{plans[planInd].end}장
         </div>
       );
     }
@@ -70,13 +46,13 @@ const Calendar: React.FC = () => {
       className = className + " saturday";
     }
 
-    const planInd = plan?.findIndex(
+    const planInd = plans?.findIndex(
       (_plan) =>
         _plan.date ===
         `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     );
     if (planInd >= 0) {
-      if (completedDayCountList.includes(Number(plan[planInd].daycount)))
+      if (completedDayCountList.includes(Number(plans[planInd].daycount)))
         className = className + " active";
     }
 
@@ -87,10 +63,7 @@ const Calendar: React.FC = () => {
     if (!hasHydrated) {
       return;
     }
-    if (!plan) {
-      fetchPlan();
-    }
-  }, [plan, fetchPlan, hasHydrated]);
+  }, [hasHydrated]);
 
   return (
     <div className="flex justify-center flex-col font-bold">

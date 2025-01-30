@@ -1,13 +1,13 @@
 "use client";
 
-import { usePlan } from "@/stores/plan";
+import { usePlans } from "@/stores/plan";
 
 const SummeryImg = () => {
-  const { selectDayPlan } = usePlan();
+  const { currentPlan } = usePlans();
 
   return (
-    selectDayPlan?.img && (
-      <img src={selectDayPlan.img} alt="img" className="p-4 w-full"></img>
+    currentPlan?.img && (
+      <img src={currentPlan.img} alt="img" className="p-4 w-full"></img>
     )
   );
 };

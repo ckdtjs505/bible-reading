@@ -1,7 +1,7 @@
 "use client";
 
 import { getUserProgressInfo, setReadBible } from "@/pages/api/userInfo";
-import { usePlan } from "@/stores/plan";
+import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PlayerJournal = () => {
-  const { selectDayPlan } = usePlan();
+  const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
 
   const userName = useStore(useUserInfo, (state) => state.userName);
@@ -55,7 +55,9 @@ const PlayerJournal = () => {
   }, [userName, router, hasHydrated]);
 
   const handleSaveButton = () => {
-    const myMessage = messages[selectDayPlan.date].join("\n");
+    const myMessage =
+      messages[currentPlan.date]?.map(({ message }) => message).join("\n") ||
+      "";
     const copyData =
       (isShowPlayForUserCheckBox
         ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
@@ -63,13 +65,13 @@ const PlayerJournal = () => {
       `🌸 이름 : ${userName} \n\n` +
       `📖 오늘 내게 주신 말씀 \n${myMessage}\n\n` +
       (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
-      `제 ${selectDayPlan.daycount}일차 완료했습니다.`;
+      `제 ${currentPlan.daycount}일차 완료했습니다.`;
 
     navigator.clipboard
       .writeText(copyData)
       .then(() => {
         console.log("클립보드에 복사되었습니다: \n" + copyData);
-        //if (!name) return;
+        if (!userName) return;
         if (!myMessage) return;
 
         setReadBible({
@@ -77,10 +79,10 @@ const PlayerJournal = () => {
           pray: pray,
           myMessage: myMessage,
           prayForUser: prayForUser,
-          daycnt: Number(selectDayPlan.daycount),
+          daycnt: Number(currentPlan.daycount),
         });
 
-        addCompleteDayCountList(Number(selectDayPlan.daycount));
+        addCompleteDayCountList(Number(currentPlan.daycount));
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);
@@ -146,7 +148,7 @@ const PlayerJournal = () => {
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
-            {messages?.[selectDayPlan.date]?.map(({ message }, index) => {
+            {messages?.[currentPlan.date]?.map(({ message }, index) => {
               return (
                 <div key={index}>
                   {message} <br />
@@ -168,7 +170,7 @@ const PlayerJournal = () => {
             </div>
           )}
           <div>
-            제 <span id="day">{selectDayPlan.daycount}</span> 일차 완료했습니다.
+            제 <span id="day">{currentPlan.daycount}</span> 일차 완료했습니다.
           </div>
           <br />
         </div>
