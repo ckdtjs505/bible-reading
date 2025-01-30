@@ -8,10 +8,12 @@ import useStore from "@/stores/useStore";
 import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import useDialogStore from "@/stores/dialogStore";
 
 const PlayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
+  const { openDialog } = useDialogStore();
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
@@ -38,7 +40,7 @@ const PlayerJournal = () => {
       console.log("loading ");
     } else {
       if (userName === "") {
-        router.push("/login");
+        openDialog("login");
       } else {
         const fetchData = async () => {
           try {
@@ -172,12 +174,10 @@ const PlayerJournal = () => {
           <div>
             제 <span id="day">{currentPlan.daycount}</span> 일차 완료했습니다.
           </div>
-          <br />
         </div>
-
         <button
           id="saveButton"
-          className="bg-blue-200"
+          className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
           type="button"
           onClick={handleSaveButton}
         >
@@ -185,9 +185,10 @@ const PlayerJournal = () => {
         </button>
         <button
           id="changeName"
+          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
           type="button"
           onClick={() => {
-            router.push("./login");
+            openDialog("login");
           }}
         >
           이름바꾸기
