@@ -51,7 +51,7 @@ const LoginDialog: React.FC = () => {
           <div className="flex min-h-full items-center justify-center p-2">
             <DialogPanel
               transition
-              className="border bg-gray-50 w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl uration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+              className="border bg-white w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl uration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
             >
               <DialogTitle className="text-2xl font-bold m-3 text-center">
                 함 온 성
