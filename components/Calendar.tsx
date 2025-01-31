@@ -17,7 +17,8 @@ const Calendar: React.FC = () => {
     setCurrentPlan(date);
   };
 
-  const tileContent = ({ date }: { date: Date }) => {
+  const tileContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view !== "month") return;
     const planInd = plans?.findIndex(
       (_plan) =>
         _plan.date ===
@@ -35,7 +36,14 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const handleTileClassName = ({ date }: { date: Date }) => {
+  const handleTileClassName = ({
+    date,
+    view,
+  }: {
+    date: Date;
+    view: string;
+  }) => {
+    if (view !== "month") return;
     let className: string = "";
 
     const day = date.getDay() + 1;
