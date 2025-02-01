@@ -9,9 +9,16 @@ import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
 import { plan } from "@/constants/plan";
 
+const findPlan = (date: Date) => {
+  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const targetPlan = plan.filter(({ date }) => date === formattedDate);
+
+  return targetPlan;
+};
+
 const Calendar: React.FC = () => {
   const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
-  const { setCurrentPlan  } = usePlans();
+  const { setCurrentPlan } = usePlans();
   const { completedDayCountList } = useUserInfo();
 
   const handleClickDay = (date: Date) => {
@@ -20,21 +27,16 @@ const Calendar: React.FC = () => {
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
     if (view !== "month") return;
-    const planInd = plan?.findIndex(
-      (_plan) =>
-        _plan.date ===
-        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-    );
-
-    if (planInd >= 0) {
+    const targetPlan = findPlan(date);
+    return targetPlan.map(({ book, start, end }, index) => {
       return (
-        <div>
-          {plan[planInd].book}
+        <div key={index}>
+          {book}
           <br />
-          {plan[planInd].start}-{plan[planInd].end}장
+          {start}-{end}장
         </div>
       );
-    }
+    });
   };
 
   const handleTileClassName = ({

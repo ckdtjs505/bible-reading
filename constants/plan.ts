@@ -2080,7 +2080,7 @@ export const plan = [
   },
   {
     index: "190",
-    daycount: "1",
+    daycount: "187",
     date: "2025-9-1",
     lang: "kor",
     book: "마태복음",
@@ -2091,7 +2091,7 @@ export const plan = [
   },
   {
     index: "191",
-    daycount: "2",
+    daycount: "188",
     date: "2025-9-2",
     lang: "kor",
     book: "마태복음",
@@ -2102,7 +2102,7 @@ export const plan = [
   },
   {
     index: "192",
-    daycount: "3",
+    daycount: "189",
     date: "2025-9-3",
     lang: "kor",
     book: "마태복음",
@@ -2113,7 +2113,7 @@ export const plan = [
   },
   {
     index: "193",
-    daycount: "4",
+    daycount: "190",
     date: "2025-9-4",
     lang: "kor",
     book: "마태복음",
@@ -2124,7 +2124,7 @@ export const plan = [
   },
   {
     index: "194",
-    daycount: "5",
+    daycount: "191",
     date: "2025-9-5",
     lang: "kor",
     book: "마태복음",
@@ -2135,7 +2135,7 @@ export const plan = [
   },
   {
     index: "195",
-    daycount: "6",
+    daycount: "192",
     date: "2025-9-6",
     lang: "kor",
     book: "마태복음",
@@ -2146,7 +2146,7 @@ export const plan = [
   },
   {
     index: "196",
-    daycount: "7",
+    daycount: "193",
     date: "2025-9-8",
     lang: "kor",
     book: "마태복음",
@@ -2157,7 +2157,7 @@ export const plan = [
   },
   {
     index: "197",
-    daycount: "8",
+    daycount: "194",
     date: "2025-9-9",
     lang: "kor",
     book: "마태복음",
@@ -2168,7 +2168,7 @@ export const plan = [
   },
   {
     index: "198",
-    daycount: "9",
+    daycount: "195",
     date: "2025-9-10",
     lang: "kor",
     book: "마태복음",
@@ -2179,7 +2179,7 @@ export const plan = [
   },
   {
     index: "199",
-    daycount: "10",
+    daycount: "196",
     date: "2025-9-11",
     lang: "kor",
     book: "마가복음",
@@ -2190,7 +2190,7 @@ export const plan = [
   },
   {
     index: "200",
-    daycount: "11",
+    daycount: "197",
     date: "2025-9-12",
     lang: "kor",
     book: "마가복음",
@@ -2201,7 +2201,7 @@ export const plan = [
   },
   {
     index: "201",
-    daycount: "12",
+    daycount: "198",
     date: "2025-9-13",
     lang: "kor",
     book: "마가복음",
@@ -2212,7 +2212,7 @@ export const plan = [
   },
   {
     index: "202",
-    daycount: "13",
+    daycount: "199",
     date: "2025-9-15",
     lang: "kor",
     book: "누가복음",
@@ -2223,7 +2223,7 @@ export const plan = [
   },
   {
     index: "203",
-    daycount: "14",
+    daycount: "200",
     date: "2025-9-16",
     lang: "kor",
     book: "누가복음",
@@ -2234,7 +2234,7 @@ export const plan = [
   },
   {
     index: "204",
-    daycount: "15",
+    daycount: "201",
     date: "2025-9-17",
     lang: "kor",
     book: "누가복음",
@@ -2245,7 +2245,7 @@ export const plan = [
   },
   {
     index: "205",
-    daycount: "16",
+    daycount: "202",
     date: "2025-9-18",
     lang: "kor",
     book: "누가복음",
@@ -2256,7 +2256,7 @@ export const plan = [
   },
   {
     index: "206",
-    daycount: "17",
+    daycount: "203",
     date: "2025-9-19",
     lang: "kor",
     book: "누가복음",
@@ -2267,7 +2267,7 @@ export const plan = [
   },
   {
     index: "207",
-    daycount: "18",
+    daycount: "204",
     date: "2025-9-20",
     lang: "kor",
     book: "누가복음",
@@ -2278,7 +2278,7 @@ export const plan = [
   },
   {
     index: "208",
-    daycount: "19",
+    daycount: "205",
     date: "2025-9-22",
     lang: "kor",
     book: "요한복음",
@@ -2289,7 +2289,7 @@ export const plan = [
   },
   {
     index: "209",
-    daycount: "20",
+    daycount: "206",
     date: "2025-9-23",
     lang: "kor",
     book: "요한복음",
@@ -2300,7 +2300,7 @@ export const plan = [
   },
   {
     index: "210",
-    daycount: "21",
+    daycount: "207",
     date: "2025-9-24",
     lang: "kor",
     book: "요한복음",
@@ -2311,7 +2311,7 @@ export const plan = [
   },
   {
     index: "211",
-    daycount: "22",
+    daycount: "208",
     date: "2025-9-25",
     lang: "kor",
     book: "요한복음",
@@ -2322,7 +2322,7 @@ export const plan = [
   },
   {
     index: "212",
-    daycount: "23",
+    daycount: "209",
     date: "2025-9-26",
     lang: "kor",
     book: "요한복음",
@@ -2333,7 +2333,7 @@ export const plan = [
   },
   {
     index: "213",
-    daycount: "24",
+    daycount: "210",
     date: "2025-9-27",
     lang: "kor",
     book: "요한복음",
@@ -2344,7 +2344,7 @@ export const plan = [
   },
   {
     index: "214",
-    daycount: "25",
+    daycount: "211",
     date: "2025-9-29",
     lang: "kor",
     book: "사도행전",
@@ -2355,7 +2355,7 @@ export const plan = [
   },
   {
     index: "215",
-    daycount: "26",
+    daycount: "212",
     date: "2025-9-30",
     lang: "kor",
     book: "사도행전",
@@ -2366,7 +2366,7 @@ export const plan = [
   },
   {
     index: "216",
-    daycount: "27",
+    daycount: "213",
     date: "2025-10-1",
     lang: "kor",
     book: "사도행전",
@@ -2377,7 +2377,7 @@ export const plan = [
   },
   {
     index: "217",
-    daycount: "28",
+    daycount: "214",
     date: "2025-10-2",
     lang: "kor",
     book: "사도행전",
@@ -2388,7 +2388,7 @@ export const plan = [
   },
   {
     index: "218",
-    daycount: "29",
+    daycount: "215",
     date: "2025-10-3",
     lang: "kor",
     book: "사도행전",
@@ -2399,7 +2399,7 @@ export const plan = [
   },
   {
     index: "219",
-    daycount: "30",
+    daycount: "216",
     date: "2025-10-4",
     lang: "kor",
     book: "사도행전",
@@ -2410,7 +2410,7 @@ export const plan = [
   },
   {
     index: "220",
-    daycount: "31",
+    daycount: "217",
     date: "2025-10-13",
     lang: "kor",
     book: "사도행전",
@@ -2421,7 +2421,7 @@ export const plan = [
   },
   {
     index: "221",
-    daycount: "32",
+    daycount: "218",
     date: "2025-10-14",
     lang: "kor",
     book: "사도행전",
@@ -2432,7 +2432,7 @@ export const plan = [
   },
   {
     index: "222",
-    daycount: "33",
+    daycount: "219",
     date: "2025-10-15",
     lang: "kor",
     book: "사도행전",
@@ -2443,7 +2443,7 @@ export const plan = [
   },
   {
     index: "223",
-    daycount: "34",
+    daycount: "220",
     date: "2025-10-16",
     lang: "kor",
     book: "사도행전",
@@ -2454,7 +2454,7 @@ export const plan = [
   },
   {
     index: "224",
-    daycount: "35",
+    daycount: "221",
     date: "2025-10-17",
     lang: "kor",
     book: "사도행전",
@@ -2465,7 +2465,7 @@ export const plan = [
   },
   {
     index: "225",
-    daycount: "36",
+    daycount: "222",
     date: "2025-10-18",
     lang: "kor",
     book: "사도행전",
@@ -2476,7 +2476,7 @@ export const plan = [
   },
   {
     index: "226",
-    daycount: "37",
+    daycount: "223",
     date: "2025-10-20",
     lang: "kor",
     book: "로마서",
@@ -2487,7 +2487,7 @@ export const plan = [
   },
   {
     index: "227",
-    daycount: "38",
+    daycount: "224",
     date: "2025-10-21",
     lang: "kor",
     book: "로마서",
@@ -2498,7 +2498,7 @@ export const plan = [
   },
   {
     index: "228",
-    daycount: "39",
+    daycount: "225",
     date: "2025-10-22",
     lang: "kor",
     book: "로마서",
@@ -2509,7 +2509,7 @@ export const plan = [
   },
   {
     index: "229",
-    daycount: "40",
+    daycount: "226",
     date: "2025-10-23",
     lang: "kor",
     book: "로마서",
@@ -2520,7 +2520,7 @@ export const plan = [
   },
   {
     index: "230",
-    daycount: "41",
+    daycount: "227",
     date: "2025-10-24",
     lang: "kor",
     book: "로마서",
@@ -2531,7 +2531,7 @@ export const plan = [
   },
   {
     index: "231",
-    daycount: "42",
+    daycount: "228",
     date: "2025-10-25",
     lang: "kor",
     book: "로마서",
@@ -2542,7 +2542,7 @@ export const plan = [
   },
   {
     index: "232",
-    daycount: "43",
+    daycount: "229",
     date: "2025-10-27",
     lang: "kor",
     book: "고린도전서",
@@ -2553,7 +2553,7 @@ export const plan = [
   },
   {
     index: "233",
-    daycount: "44",
+    daycount: "230",
     date: "2025-10-28",
     lang: "kor",
     book: "고린도전서",
@@ -2564,7 +2564,7 @@ export const plan = [
   },
   {
     index: "234",
-    daycount: "45",
+    daycount: "231",
     date: "2025-10-29",
     lang: "kor",
     book: "고린도전서",
@@ -2575,7 +2575,7 @@ export const plan = [
   },
   {
     index: "235",
-    daycount: "46",
+    daycount: "232",
     date: "2025-10-30",
     lang: "kor",
     book: "고린도전서",
@@ -2586,7 +2586,7 @@ export const plan = [
   },
   {
     index: "236",
-    daycount: "47",
+    daycount: "233",
     date: "2025-10-31",
     lang: "kor",
     book: "고린도후서",
@@ -2597,7 +2597,7 @@ export const plan = [
   },
   {
     index: "237",
-    daycount: "48",
+    daycount: "234",
     date: "2025-11-1",
     lang: "kor",
     book: "고린도후서",
@@ -2608,7 +2608,7 @@ export const plan = [
   },
   {
     index: "238",
-    daycount: "49",
+    daycount: "235",
     date: "2025-11-3",
     lang: "kor",
     book: "고린도후서",
@@ -2619,7 +2619,7 @@ export const plan = [
   },
   {
     index: "239",
-    daycount: "50",
+    daycount: "236",
     date: "2025-11-4",
     lang: "kor",
     book: "고린도후서",
@@ -2630,7 +2630,7 @@ export const plan = [
   },
   {
     index: "240",
-    daycount: "51",
+    daycount: "237",
     date: "2025-11-5",
     lang: "kor",
     book: "갈라디아서",
@@ -2641,7 +2641,7 @@ export const plan = [
   },
   {
     index: "241",
-    daycount: "52",
+    daycount: "238",
     date: "2025-11-6",
     lang: "kor",
     book: "에베소서",
@@ -2652,7 +2652,7 @@ export const plan = [
   },
   {
     index: "242",
-    daycount: "53",
+    daycount: "239",
     date: "2025-11-7",
     lang: "kor",
     book: "에베소서",
@@ -2663,7 +2663,7 @@ export const plan = [
   },
   {
     index: "243",
-    daycount: "54",
+    daycount: "240",
     date: "2025-11-8",
     lang: "kor",
     book: "빌립보서",
@@ -2674,7 +2674,7 @@ export const plan = [
   },
   {
     index: "244",
-    daycount: "55",
+    daycount: "241",
     date: "2025-11-10",
     lang: "kor",
     book: "골로새서",
@@ -2685,7 +2685,7 @@ export const plan = [
   },
   {
     index: "245",
-    daycount: "56",
+    daycount: "242",
     date: "2025-11-11",
     lang: "kor",
     book: "데살로니가전서",
@@ -2696,7 +2696,7 @@ export const plan = [
   },
   {
     index: "246",
-    daycount: "57",
+    daycount: "243",
     date: "2025-11-12",
     lang: "kor",
     book: "데살로니가후서",
@@ -2707,7 +2707,7 @@ export const plan = [
   },
   {
     index: "247",
-    daycount: "58",
+    daycount: "244",
     date: "2025-11-13",
     lang: "kor",
     book: "디모데전서",
@@ -2718,7 +2718,7 @@ export const plan = [
   },
   {
     index: "248",
-    daycount: "59",
+    daycount: "245",
     date: "2025-11-14",
     lang: "kor",
     book: "디모데후서",
@@ -2729,7 +2729,7 @@ export const plan = [
   },
   {
     index: "249",
-    daycount: "60",
+    daycount: "246",
     date: "2025-11-15",
     lang: "kor",
     book: "디도서",
@@ -2740,7 +2740,7 @@ export const plan = [
   },
   {
     index: "250",
-    daycount: "60",
+    daycount: "246",
     date: "2025-11-15",
     lang: "kor",
     book: "빌레몬서",
@@ -2751,7 +2751,7 @@ export const plan = [
   },
   {
     index: "251",
-    daycount: "61",
+    daycount: "247",
     date: "2025-11-17",
     lang: "kor",
     book: "히브리서",
@@ -2762,7 +2762,7 @@ export const plan = [
   },
   {
     index: "252",
-    daycount: "62",
+    daycount: "248",
     date: "2025-11-18",
     lang: "kor",
     book: "히브리서",
@@ -2773,7 +2773,7 @@ export const plan = [
   },
   {
     index: "253",
-    daycount: "63",
+    daycount: "249",
     date: "2025-11-19",
     lang: "kor",
     book: "히브리서",
@@ -2784,7 +2784,7 @@ export const plan = [
   },
   {
     index: "254",
-    daycount: "64",
+    daycount: "250",
     date: "2025-11-20",
     lang: "kor",
     book: "히브리서",
@@ -2795,7 +2795,7 @@ export const plan = [
   },
   {
     index: "255",
-    daycount: "65",
+    daycount: "251",
     date: "2025-11-21",
     lang: "kor",
     book: "야고보서",
@@ -2806,7 +2806,7 @@ export const plan = [
   },
   {
     index: "256",
-    daycount: "66",
+    daycount: "252",
     date: "2025-11-22",
     lang: "kor",
     book: "야고보서",
@@ -2817,7 +2817,7 @@ export const plan = [
   },
   {
     index: "257",
-    daycount: "67",
+    daycount: "253",
     date: "2025-11-24",
     lang: "kor",
     book: "베드로전서",
@@ -2828,7 +2828,7 @@ export const plan = [
   },
   {
     index: "258",
-    daycount: "68",
+    daycount: "254",
     date: "2025-11-25",
     lang: "kor",
     book: "베드로후서",
@@ -2839,7 +2839,7 @@ export const plan = [
   },
   {
     index: "259",
-    daycount: "69",
+    daycount: "255",
     date: "2025-11-26",
     lang: "kor",
     book: "요한1서",
@@ -2850,7 +2850,7 @@ export const plan = [
   },
   {
     index: "260",
-    daycount: "70",
+    daycount: "256",
     date: "2025-11-27",
     lang: "kor",
     book: "요한1서",
@@ -2861,7 +2861,7 @@ export const plan = [
   },
   {
     index: "261",
-    daycount: "71",
+    daycount: "257",
     date: "2025-11-28",
     lang: "kor",
     book: "요한2서",
@@ -2872,7 +2872,7 @@ export const plan = [
   },
   {
     index: "262",
-    daycount: "71",
+    daycount: "257",
     date: "2025-11-28",
     lang: "kor",
     book: "요한3서",
@@ -2883,7 +2883,7 @@ export const plan = [
   },
   {
     index: "263",
-    daycount: "71",
+    daycount: "257",
     date: "2025-11-28",
     lang: "kor",
     book: "유다서",
@@ -2894,7 +2894,7 @@ export const plan = [
   },
   {
     index: "264",
-    daycount: "73",
+    daycount: "258",
     date: "2025-12-1",
     lang: "kor",
     book: "요한계시록",
@@ -2905,7 +2905,7 @@ export const plan = [
   },
   {
     index: "265",
-    daycount: "74",
+    daycount: "259",
     date: "2025-12-2",
     lang: "kor",
     book: "요한계시록",
@@ -2916,7 +2916,7 @@ export const plan = [
   },
   {
     index: "266",
-    daycount: "75",
+    daycount: "260",
     date: "2025-12-3",
     lang: "kor",
     book: "요한계시록",
@@ -2927,7 +2927,7 @@ export const plan = [
   },
   {
     index: "267",
-    daycount: "76",
+    daycount: "261",
     date: "2025-12-4",
     lang: "kor",
     book: "요한계시록",
@@ -2938,7 +2938,7 @@ export const plan = [
   },
   {
     index: "268",
-    daycount: "77",
+    daycount: "262",
     date: "2025-12-5",
     lang: "kor",
     book: "요한계시록",
@@ -2948,4 +2948,3 @@ export const plan = [
     videoId: "7hQSOYCETPE",
   },
 ];
-
