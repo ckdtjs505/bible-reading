@@ -1,4 +1,3 @@
-import { Verse } from "@/type/biblePlan";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -8,11 +7,7 @@ interface VersesState {
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
   bible: Bible;
-  verses: Verse[];
-  book: string;
   setBible: (data: Bible) => void;
-  setVerses: (data: Verse[]) => void;
-  setBook: (data: string) => void;
 }
 
 const useVerses = create<VersesState>()(
@@ -25,21 +20,9 @@ const useVerses = create<VersesState>()(
         });
       },
       bible: "woorimal",
-      verses: [],
-      book: "",
       setBible: (bible: Bible) => {
         set(() => ({
           bible: bible,
-        }));
-      },
-      setVerses: (verses: Verse[]) => {
-        set(() => ({
-          verses: verses,
-        }));
-      },
-      setBook: (data: string) => {
-        set(() => ({
-          book: data,
         }));
       },
     }),

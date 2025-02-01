@@ -7,10 +7,11 @@ import { usePlans } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
+import { plan } from "@/constants/plan";
 
 const Calendar: React.FC = () => {
   const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
-  const { setCurrentPlan, plans } = usePlans();
+  const { setCurrentPlan  } = usePlans();
   const { completedDayCountList } = useUserInfo();
 
   const handleClickDay = (date: Date) => {
@@ -19,7 +20,7 @@ const Calendar: React.FC = () => {
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
     if (view !== "month") return;
-    const planInd = plans?.findIndex(
+    const planInd = plan?.findIndex(
       (_plan) =>
         _plan.date ===
         `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
@@ -28,9 +29,9 @@ const Calendar: React.FC = () => {
     if (planInd >= 0) {
       return (
         <div>
-          {plans[planInd].book}
+          {plan[planInd].book}
           <br />
-          {plans[planInd].start}-{plans[planInd].end}장
+          {plan[planInd].start}-{plan[planInd].end}장
         </div>
       );
     }
@@ -54,13 +55,13 @@ const Calendar: React.FC = () => {
       className = className + " saturday";
     }
 
-    const planInd = plans?.findIndex(
+    const planInd = plan?.findIndex(
       (_plan) =>
         _plan.date ===
         `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     );
     if (planInd >= 0) {
-      if (completedDayCountList.includes(Number(plans[planInd].daycount)))
+      if (completedDayCountList.includes(Number(plan[planInd].daycount)))
         className = className + " active";
     }
 

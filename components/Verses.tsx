@@ -6,18 +6,21 @@ import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
-import { useEffect } from "react";
+import { Verse } from "@/type/biblePlan";
+import { useEffect, useState } from "react";
 
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
   const level = useStore(useFontLevel, (state) => state.level) || 0;
   const bible = useStore(useVerses, (state) => state.bible);
+  const { setBible } = useVerses();
   const { setFontLevel } = useFontLevel();
-  const { verses, book, setBible, setVerses, setBook } = useVerses();
   const { currentPlan } = usePlans();
+  const [content, setContent] = useState<{ book: string; verses: Verse[] }[]>(
+    [],
+  );
 
   const messages = useStore(useReceivedMessages, (state) => state.messages);
-
   const { addMessage, removeMessage } = useReceivedMessages();
 
   const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -31,26 +34,22 @@ const Verses = () => {
   };
 
   useEffect(() => {
-    const { index, book, start, end } = currentPlan;
-
-    if (index !== "-1") {
-      const verses = getDailyVerse({
-        book,
-        start: Number(start),
-        end: Number(end),
-        bible: bible || "revised",
-      });
-
-      setVerses(verses);
-      setBook(book);
-    } else {
-      setVerses([]);
-      setBook("");
-    }
-  }, [bible, currentPlan, setVerses, setBook]);
+    const content = currentPlan.verseRange.map(({ book, start, end }) => {
+      return {
+        book: book,
+        verses: getDailyVerse({
+          book,
+          start,
+          end,
+          bible: bible || "revised",
+        }),
+      };
+    });
+    setContent(content);
+  }, [bible, currentPlan, setContent]);
 
   if (currentPlan.index === "-1") {
-    return <div className="p-4"> 함온성이 없는 날 입니다. </div>;
+    return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;
   }
 
   return (
@@ -102,25 +101,31 @@ const Verses = () => {
       </div>
 
       <div className={fontLevel}>
-        <div>{book}</div>
-        {verses?.map(({ chapter, verse, message: content }, index) => {
+        {content.map(({ book, verses }, idx) => {
           return (
-            <div key={index}>
-              <div>
-                <span
-                  className={
-                    messages?.[currentPlan.date]
-                      ?.map(({ message }) => message)
-                      .includes(`${chapter}:${verse} ${content}`)
-                      ? "select"
-                      : ""
-                  }
-                  onClick={handleClickMessage}
-                >
-                  {chapter}:{verse} {content}
-                </span>
-              </div>
-              <br />
+            <div key={idx}>
+              <div className="font-bold"> {book}</div>
+              {verses?.map(({ chapter, verse, message }, index) => {
+                return (
+                  <div key={index}>
+                    <div>
+                      <span
+                        className={
+                          messages?.[currentPlan.date]
+                            ?.map(({ message }) => message)
+                            .includes(`${chapter}:${verse} ${messages}`)
+                            ? "select"
+                            : ""
+                        }
+                        onClick={handleClickMessage}
+                      >
+                        {chapter}:{verse} {message}
+                      </span>
+                    </div>
+                    <br />
+                  </div>
+                );
+              })}
             </div>
           );
         })}
