@@ -46,6 +46,7 @@ const Verses = () => {
       };
     });
     setContent(content);
+
   }, [bible, currentPlan, setContent]);
 
   if (currentPlan.index === "-1") {
@@ -113,7 +114,7 @@ const Verses = () => {
                         className={
                           messages?.[currentPlan.date]
                             ?.map(({ message }) => message)
-                            .includes(`${chapter}:${verse} ${messages}`)
+                            .includes(`${chapter}:${verse} ${message}`)
                             ? "select"
                             : ""
                         }

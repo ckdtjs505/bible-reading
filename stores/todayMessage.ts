@@ -39,6 +39,7 @@ export const useReceivedMessages = create<ReceivedMessagesState>()(
       },
       messages: {},
       addMessage: (date, newMessage) => {
+        console.log(newMessage)
         set((state) => {
           const currentMessage = state.messages[date] || [];
           const newMessages = {
