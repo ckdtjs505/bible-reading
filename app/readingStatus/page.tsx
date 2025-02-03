@@ -62,7 +62,7 @@ const findReadPlanWeek = (daycount: number): number => {
   return -1; // daycount가 없을 경우 -1 반환
 };
 
-const currentDaycount = getCurrentDaycount(new Date("2025-02-03"));
+const currentDaycount = getCurrentDaycount(new Date);
 const currentReadPlanWeek = findReadPlanWeek(currentDaycount);
 
 const ReadingStatus = () => {
