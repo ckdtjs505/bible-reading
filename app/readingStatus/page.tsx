@@ -3,7 +3,7 @@
 import { member } from "@/constants/member";
 import { plan } from "@/constants/plan";
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const OPENSHEET = "https://opensheet.elk.sh";
 const KEY = "1LrUC8zEKsmAgi7pIeWUIQR8ufOd0F0nGI65ix7UMXr8";
@@ -62,14 +62,18 @@ const findReadPlanWeek = (daycount: number): number => {
   return -1; // daycount가 없을 경우 -1 반환
 };
 
-const currentDaycount = getCurrentDaycount(new Date);
+const currentDaycount = getCurrentDaycount(new Date());
 const currentReadPlanWeek = findReadPlanWeek(currentDaycount);
 
 const ReadingStatus = () => {
   const [bibleReadingStatus, setBibleReadingStatus] =
     useState<ReadingStatusState>([]);
 
-  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    handleClick();
+  }, []);
+
   const handleClick = () => {
     const fetchData = async () => {
       try {
@@ -110,15 +114,13 @@ const ReadingStatus = () => {
     fetchData();
   };
 
-
-  const handleCopyClick = () => {
-
-    if(!textRef.current ) return;
-  const copydata = textRef.current.innerText || "";
+  const handleCopyClick = (idx : number) => {
+    const el = document?.querySelector(`#daliy_${idx}`)
+    const copydata = el instanceof HTMLDivElement ? el.innerText : "";
     navigator.clipboard
       .writeText(copydata)
       .then(() => {
-        console.log("클립보드에 복사되었습니다: \n", copydata );
+        console.log("클립보드에 복사되었습니다: \n", copydata);
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);
@@ -126,37 +128,45 @@ const ReadingStatus = () => {
   };
   return (
     <div>
-      <button
-        onClick={handleClick}
-        className="border border-black m-2 rounded-lg bg-blue-200"
-      >
-        1조 진행사항 가져오기
-      </button>
-      <div ref={textRef} className="border-black m-2">
-        <div>🏆구약 {currentReadPlanWeek}주차 매일 점검표🏆</div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;월 화 수 목 금 토  </div>
-        {bibleReadingStatus.map((data) => {
-          return data.map((member, idx) => {
-            return (
-              <div key={idx}>
-                {idx + 1}. {member.name} {member.readingStatus.join(" ")}
+      <div className="border-black m-2">
+        {bibleReadingStatus.map((data, idx) => {
+          return (
+            <div key={idx}>
+              <br />
+
+
+              <div id ={`daliy_${idx}`} >
+                <div>🏆구약 {currentReadPlanWeek}주차 매일 점검표🏆</div>
+                <div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;월 화 수 목 금
+                  토{" "}
+                </div>
+                {data.map((member, idx) => {
+                  return (
+                    <div key={idx}>
+                      {String(idx + 1).padStart(2, "0")}. {member.name}{" "}
+                      {member.readingStatus.join(" ")}
+                    </div>
+                  );
+                })}
+                <div>
+                  총 {bibleReadingStatus[idx]?.length}명 중
+                  {
+                    bibleReadingStatus[idx]?.filter(
+                      (user) =>
+                        user.readingStatus[(currentDaycount % 6) - 1] === "O",
+                    ).length
+                  }
+                  명 완료🙏🏼
+                </div>
               </div>
-            );
-          });
+              <button onClick={ () => handleCopyClick(idx) } className="m-2">
+                복사 하기
+              </button>
+            </div>
+          );
         })}
-        <div>
-          총 {bibleReadingStatus[0]?.length}명 중
-          {
-            bibleReadingStatus[0]?.filter(
-              (user) => user.readingStatus[currentDaycount % 6 - 1] === "O",
-            ).length
-          }
-          명 완료🙏🏼
-        </div>
       </div>
-      <button onClick={handleCopyClick} className="m-2">
-        복사 하기
-      </button>
     </div>
   );
 };
