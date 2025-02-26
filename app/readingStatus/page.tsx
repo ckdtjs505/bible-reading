@@ -3,7 +3,7 @@
 import { member } from "@/constants/member";
 import { plan } from "@/constants/plan";
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const OPENSHEET = "https://opensheet.elk.sh";
 const KEY = "1LrUC8zEKsmAgi7pIeWUIQR8ufOd0F0nGI65ix7UMXr8";
@@ -24,9 +24,7 @@ type Person = {
   readingStatus: Status[];
 };
 
-type Team = Person[];
-
-type ReadingStatusState = Team[];
+type ReadingStatusState = Person[];
 
 const getHamonDB = async (): Promise<ReadingStatus> => {
   const response = await fetch(`${OPENSHEET}/${KEY}/${param}`, {
@@ -69,41 +67,43 @@ const ReadingStatus = () => {
   const [bibleReadingStatus, setBibleReadingStatus] =
     useState<ReadingStatusState>([]);
 
+  const status = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    handleClick();
-  }, []);
+  const [member, setMemmber] = useState([]);
+
+  const onChangeHandle = (e) => {
+    const members = e.target.value.replaceAll(" ", "").split(",");
+    setMemmber(members);
+  };
 
   const handleClick = () => {
     const fetchData = async () => {
       try {
         const allReadingStatus = await getHamonDB();
 
-        const memberReadingStatus = member.map((team) => {
-          return team.map((name) => {
-            const status = allReadingStatus.filter(
-              (data) => data.name === name,
-            );
-            const result = readPlanByWeek[currentReadPlanWeek - 1].map(
-              (dayCount) => {
-                if (dayCount <= currentDaycount) {
-                  const idx = status.findIndex((val) => {
-                    return Number(val.daycnt) === dayCount;
-                  });
+        const memberReadingStatus = member.map((name) => {
+          const status = allReadingStatus.filter((data) => data.name === name);
+          const result = readPlanByWeek[currentReadPlanWeek - 1].map(
+            (dayCount) => {
+              if (dayCount <= currentDaycount) {
+                const idx = status.findIndex((val) => {
+                  return Number(val.daycnt) === dayCount;
+                });
 
-                  return idx === -1 ? "X" : "O";
-                } else {
-                  return " ";
-                }
-              },
-            );
+                return idx === -1 ? "X" : "O";
+              } else {
+                return " ";
+              }
+            },
+          );
 
-            return {
-              name: name,
-              readingStatus: result,
-            };
-          });
+          return {
+            name: name,
+            readingStatus: result,
+          };
         });
+
+        console.log(memberReadingStatus);
 
         setBibleReadingStatus(memberReadingStatus);
       } catch (err) {
@@ -114,9 +114,9 @@ const ReadingStatus = () => {
     fetchData();
   };
 
-  const handleCopyClick = (idx : number) => {
-    const el = document?.querySelector(`#daliy_${idx}`)
-    const copydata = el instanceof HTMLDivElement ? el.innerText : "";
+  const handleCopyClick = () => {
+    let copydata = status.current?.innerText || "";
+    //copydata = copydata.replace(/\n+/g, "\n\n"); // 여러 개의 줄 바꿈을 한 번으로 압축
     navigator.clipboard
       .writeText(copydata)
       .then(() => {
@@ -126,46 +126,65 @@ const ReadingStatus = () => {
         console.error("클립보드 복사에 실패했습니다: ", err);
       });
   };
+
   return (
-    <div>
+    <div className="text-center">
+      <div className="m-2 text-center text-2xl p-2"> 함온성 매일 점검표</div>
+      <div className="text-center text-lg">
+        조원들의 이름을 콤마(,)로 구분하여 입력해주세요.
+      </div>
+      <div className="">
+        <input
+          onChange={onChangeHandle}
+          className="border py-1.5 rounded-md"
+          placeholder="강대범, 강성철, 김성룡, 김재섭, 김준걸, 박용우, 오창선, 이재문, 주명성"
+        />
+        <button
+          onClick={handleClick}
+          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner"
+        >
+          불러오기{" "}
+        </button>
+      </div>
+      <div>
+        {" "}
+        1조 : 강대범, 강성철, 김성룡, 김재섭, 김준걸, 박용우, 오창선, 이재문,
+        주명성
+      </div>
+      ---
       <div className="border-black m-2">
-        {bibleReadingStatus.map((data, idx) => {
-          return (
-            <div key={idx}>
-              <br />
-
-
-              <div id ={`daliy_${idx}`} >
-                <div>🏆구약 {currentReadPlanWeek}주차 매일 점검표🏆</div>
-                <div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;월 화 수 목 금
-                  토{" "}
-                </div>
-                {data.map((member, idx) => {
-                  return (
-                    <div key={idx}>
-                      {String(idx + 1).padStart(2, "0")}. {member.name}{" "}
-                      {member.readingStatus.join(" ")}
-                    </div>
-                  );
-                })}
-                <div>
-                  총 {bibleReadingStatus[idx]?.length}명 중
-                  {
-                    bibleReadingStatus[idx]?.filter(
-                      (user) =>
-                        user.readingStatus[(currentDaycount % 6) - 1] === "O",
-                    ).length
-                  }
-                  명 완료🙏🏼
-                </div>
+        <div
+          className="whitespace-pre border border-black w-52 m-auto text-left rounded-md p-2"
+          ref={status}
+        >
+          <div>🏆구약 {currentReadPlanWeek}주차 매일 점검표🏆</div>
+          <br />
+          <span>{Array(15).fill("\u00A0").join("")}월 화 수 목 금 토 </span>
+          {bibleReadingStatus.map((member, idx) => {
+            return (
+              <div key={idx}>
+                {String(idx + 1).padStart(2, "0")}. {member.name}{" "}
+                {member.readingStatus.join(" ")}
               </div>
-              <button onClick={ () => handleCopyClick(idx) } className="m-2">
-                복사 하기
-              </button>
-            </div>
-          );
-        })}
+            );
+          })}
+          <br />
+          <span className="text-center">
+            총 {bibleReadingStatus?.length}명 중
+            {
+              bibleReadingStatus?.filter(
+                (user) => user.readingStatus[(currentDaycount % 6) - 1] === "O",
+              ).length
+            }
+            명 완료🙏🏼
+          </span>
+        </div>
+        <button
+          onClick={handleCopyClick}
+          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner"
+        >
+          복사 하기
+        </button>
       </div>
     </div>
   );
