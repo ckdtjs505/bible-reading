@@ -1,9 +1,8 @@
 "use client";
 
-import { member } from "@/constants/member";
 import { plan } from "@/constants/plan";
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 const OPENSHEET = "https://opensheet.elk.sh";
 const KEY = "1LrUC8zEKsmAgi7pIeWUIQR8ufOd0F0nGI65ix7UMXr8";
@@ -69,11 +68,11 @@ const ReadingStatus = () => {
 
   const status = useRef<HTMLDivElement>(null);
 
-  const [member, setMemmber] = useState([]);
+  const [member, setMember] = useState<string[]>([]);
 
-  const onChangeHandle = (e) => {
-    const members = e.target.value.replaceAll(" ", "").split(",");
-    setMemmber(members);
+  const onChangeHandle = (e : ChangeEvent<HTMLInputElement>) => {
+    const members = e?.target?.value.replaceAll(" ", "").split(",") || [];
+    setMember(members);
   };
 
   const handleClick = () => {
@@ -115,7 +114,7 @@ const ReadingStatus = () => {
   };
 
   const handleCopyClick = () => {
-    let copydata = status.current?.innerText || "";
+    const copydata = status.current?.innerText || "";
     //copydata = copydata.replace(/\n+/g, "\n\n"); // 여러 개의 줄 바꿈을 한 번으로 압축
     navigator.clipboard
       .writeText(copydata)
