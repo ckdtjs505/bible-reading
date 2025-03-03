@@ -2,7 +2,7 @@
 
 import { plan } from "@/constants/plan";
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 const OPENSHEET = "https://opensheet.elk.sh";
 const KEY = "1LrUC8zEKsmAgi7pIeWUIQR8ufOd0F0nGI65ix7UMXr8";
@@ -70,10 +70,17 @@ const ReadingStatus = () => {
 
   const [member, setMember] = useState<string[]>([]);
 
-  const onChangeHandle = (e : ChangeEvent<HTMLInputElement>) => {
-    const members = e?.target?.value.replaceAll(" ", "").split(",") || [];
+  const onChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e?.target?.value;
+    localStorage.setItem("memberString", value);
+    const members = value.replaceAll(" ", "").split(",") || [];
     setMember(members);
   };
+
+  useEffect(() => {
+    const saveMembers = localStorage.getItem("memberString") || "";
+    setMember(saveMembers.replaceAll(" ", "").split(","));
+  }, []);
 
   const handleClick = () => {
     const fetchData = async () => {
@@ -101,8 +108,6 @@ const ReadingStatus = () => {
             readingStatus: result,
           };
         });
-
-        console.log(memberReadingStatus);
 
         setBibleReadingStatus(memberReadingStatus);
       } catch (err) {
@@ -137,20 +142,20 @@ const ReadingStatus = () => {
           onChange={onChangeHandle}
           className="border py-1.5 rounded-md"
           placeholder="강대범, 강성철, 김성룡, 김재섭, 김준걸, 박용우, 오창선, 이재문, 주명성"
+          value={member}
         />
         <button
           onClick={handleClick}
           className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner"
         >
-          불러오기{" "}
+          불러오기
         </button>
       </div>
       <div>
-        {" "}
         1조 : 강대범, 강성철, 김성룡, 김재섭, 김준걸, 박용우, 오창선, 이재문,
         주명성
       </div>
-      ---
+
       <div className="border-black m-2">
         <div
           className="whitespace-pre border border-black w-52 m-auto text-left rounded-md p-2"
