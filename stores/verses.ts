@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Bible = "revised" | "woorimal";
+type Bible = "revised" | "woorimal" | "newHangul";
 
 interface VersesState {
   _hasHydrated: boolean;

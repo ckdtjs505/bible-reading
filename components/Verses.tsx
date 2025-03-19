@@ -76,6 +76,16 @@ const Verses = () => {
           >
             우리말 성경
           </button>
+           <button
+            id="newHangul"
+            className={`rounded-full  mr-2 border-none transition ${bible === "newHangul" ? "active" : ""}`}
+            onClick={() => {
+              setBible("newHangul");
+            }}
+          >
+            새한글 성경
+          </button>
+
         </div>
 
         {/* 글꼴 크기 버튼 그룹 */}
