@@ -26,7 +26,7 @@ const PlayerJournal = () => {
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
-  const formatDay = (daycount) => {
+  const formatDay = (daycount : number ) : number => {
     return daycount >= 187 ? daycount - 186 : daycount;
   } 
 
@@ -71,7 +71,7 @@ const PlayerJournal = () => {
       `🌸 이름 : ${userName} \n\n` +
       `📖 오늘 내게 주신 말씀 \n${myMessage}\n\n` +
       (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
-      `제 ${formatDay(currentPlan.daycount)}일차 완료했습니다.`;
+      `제 ${formatDay(Number(currentPlan.daycount))}일차 완료했습니다.`;
 
     navigator.clipboard
       .writeText(copyData)
@@ -176,7 +176,7 @@ const PlayerJournal = () => {
             </div>
           )}
           <div>
-            제 <span id="day">{formatDay(currentPlan.daycount) }</span> 일차 완료했습니다.
+            제 <span id="day">{formatDay(Number(currentPlan.daycount)) }</span> 일차 완료했습니다.
           </div>
         </div>
         <button
