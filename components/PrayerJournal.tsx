@@ -10,12 +10,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useDialogStore from "@/stores/dialogStore";
 
+import { bookKeyNumber } from "@/constants/bibleNumber";
+
 const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
   const { openDialog } = useDialogStore();
 
   const currentMessages = messages[currentPlan.date] || [];
+
   const groupedMessages = currentMessages.reduce((acc, message) => {
     if (!acc[message.book]) {
       acc[message.book] = [];
@@ -23,6 +26,19 @@ const PrayerJournal = () => {
     acc[message.book].push(message);
     return acc;
   }, {} as Record<string, typeof currentMessages>);
+
+  const sortedMessageEntries = Object.entries(groupedMessages).sort(
+    ([bookA], [bookB]) => bookKeyNumber(bookA) - bookKeyNumber(bookB),
+  );
+
+  sortedMessageEntries.forEach(([_, msgs]) => {
+    msgs.sort((a, b) => {
+      if (a.chapter !== b.chapter) {
+        return a.chapter - b.chapter;
+      }
+      return a.verse - b.verse;
+    });
+  });
 
 
   const userName = useStore(useUserInfo, (state) => state.userName);
@@ -72,7 +88,7 @@ const PrayerJournal = () => {
 
   const handleSaveButton = () => {
     console.log(messages, currentPlan)
-    const myMessage = Object.entries(groupedMessages || {})
+    const myMessage = sortedMessageEntries
       .map(([book, msgs]) => {
         const verses = msgs.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`).join("\n");
         return `${book}\n${verses}`;
@@ -168,7 +184,7 @@ const PrayerJournal = () => {
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
-            {Object.entries(groupedMessages).map(([book, msgs], index) => (
+            {sortedMessageEntries.map(([book, msgs], index) => (
               <div key={index} className="mb-2">
                 <div className="font-bold">{book}</div>
                 {msgs.map(({ chapter, verse, content }, vIndex) => (
