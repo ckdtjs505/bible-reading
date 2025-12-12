@@ -31,7 +31,7 @@ const PrayerJournal = () => {
     ([bookA], [bookB]) => bookKeyNumber(bookA) - bookKeyNumber(bookB),
   );
 
-  sortedMessageEntries.forEach(([_, msgs]) => {
+  sortedMessageEntries.forEach(([, msgs]) => {
     msgs.sort((a, b) => {
       if (a.chapter !== b.chapter) {
         return a.chapter - b.chapter;
