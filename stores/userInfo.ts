@@ -5,7 +5,7 @@ type userInfoParam = {
   userName: string;
   setUserName: (data: string) => void;
   completedDayCountList: number[];
-  setComplteDayCountList: (daycounts: number[]) => void;
+  setCompleteDayCountList: (daycounts: number[]) => void;
   addCompleteDayCountList: (daycount: number) => void;
   _hasHydrated: boolean;
   setHasHydrated: (data: boolean) => void;
@@ -19,7 +19,7 @@ const useUserInfo = create<userInfoParam>()(
         set({ userName: userName });
       },
       completedDayCountList: [],
-      setComplteDayCountList: (daycounts: number[]) => {
+      setCompleteDayCountList: (daycounts: number[]) => {
         // 이름 변경 후 진입시 이전에 저장했던 정보가 남아 있음
         set(() => ({
           completedDayCountList: [...daycounts],

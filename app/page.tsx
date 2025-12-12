@@ -1,6 +1,6 @@
-import Calender from "@/components/Calendar";
+import Calendar from "@/components/Calendar";
 import LoginDialog from "@/components/LoginDialog";
-import PlayerJournal from "@/components/PrayerJournal";
+import PrayerJournal from "@/components/PrayerJournal";
 import ScrollButton from "@/components/ScrollUpButton";
 import SummeryImg from "@/components/summeryImg";
 import Verses from "@/components/Verses";
@@ -12,7 +12,7 @@ export default function Home() {
       <div id="title" className="text-center text-3xl mt-4 font-bold">
         함 온 성
       </div>
-      <Calender></Calender>
+      <Calendar></Calendar>
 
       <YoutubeVideo />
 
@@ -20,7 +20,7 @@ export default function Home() {
 
       <Verses />
 
-      <PlayerJournal />
+      <PrayerJournal />
 
       <LoginDialog />
 

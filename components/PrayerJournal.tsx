@@ -10,14 +10,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useDialogStore from "@/stores/dialogStore";
 
-const PlayerJournal = () => {
+const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
   const { openDialog } = useDialogStore();
 
+
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
-  const { addCompleteDayCountList, setComplteDayCountList } = useUserInfo();
+  const { addCompleteDayCountList, setCompleteDayCountList } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -26,9 +27,9 @@ const PlayerJournal = () => {
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
 
-  const formatDay = (daycount : number ) : number => {
+  const formatDay = (daycount: number): number => {
     return daycount >= 187 ? daycount - 186 : daycount;
-  } 
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,7 +50,7 @@ const PlayerJournal = () => {
         const fetchData = async () => {
           try {
             const info = await getUserProgressInfo(userName || "");
-            setComplteDayCountList(info.row);
+            setCompleteDayCountList(info.row);
           } catch (err) {
             console.log(err);
           }
@@ -61,6 +62,7 @@ const PlayerJournal = () => {
   }, [userName, router, hasHydrated]);
 
   const handleSaveButton = () => {
+    console.log(messages, currentPlan)
     const myMessage =
       messages[currentPlan.date]?.map(({ message }) => message).join("\n") ||
       "";
@@ -176,7 +178,7 @@ const PlayerJournal = () => {
             </div>
           )}
           <div>
-            제 <span id="day">{formatDay(Number(currentPlan.daycount)) }</span> 일차 완료했습니다.
+            제 <span id="day">{formatDay(Number(currentPlan.daycount))}</span> 일차 완료했습니다.
           </div>
         </div>
         <button
@@ -202,4 +204,4 @@ const PlayerJournal = () => {
   );
 };
 
-export default PlayerJournal;
+export default PrayerJournal;

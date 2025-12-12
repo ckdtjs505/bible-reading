@@ -1,6 +1,6 @@
 "use client";
 
-import { getDailyVerse } from "@/pages/api/bible";
+import { getDailyVerse } from "@/app/actions/bible";
 import { useFontLevel } from "@/stores/font";
 import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
@@ -34,20 +34,26 @@ const Verses = () => {
   };
 
   useEffect(() => {
-    const content = currentPlan.verseRange.map(({ book, start, end }) => {
-      return {
-        book: book,
-        verses: getDailyVerse({
+    const fetchVerses = async () => {
+      const promises = currentPlan.verseRange.map(async ({ book, start, end }) => {
+        const verses = await getDailyVerse({
           book,
           start,
           end,
           bible: bible || "revised",
-        }),
-      };
-    });
-    setContent(content);
+        });
+        return {
+          book: book,
+          verses: verses,
+        };
+      });
 
-  }, [bible, currentPlan, setContent]);
+      const results = await Promise.all(promises);
+      setContent(results);
+    };
+
+    fetchVerses();
+  }, [bible, currentPlan]);
 
   if (currentPlan.index === "-1") {
     return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;
@@ -76,7 +82,7 @@ const Verses = () => {
           >
             우리말 성경
           </button>
-           <button
+          <button
             id="newHangul"
             className={`rounded-full  mr-2 border-none transition ${bible === "newHangul" ? "active" : ""}`}
             onClick={() => {
