@@ -15,6 +15,15 @@ const PrayerJournal = () => {
   const { messages } = useReceivedMessages();
   const { openDialog } = useDialogStore();
 
+  const currentMessages = messages[currentPlan.date] || [];
+  const groupedMessages = currentMessages.reduce((acc, message) => {
+    if (!acc[message.book]) {
+      acc[message.book] = [];
+    }
+    acc[message.book].push(message);
+    return acc;
+  }, {} as Record<string, typeof currentMessages>);
+
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
@@ -63,10 +72,12 @@ const PrayerJournal = () => {
 
   const handleSaveButton = () => {
     console.log(messages, currentPlan)
-    const myMessage =
-      messages[currentPlan.date]
-        ?.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`)
-        .join("\n") || "";
+    const myMessage = Object.entries(groupedMessages || {})
+      .map(([book, msgs]) => {
+        const verses = msgs.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`).join("\n");
+        return `${book}\n${verses}`;
+      })
+      .join("\n\n") || "";
     const copyData =
       (isShowPlayForUserCheckBox
         ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
@@ -157,15 +168,16 @@ const PrayerJournal = () => {
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
-            {messages?.[currentPlan.date]?.map(
-              ({ chapter, verse, content }, index) => {
-                return (
-                  <div key={index}>
-                    {chapter}:{verse} {content} <br />
+            {Object.entries(groupedMessages).map(([book, msgs], index) => (
+              <div key={index} className="mb-2">
+                <div className="font-bold">{book}</div>
+                {msgs.map(({ chapter, verse, content }, vIndex) => (
+                  <div key={vIndex}>
+                    {chapter}:{verse} {content}
                   </div>
-                );
-              },
-            )}
+                ))}
+              </div>
+            ))}
           </div>
           {isShowPray && (
             <div id="prayBox">
