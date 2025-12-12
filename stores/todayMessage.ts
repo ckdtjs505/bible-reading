@@ -1,12 +1,26 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Messages = Record<string, { message: string; createAt: number }[]>;
+/**
+ * 오늘 내게 주신 말씀.
+ */
+export interface TodayMessage {
+  book: string;
+  chapter: number;
+  verse: number;
+  content: string; // The text content of the verse
+  createAt: number;
+}
+
+type Messages = Record<string, TodayMessage[]>;
 
 interface ReceivedMessagesState {
   messages: Messages;
-  addMessage: (date: string, message: string) => void;
-  removeMessage: (date: string, message: string) => void;
+  addMessage: (date: string, verse: Omit<TodayMessage, "createAt">) => void;
+  removeMessage: (
+    date: string,
+    verse: Omit<TodayMessage, "createAt" | "content">,
+  ) => void;
   clearMessages: (date: string) => void;
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
@@ -38,15 +52,27 @@ export const useReceivedMessages = create<ReceivedMessagesState>()(
         });
       },
       messages: {},
-      addMessage: (date, newMessage) => {
-        console.log(newMessage)
+      addMessage: (date, newVerse) => {
         set((state) => {
           const currentMessage = state.messages[date] || [];
+
+          // Check for duplicates based on ID (book, chapter, verse)
+          const exists = currentMessage.some(
+            (m) =>
+              m.book === newVerse.book &&
+              m.chapter === newVerse.chapter &&
+              m.verse === newVerse.verse,
+          );
+
+          if (exists) {
+            return { messages: state.messages };
+          }
+
           const newMessages = {
             ...state.messages,
             [date]: [
               ...currentMessage,
-              { message: newMessage, createAt: Date.now() },
+              { ...newVerse, createAt: Date.now() },
             ],
           };
 
@@ -54,10 +80,15 @@ export const useReceivedMessages = create<ReceivedMessagesState>()(
           return { messages: filteredMessages };
         });
       },
-      removeMessage: (date, messageToRemove) => {
+      removeMessage: (date, verseToRemove) => {
         set((state) => {
-          const updateMessages = (state.messages[date] || {}).filter(
-            (msg) => msg.message !== messageToRemove,
+          const updateMessages = (state.messages[date] || []).filter(
+            (msg) =>
+              !(
+                msg.book === verseToRemove.book &&
+                msg.chapter === verseToRemove.chapter &&
+                msg.verse === verseToRemove.verse
+              ),
           );
 
           const newMessage = {
@@ -78,7 +109,7 @@ export const useReceivedMessages = create<ReceivedMessagesState>()(
         }),
     }),
     {
-      name: "receivedMessage",
+      name: "receivedMessage-v2", // Versioned to avoid conflicts with old string-based data
       onRehydrateStorage: (state) => {
         return () => state.setHasHydrated(true);
       },

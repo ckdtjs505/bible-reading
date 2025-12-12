@@ -23,13 +23,27 @@ const Verses = () => {
   const messages = useStore(useReceivedMessages, (state) => state.messages);
   const { addMessage, removeMessage } = useReceivedMessages();
 
-  const handleClickMessage = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event?.target as HTMLElement;
+  const handleToggleMessage = ({
+    book,
+    chapter,
+    verse,
+    content,
+  }: {
+    book: string;
+    chapter: number;
+    verse: number;
+    content: string;
+  }) => {
+    // Check if message exists based on ID (book, chapter, verse)
+    const isSelected = messages?.[currentPlan.date]?.some(
+      (msg) =>
+        msg.book === book && msg.chapter === chapter && msg.verse === verse,
+    );
 
-    if (target.classList.contains("select")) {
-      removeMessage(currentPlan.date, target.innerText);
+    if (isSelected) {
+      removeMessage(currentPlan.date, { book, chapter, verse });
     } else {
-      addMessage(currentPlan.date, target.innerText);
+      addMessage(currentPlan.date, { book, chapter, verse, content });
     }
   };
 
@@ -128,13 +142,23 @@ const Verses = () => {
                     <div>
                       <span
                         className={
-                          messages?.[currentPlan.date]
-                            ?.map(({ message }) => message)
-                            .includes(`${chapter}:${verse} ${message}`)
+                          messages?.[currentPlan.date]?.some(
+                            (msg) =>
+                              msg.book === book &&
+                              msg.chapter === chapter &&
+                              msg.verse === verse,
+                          )
                             ? "select"
                             : ""
                         }
-                        onClick={handleClickMessage}
+                        onClick={() =>
+                          handleToggleMessage({
+                            book,
+                            chapter,
+                            verse,
+                            content: message || "",
+                          })
+                        }
                       >
                         {chapter}:{verse} {message}
                       </span>

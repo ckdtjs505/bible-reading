@@ -64,8 +64,9 @@ const PrayerJournal = () => {
   const handleSaveButton = () => {
     console.log(messages, currentPlan)
     const myMessage =
-      messages[currentPlan.date]?.map(({ message }) => message).join("\n") ||
-      "";
+      messages[currentPlan.date]
+        ?.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`)
+        .join("\n") || "";
     const copyData =
       (isShowPlayForUserCheckBox
         ? `💝앞사람을  위한 기도 \n${prayForUser}\n\n`
@@ -156,13 +157,15 @@ const PrayerJournal = () => {
           </div>
           📖 오늘 내게 주신 말씀 : <br />
           <div id="myMessage">
-            {messages?.[currentPlan.date]?.map(({ message }, index) => {
-              return (
-                <div key={index}>
-                  {message} <br />
-                </div>
-              );
-            })}
+            {messages?.[currentPlan.date]?.map(
+              ({ chapter, verse, content }, index) => {
+                return (
+                  <div key={index}>
+                    {chapter}:{verse} {content} <br />
+                  </div>
+                );
+              },
+            )}
           </div>
           {isShowPray && (
             <div id="prayBox">
