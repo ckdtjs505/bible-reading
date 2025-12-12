@@ -19,6 +19,7 @@ const Verses = () => {
   const [content, setContent] = useState<{ book: string; verses: Verse[] }[]>(
     [],
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const messages = useStore(useReceivedMessages, (state) => state.messages);
   const { addMessage, removeMessage } = useReceivedMessages();
@@ -49,21 +50,26 @@ const Verses = () => {
 
   useEffect(() => {
     const fetchVerses = async () => {
-      const promises = currentPlan.verseRange.map(async ({ book, start, end }) => {
-        const verses = await getDailyVerse({
-          book,
-          start,
-          end,
-          bible: bible || "revised",
+      setIsLoading(true);
+      try {
+        const promises = currentPlan.verseRange.map(async ({ book, start, end }) => {
+          const verses = await getDailyVerse({
+            book,
+            start,
+            end,
+            bible: bible || "revised",
+          });
+          return {
+            book: book,
+            verses: verses,
+          };
         });
-        return {
-          book: book,
-          verses: verses,
-        };
-      });
 
-      const results = await Promise.all(promises);
-      setContent(results);
+        const results = await Promise.all(promises);
+        setContent(results);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchVerses();
@@ -132,44 +138,50 @@ const Verses = () => {
       </div>
 
       <div className={fontLevel}>
-        {content.map(({ book, verses }, idx) => {
-          return (
-            <div key={idx}>
-              <div className="font-bold"> {book}</div>
-              {verses?.map(({ chapter, verse, message }, index) => {
-                return (
-                  <div key={index}>
-                    <div>
-                      <span
-                        className={
-                          messages?.[currentPlan.date]?.some(
-                            (msg) =>
-                              msg.book === book &&
-                              msg.chapter === chapter &&
-                              msg.verse === verse,
-                          )
-                            ? "select"
-                            : ""
-                        }
-                        onClick={() =>
-                          handleToggleMessage({
-                            book,
-                            chapter,
-                            verse,
-                            content: message || "",
-                          })
-                        }
-                      >
-                        {chapter}:{verse} {message}
-                      </span>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
+          </div>
+        ) : (
+          content.map(({ book, verses }, idx) => {
+            return (
+              <div key={idx}>
+                <div className="font-bold"> {book}</div>
+                {verses?.map(({ chapter, verse, message }, index) => {
+                  return (
+                    <div key={index}>
+                      <div>
+                        <span
+                          className={
+                            messages?.[currentPlan.date]?.some(
+                              (msg) =>
+                                msg.book === book &&
+                                msg.chapter === chapter &&
+                                msg.verse === verse,
+                            )
+                              ? "select"
+                              : ""
+                          }
+                          onClick={() =>
+                            handleToggleMessage({
+                              book,
+                              chapter,
+                              verse,
+                              content: message || "",
+                            })
+                          }
+                        >
+                          {chapter}:{verse} {message}
+                        </span>
+                      </div>
+                      <br />
                     </div>
-                    <br />
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                  );
+                })}
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
