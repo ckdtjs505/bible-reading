@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hahmlet } from "next/font/google";
 import "./globals.css";
+import QueryProvider from "@/components/QueryProvider";
 // Hahmlet
 const hahmlet = Hahmlet({
   subsets: ["latin"],
@@ -29,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${hahmlet.className} antialiased`}>{children}</body>
+      <body className={`${hahmlet.className} antialiased`}>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

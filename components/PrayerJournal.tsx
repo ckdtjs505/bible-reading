@@ -12,7 +12,6 @@ import useDialogStore from "@/stores/dialogStore";
 
 import { bookKeyNumber } from "@/constants/bibleNumber";
 
-
 const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
@@ -63,11 +62,7 @@ const PrayerJournal = () => {
     }
   }, [userName, router, hasHydrated, openDialog, setCompleteDayCountList]);
 
-  if (!currentPlan) {
-    return <div className="p-4 text-center"> 일정을 불러오는 중입니다... </div>;
-  }
-
-  const currentMessages = messages[currentPlan.date] || [];
+  const currentMessages = currentPlan ? (messages[currentPlan.date] || []) : [];
 
   const groupedMessages = currentMessages.reduce((acc, message) => {
     if (!acc[message.book]) {
@@ -92,6 +87,7 @@ const PrayerJournal = () => {
 
 
   const handleSaveButton = () => {
+    if (!currentPlan) return;
     console.log(messages, currentPlan)
     const myMessage = sortedMessageEntries
       .map(([book, msgs]) => {
@@ -214,7 +210,7 @@ const PrayerJournal = () => {
             </div>
           )}
           <div>
-            제 <span id="day">{formatDay(Number(currentPlan.daycount))}</span> 일차 완료했습니다.
+            제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
           </div>
         </div>
         <button

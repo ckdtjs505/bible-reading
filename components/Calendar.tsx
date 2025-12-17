@@ -1,41 +1,76 @@
 "use client";
 
-
 import "./Calendar.css";
 import { Calendar as RCalendar } from "react-calendar";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePlans } from "@/stores/plan";
 import useVerses from "@/stores/verses";
 import useUserInfo from "@/stores/userInfo";
 import useStore from "@/stores/useStore";
+import { useSchedules } from "@/hooks/useSchedules";
+import { Plan, ScheduleItem } from "@/type/biblePlan";
+
+const transformToPlan = (date: Date, schedules: ScheduleItem[]): Plan | null => {
+  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const dailyItems = schedules.filter((item) => item.date === formattedDate);
+
+  if (dailyItems.length === 0) return null;
+
+  return dailyItems.reduce<Plan>(
+    (acc, val) => {
+      return {
+        index: val.index,
+        daycount: val.daycount,
+        date: val.date,
+        lang: val.lang,
+        verseRange: [
+          ...acc.verseRange,
+          {
+            book: val.book,
+            start: Number(val.start),
+            end: Number(val.end),
+          },
+        ],
+        img: val.img,
+        videoId: val.videoId,
+      };
+    },
+    {
+      index: "-1",
+      daycount: "",
+      date: "",
+      lang: "",
+      verseRange: [],
+      img: "",
+      videoId: "",
+    }
+  );
+};
 
 const Calendar: React.FC = () => {
   const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
-  const { schedules, fetchSchedules, setCurrentPlan } = usePlans();
+  const { setCurrentPlan } = usePlans();
   const { completedDayCountList } = useUserInfo();
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
 
-  // Fetch schedules on mount (or when year changes - implemented simply for now)
-  // Fetch schedules for the current view on mount
-  useEffect(() => {
-    fetchSchedules(String(new Date().getFullYear()));
-  }, [fetchSchedules]);
+  const { data: schedules = [], isLoading } = useSchedules(String(activeStartDate.getFullYear()));
 
   const handleActiveStartDateChange = ({ activeStartDate, view }: any) => {
     if (view === 'month' && activeStartDate) {
-      fetchSchedules(String(activeStartDate.getFullYear()));
+      setActiveStartDate(activeStartDate);
     }
   };
 
   const handleClickDay = (date: Date) => {
-    setCurrentPlan(date);
+    const plan = transformToPlan(date, schedules);
+    setCurrentPlan(plan);
   };
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
     if (view !== "month") return;
 
-    // Logic to find plan implementation inside component to avoid hooks in callback
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    const targetPlan = schedules.filter((p) => p.date === formattedDate);
+    const targetPlan = (schedules || []).filter((p) => p.date === formattedDate);
 
     return targetPlan.map(({ book, start, end }, index) => {
       return (
@@ -67,7 +102,7 @@ const Calendar: React.FC = () => {
     }
 
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    const planItem = schedules.find((p) => p.date === formattedDate);
+    const planItem = (schedules || []).find((p) => p.date === formattedDate);
 
     if (planItem) {
       if (completedDayCountList.includes(Number(planItem.daycount)))
@@ -78,13 +113,16 @@ const Calendar: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!hasHydrated) {
+    if (!hasHydrated || schedules.length === 0) {
       return;
     }
-    // Set initial plan for today after hydration/data fetch?
-    // Maybe checking if currentPlan is null and schedules exist using another useEffect
-    setCurrentPlan(new Date());
-  }, [hasHydrated, schedules.length, setCurrentPlan]);
+    // Attempt to set plan for today if available
+    const today = new Date();
+    const plan = transformToPlan(today, schedules);
+    if (schedules[0]?.year === String(today.getFullYear())) {
+      setCurrentPlan(plan);
+    }
+  }, [hasHydrated, schedules, setCurrentPlan]);
 
   return (
     <div className="flex justify-center flex-col font-bold">

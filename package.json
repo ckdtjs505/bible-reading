@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@tanstack/react-query": "^5.90.12",
     "dotenv": "^17.2.3",
     "mongoose": "^9.0.1",
     "next": "15.1.11",

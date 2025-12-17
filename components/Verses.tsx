@@ -1,13 +1,12 @@
 "use client";
 
-import { getDailyVerse } from "@/app/actions/bible";
+import { useDailyVerse } from "@/hooks/useDailyVerse";
 import { useFontLevel } from "@/stores/font";
 import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
 import { Verse } from "@/type/biblePlan";
-import { useEffect, useState } from "react";
 
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
@@ -16,10 +15,11 @@ const Verses = () => {
   const { setBible } = useVerses();
   const { setFontLevel } = useFontLevel();
   const { currentPlan } = usePlans();
-  const [content, setContent] = useState<{ book: string; verses: Verse[] }[]>(
-    [],
+
+  const { data: content = [], isLoading } = useDailyVerse(
+    currentPlan,
+    bible || "revised"
   );
-  const [isLoading, setIsLoading] = useState(false);
 
   const messages = useStore(useReceivedMessages, (state) => state.messages);
   const { addMessage, removeMessage } = useReceivedMessages();
@@ -50,37 +50,13 @@ const Verses = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchVerses = async () => {
-      if (!currentPlan) return;
-      setIsLoading(true);
-      try {
-        const promises = currentPlan.verseRange.map(async ({ book, start, end }) => {
-          const verses = await getDailyVerse({
-            book,
-            start,
-            end,
-            bible: bible || "revised",
-          });
-          return {
-            book: book,
-            verses: verses,
-          };
-        });
+  if (isLoading) return <div className="p-4 text-center"> Loading... </div>;
 
-        const results = await Promise.all(promises);
-        setContent(results);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  if (currentPlan && currentPlan.index === "-1") {
+    return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;
+  }
 
-    fetchVerses();
-  }, [bible, currentPlan]);
-
-  if (!currentPlan) return <div className="p-4 text-center"> Loading... </div>;
-
-  if (currentPlan.index === "-1") {
+  if (!currentPlan) {
     return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;
   }
 
