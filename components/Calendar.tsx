@@ -15,22 +15,16 @@ const Calendar: React.FC = () => {
   const { completedDayCountList } = useUserInfo();
 
   // Fetch schedules on mount (or when year changes - implemented simply for now)
+  // Fetch schedules for the current view on mount
   useEffect(() => {
-    fetchSchedules('2025'); // Default to 2025 or current year logic
-    // We could make this dynamic based on the calendar's active view date
-    fetchSchedules('2026'); // Pre-fetch 2026 too? Or just handle one year for now.
-    // Ideally, fetchSchedules should append data? 
-    // Current implementation replaces it. 
-    // Let's stick to 2025/2026 logic or just fetching the needed year.
-
-    // For this specific app context (Bible Reading per year), 
-    // usually the user is on a specific year plan. 
-    // Let's assume 2025 for now as per previous context, 
-    // or maybe fetch both? 
-    // The store implementation replaces 'schedules'.
-    // Let's stick to '2025' for now as that's the main usage or check `new Date().getFullYear()`.
     fetchSchedules(String(new Date().getFullYear()));
   }, [fetchSchedules]);
+
+  const handleActiveStartDateChange = ({ activeStartDate, view }: any) => {
+    if (view === 'month' && activeStartDate) {
+      fetchSchedules(String(activeStartDate.getFullYear()));
+    }
+  };
 
   const handleClickDay = (date: Date) => {
     setCurrentPlan(date);
@@ -111,6 +105,7 @@ const Calendar: React.FC = () => {
         tileContent={tileContent}
         onClickDay={handleClickDay}
         tileClassName={handleTileClassName}
+        onActiveStartDateChange={handleActiveStartDateChange}
       ></RCalendar>
     </div>
   );

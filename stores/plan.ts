@@ -6,7 +6,7 @@ interface PlansState {
   schedules: ScheduleItem[]; // Flattened list from DB
   currentPlan: Plan | null;
   isLoading: boolean;
-  year: string;
+  loadedYears: string[];
   fetchSchedules: (year: string) => Promise<void>;
   setCurrentPlan: (date: Date) => void;
 }
@@ -52,22 +52,22 @@ export const usePlans = create<PlansState>((set, get) => ({
   schedules: [],
   currentPlan: null,
   isLoading: false,
-  year: '2026', // Default year
+  loadedYears: [],
 
   fetchSchedules: async (year: string) => {
-    // Prevent refetch if already have data for this year? 
-    // For now, let's fetch always or simple check
-    if (get().year === year && get().schedules.length > 0) return;
+    if (get().loadedYears.includes(year)) return;
 
     set({ isLoading: true });
     try {
       const res = await fetch(`/api/schedule?year=${year}`);
       if (!res.ok) throw new Error("Failed to fetch schedule");
       const data: ScheduleItem[] = await res.json();
-      set({ schedules: data, year, isLoading: false });
 
-      // Update current plan if date matches found data?
-      // Actually setCurrentPlan calls transformToPlan which uses get().schedules
+      set((state) => ({
+        schedules: [...state.schedules, ...data],
+        loadedYears: [...state.loadedYears, year],
+        isLoading: false
+      }));
     } catch (error) {
       console.error(error);
       set({ isLoading: false });
