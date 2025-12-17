@@ -126,7 +126,7 @@ const Verses = () => {
           content.map(({ book, verses }, idx) => {
             return (
               <div key={idx}>
-                <div className="font-bold"> {book}</div>
+                <div className="font-bold"> {book.replaceAll('\\n', '')}</div>
                 {verses?.map(({ chapter, verse, message }, index) => {
                   return (
                     <div key={index}>

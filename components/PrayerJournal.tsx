@@ -29,7 +29,7 @@ const PrayerJournal = () => {
   const [pray, setPray] = useState("");
 
   const formatDay = (daycount: number): number => {
-    return daycount >= 187 ? daycount - 186 : daycount;
+    return daycount;
   }
 
   useEffect(() => {

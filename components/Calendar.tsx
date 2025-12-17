@@ -75,9 +75,14 @@ const Calendar: React.FC = () => {
     return targetPlan.map(({ book, start, end }, index) => {
       return (
         <div key={index}>
-          {book}
+          {book.split(/\\n|\n/).map((line, i) => (
+            <React.Fragment key={i}>
+              {line}
+              {i !== book.split(/\\n|\n/).length - 1 && <br />}
+            </React.Fragment>
+          ))}
           <br />
-          {start}-{end}장
+          {(start && end ? `${start}-${end}장` : '')}
         </div>
       );
     });
