@@ -11,7 +11,8 @@ export async function GET(request: Request) {
         const year = searchParams.get('year');
         const daycount = searchParams.get('daycount');
 
-        let query: any = {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const query: any = {};
 
         if (date) {
             query.date = date;

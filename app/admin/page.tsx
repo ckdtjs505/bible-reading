@@ -44,7 +44,7 @@ export default async function AdminDashboard() {
             // Count how many entries have daycnt matching currentDaycount
             todayCount = db.filter(entry => Number(entry.daycnt) === currentDaycount).length;
         }
-    } catch (e) {
+    } catch {
         errorMsg = '데이터를 불러오는 중 오류가 발생했습니다.';
     }
 

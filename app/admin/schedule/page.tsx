@@ -15,7 +15,9 @@ type PlanItem = {
     videoId: string;
 };
 
-export default function SchedulePage() {
+import { Suspense } from 'react';
+
+function ScheduleContent() {
     const searchParams = useSearchParams();
     const year = searchParams?.get('year') || '2026';
 
@@ -250,5 +252,13 @@ export default function SchedulePage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SchedulePage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ScheduleContent />
+        </Suspense>
     );
 }

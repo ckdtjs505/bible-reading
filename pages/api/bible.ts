@@ -66,8 +66,8 @@ export const getDailyVerse = ({
           });
         }
       });
-    } else if( bible == "newHangul"){
-        newHangleBible.forEach(({ book, chapter, content, verse }) => {
+    } else if (bible == "newHangul") {
+      newHangleBible.forEach(({ book, chapter, content, verse }) => {
         // book - 어떤 성경인지
         if (
           bookNumber == Number(book) &&
@@ -82,7 +82,7 @@ export const getDailyVerse = ({
         }
       });
 
-    }else {
+    } else {
       newBible.forEach(({ book, chapter, content, verse }) => {
         // book - 어떤 성경인지
         if (
@@ -105,7 +105,8 @@ export const getDailyVerse = ({
   }
 };
 
-export default (_req: NextApiRequest, res: NextApiResponse) => {
+
+const handler = (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const dailyVerse = getDailyVerse({
       book: "창세기",
@@ -118,3 +119,5 @@ export default (_req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ message: "Error fetching Bible plans" + error });
   }
 };
+
+export default handler;

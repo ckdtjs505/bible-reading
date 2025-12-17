@@ -47,6 +47,7 @@ export async function POST(request: Request) {
         await Schedule.deleteMany({ year });
 
         // Add year to each item just in case
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const docs = data.map((item: any) => ({
             ...item,
             year
