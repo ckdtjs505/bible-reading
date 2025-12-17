@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 const GOOGLE_API = `https://script.google.com`;
-const GOOGLE_KEY = `AKfycbwHiTDeqtNUONNMdS5nekjTPponxGXkXMAM56So9S9LddNrGEk9kJY1QqlZelZefmUD`;
+const GOOGLE_KEY = `AKfycbyY1CrlExY2T7tJhwYTes3TGlZFC6N7YuC0VCMexaIMLLiMDhWBPssbNrUeThtP4ZOo`;
 
 export const getUserProgressInfo = async (userName: string) => {
   const queryParams = new URLSearchParams({
