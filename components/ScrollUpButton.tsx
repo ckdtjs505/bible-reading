@@ -38,7 +38,8 @@ const ScrollButton = () => {
             })
           }
         >
-          <img src="/free-icon-up-arrow.png" className="size-4"></img>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/free-icon-up-arrow.png" className="size-4" alt="top"></img>
         </button>
       )}
     </div>

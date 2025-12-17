@@ -6,9 +6,12 @@ const SummeryImg = () => {
   const { currentPlan } = usePlans();
 
   return (
-    currentPlan?.img && (
-      <img src={currentPlan.img} alt="img" className="p-4 w-full"></img>
-    )
+    currentPlan?.img ? (
+      <>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={currentPlan.img} alt="img" className="p-4 w-full"></img>
+      </>
+    ) : null
   );
 };
 

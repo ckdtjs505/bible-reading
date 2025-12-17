@@ -10,10 +10,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 // };
 
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   try {
     res.status(200).json('test');
   } catch (error) {
     res.status(500).json({ message: "error fetching" + error });
   }
 };
+
+export default handler;

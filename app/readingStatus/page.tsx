@@ -1,4 +1,6 @@
 
+"use client";
+
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 

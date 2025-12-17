@@ -61,7 +61,7 @@ const PrayerJournal = () => {
         fetchData();
       }
     }
-  }, [userName, router, hasHydrated]);
+  }, [userName, router, hasHydrated, openDialog, setCompleteDayCountList]);
 
   if (!currentPlan) {
     return <div className="p-4 text-center"> 일정을 불러오는 중입니다... </div>;

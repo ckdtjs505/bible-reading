@@ -30,7 +30,7 @@ const Calendar: React.FC = () => {
     // The store implementation replaces 'schedules'.
     // Let's stick to '2025' for now as that's the main usage or check `new Date().getFullYear()`.
     fetchSchedules(String(new Date().getFullYear()));
-  }, []);
+  }, [fetchSchedules]);
 
   const handleClickDay = (date: Date) => {
     setCurrentPlan(date);
@@ -90,7 +90,7 @@ const Calendar: React.FC = () => {
     // Set initial plan for today after hydration/data fetch?
     // Maybe checking if currentPlan is null and schedules exist using another useEffect
     setCurrentPlan(new Date());
-  }, [hasHydrated, schedules.length]);
+  }, [hasHydrated, schedules.length, setCurrentPlan]);
 
   return (
     <div className="flex justify-center flex-col font-bold">

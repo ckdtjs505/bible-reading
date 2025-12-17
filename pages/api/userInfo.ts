@@ -57,7 +57,8 @@ export const setReadBible = ({
   });
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const userProgressInfo = getUserProgressInfo("오창선");
     res.status(200).json(userProgressInfo);
@@ -65,3 +66,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ message: "error fetching" + error });
   }
 };
+
+export default handler;
