@@ -110,7 +110,7 @@ function ScheduleContent() {
         }
     };
 
-    // if (isLoading) return <div className="p-4">Loading...</div>;
+    if (isLoading) return <div className="p-4">Loading...</div>;
 
     return (
         <div className="w-full">

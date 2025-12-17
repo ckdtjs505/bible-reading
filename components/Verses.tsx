@@ -6,7 +6,6 @@ import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
-import { Verse } from "@/type/biblePlan";
 
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);

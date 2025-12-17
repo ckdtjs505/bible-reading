@@ -53,9 +53,9 @@ const Calendar: React.FC = () => {
   const { completedDayCountList } = useUserInfo();
   const [activeStartDate, setActiveStartDate] = useState(new Date());
 
-  const { data: schedules = [], isLoading } = useSchedules(String(activeStartDate.getFullYear()));
+  const { data: schedules = [] } = useSchedules(String(activeStartDate.getFullYear()));
 
-  const handleActiveStartDateChange = ({ activeStartDate, view }: any) => {
+  const handleActiveStartDateChange = ({ activeStartDate, view }: { activeStartDate: Date | null, view: string }) => {
     if (view === 'month' && activeStartDate) {
       setActiveStartDate(activeStartDate);
     }
