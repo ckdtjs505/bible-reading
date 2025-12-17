@@ -49,7 +49,7 @@ const Verses = () => {
     }
   };
 
-  if (isLoading) return <div className="p-4 text-center"> Loading... </div>;
+  if (isLoading) return <div className="p-4 text-center"> 말씀 가져오는 중 </div>;
 
   if (currentPlan && currentPlan.index === "-1") {
     return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;

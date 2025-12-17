@@ -26,6 +26,12 @@ function ScheduleContent() {
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState('');
 
+    type SortConfig = {
+        key: keyof PlanItem;
+        direction: 'asc' | 'desc';
+    };
+    const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+
     // Fetch initial data
     useEffect(() => {
         setIsLoading(true);
@@ -41,6 +47,33 @@ function ScheduleContent() {
                 setIsLoading(false);
             });
     }, [year]);
+
+    const handleSort = (key: keyof PlanItem) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedSchedule = [...schedule].sort((a, b) => {
+        if (!sortConfig) return 0;
+
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
+
+        // Handle numeric sorting for index and daycount
+        if (sortConfig.key === 'index' || sortConfig.key === 'daycount') {
+            return sortConfig.direction === 'asc'
+                ? Number(aValue) - Number(bValue)
+                : Number(bValue) - Number(aValue);
+        }
+
+        // Default string sorting
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+    });
 
     const handleAddRow = () => {
         const lastItem = schedule[schedule.length - 1];
@@ -135,20 +168,38 @@ function ScheduleContent() {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">Index</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">DayCnt</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">Date</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">Lang</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">Book</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">Start</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">End</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Image URL</th>
-                            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">Video ID</th>
+                            <th onClick={() => handleSort('index')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px] cursor-pointer hover:bg-gray-100">
+                                Index {sortConfig?.key === 'index' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('daycount')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px] cursor-pointer hover:bg-gray-100">
+                                DayCnt {sortConfig?.key === 'daycount' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('date')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] cursor-pointer hover:bg-gray-100">
+                                Date {sortConfig?.key === 'date' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('lang')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px] cursor-pointer hover:bg-gray-100">
+                                Lang {sortConfig?.key === 'lang' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('book')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px] cursor-pointer hover:bg-gray-100">
+                                Book {sortConfig?.key === 'book' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('start')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px] cursor-pointer hover:bg-gray-100">
+                                Start {sortConfig?.key === 'start' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('end')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px] cursor-pointer hover:bg-gray-100">
+                                End {sortConfig?.key === 'end' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('img')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px] cursor-pointer hover:bg-gray-100">
+                                Image URL {sortConfig?.key === 'img' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
+                            <th onClick={() => handleSort('videoId')} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] cursor-pointer hover:bg-gray-100">
+                                Video ID {sortConfig?.key === 'videoId' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+                            </th>
                             <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[60px]">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {schedule.map((item) => (
+                        {sortedSchedule.map((item) => (
                             <tr key={item.index}>
                                 <td className="px-2 py-2">
                                     <input
