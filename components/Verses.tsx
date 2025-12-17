@@ -36,6 +36,8 @@ const Verses = () => {
     content: string;
   }) => {
     // Check if message exists based on ID (book, chapter, verse)
+    if (!currentPlan) return;
+
     const isSelected = messages?.[currentPlan.date]?.some(
       (msg) =>
         msg.book === book && msg.chapter === chapter && msg.verse === verse,
@@ -50,6 +52,7 @@ const Verses = () => {
 
   useEffect(() => {
     const fetchVerses = async () => {
+      if (!currentPlan) return;
       setIsLoading(true);
       try {
         const promises = currentPlan.verseRange.map(async ({ book, start, end }) => {
@@ -74,6 +77,8 @@ const Verses = () => {
 
     fetchVerses();
   }, [bible, currentPlan]);
+
+  if (!currentPlan) return <div className="p-4 text-center"> Loading... </div>;
 
   if (currentPlan.index === "-1") {
     return <div className="p-4 text-xl"> 함온성이 없는 날 입니다. </div>;

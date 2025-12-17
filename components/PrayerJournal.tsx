@@ -12,34 +12,11 @@ import useDialogStore from "@/stores/dialogStore";
 
 import { bookKeyNumber } from "@/constants/bibleNumber";
 
+
 const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
   const { openDialog } = useDialogStore();
-
-  const currentMessages = messages[currentPlan.date] || [];
-
-  const groupedMessages = currentMessages.reduce((acc, message) => {
-    if (!acc[message.book]) {
-      acc[message.book] = [];
-    }
-    acc[message.book].push(message);
-    return acc;
-  }, {} as Record<string, typeof currentMessages>);
-
-  const sortedMessageEntries = Object.entries(groupedMessages).sort(
-    ([bookA], [bookB]) => bookKeyNumber(bookA) - bookKeyNumber(bookB),
-  );
-
-  sortedMessageEntries.forEach(([, msgs]) => {
-    msgs.sort((a, b) => {
-      if (a.chapter !== b.chapter) {
-        return a.chapter - b.chapter;
-      }
-      return a.verse - b.verse;
-    });
-  });
-
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
@@ -85,6 +62,34 @@ const PrayerJournal = () => {
       }
     }
   }, [userName, router, hasHydrated]);
+
+  if (!currentPlan) {
+    return <div className="p-4 text-center"> 일정을 불러오는 중입니다... </div>;
+  }
+
+  const currentMessages = messages[currentPlan.date] || [];
+
+  const groupedMessages = currentMessages.reduce((acc, message) => {
+    if (!acc[message.book]) {
+      acc[message.book] = [];
+    }
+    acc[message.book].push(message);
+    return acc;
+  }, {} as Record<string, typeof currentMessages>);
+
+  const sortedMessageEntries = Object.entries(groupedMessages).sort(
+    ([bookA], [bookB]) => bookKeyNumber(bookA) - bookKeyNumber(bookB),
+  );
+
+  sortedMessageEntries.forEach(([, msgs]) => {
+    msgs.sort((a, b) => {
+      if (a.chapter !== b.chapter) {
+        return a.chapter - b.chapter;
+      }
+      return a.verse - b.verse;
+    });
+  });
+
 
   const handleSaveButton = () => {
     console.log(messages, currentPlan)

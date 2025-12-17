@@ -1,6 +1,4 @@
-"use client";
 
-import { plan } from "@/constants/plan";
 import { readPlanByWeek } from "@/constants/readingPlanByWeek";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
@@ -9,7 +7,7 @@ const KEY = "1LrUC8zEKsmAgi7pIeWUIQR8ufOd0F0nGI65ix7UMXr8";
 const param = "%ED%95%A8%EC%98%A8%EC%84%B1DB";
 
 type ReadingStatus = {
-  Timestamp: Date;
+  Timestamp: string;
   name: string;
   daycnt: string;
   myMessage: string;
@@ -22,6 +20,7 @@ type Person = {
   name: string;
   readingStatus: Status[];
 };
+
 
 type ReadingStatusState = Person[];
 
@@ -40,15 +39,7 @@ const getHamonDB = async (): Promise<ReadingStatus> => {
   return await response.json();
 };
 
-const getCurrentDaycount = (date: Date): number => {
-  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  const currentPlan = plan.find((info) => info.date === formattedDate);
 
-  return currentPlan ? Number(currentPlan.daycount) : -1;
-};
-
-// 날자를 입력할수 있도록 해야하나?
-// 오늘 날자로 하니까 함온성이 없는 날에 이슈가 발생함.
 const findReadPlanWeek = (daycount: number): number => {
   // readPlanByWeek에서 daycount으로 week값 추출
   for (let week = 0; week < readPlanByWeek.length; week++) {
@@ -59,16 +50,34 @@ const findReadPlanWeek = (daycount: number): number => {
   return -1; // daycount가 없을 경우 -1 반환
 };
 
-const currentDaycount = getCurrentDaycount(new Date());
-const currentReadPlanWeek = findReadPlanWeek(currentDaycount);
-
 const ReadingStatus = () => {
-  const [bibleReadingStatus, setBibleReadingStatus] =
-    useState<ReadingStatusState>([]);
-
+  const [bibleReadingStatus, setBibleReadingStatus] = useState<ReadingStatusState>([]);
   const status = useRef<HTMLDivElement>(null);
-
   const [member, setMember] = useState<string[]>([]);
+  const [currentDaycount, setCurrentDaycount] = useState<number>(-1);
+  const [currentReadPlanWeek, setCurrentReadPlanWeek] = useState<number>(-1);
+
+  // Fetch current daycount from API
+  useEffect(() => {
+    const fetchDayCount = async () => {
+      try {
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        const res = await fetch(`/api/schedule?date=${formattedDate}`);
+        const data = await res.json();
+
+        if (Array.isArray(data) && data.length > 0) {
+          const dayIdx = Number(data[0].daycount);
+          setCurrentDaycount(dayIdx);
+          setCurrentReadPlanWeek(findReadPlanWeek(dayIdx));
+        }
+      } catch (err) {
+        console.error("Failed to fetch day count", err);
+      }
+    };
+    fetchDayCount();
+  }, []);
+
 
   const onChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e?.target?.value;
