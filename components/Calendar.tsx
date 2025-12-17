@@ -50,7 +50,7 @@ const transformToPlan = (date: Date, schedules: ScheduleItem[]): Plan | null => 
 const Calendar: React.FC = () => {
   const hasHydrated = useStore(useVerses, (state) => state._hasHydrated);
   const { setCurrentPlan } = usePlans();
-  const { completedDayCountList } = useUserInfo();
+  const { completedIndexList } = useUserInfo();
   const [activeStartDate, setActiveStartDate] = useState(new Date());
 
   const { data: schedules = [] } = useSchedules(String(activeStartDate.getFullYear()));
@@ -110,7 +110,7 @@ const Calendar: React.FC = () => {
     const planItem = (schedules || []).find((p) => p.date === formattedDate);
 
     if (planItem) {
-      if (completedDayCountList.includes(Number(planItem.daycount)))
+      if (completedIndexList.includes(planItem.index))
         className = className + " active";
     }
 

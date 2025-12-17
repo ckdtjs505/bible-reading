@@ -19,7 +19,7 @@ const PrayerJournal = () => {
 
   const userName = useStore(useUserInfo, (state) => state.userName);
   const hasHydrated = useStore(useUserInfo, (state) => state._hasHydrated);
-  const { addCompleteDayCountList, setCompleteDayCountList } = useUserInfo();
+  const { addCompletedIndexList, setCompletedIndexList } = useUserInfo();
   const [isShowPlayForUserCheckBox, setIsShowPlayForUserCheckBox] =
     useState(false);
 
@@ -51,7 +51,7 @@ const PrayerJournal = () => {
         const fetchData = async () => {
           try {
             const info = await getUserProgressInfo(userName || "");
-            setCompleteDayCountList(info.row);
+            setCompletedIndexList((info.row || []).map(String));
           } catch (err) {
             console.log(err);
           }
@@ -60,7 +60,7 @@ const PrayerJournal = () => {
         fetchData();
       }
     }
-  }, [userName, router, hasHydrated, openDialog, setCompleteDayCountList]);
+  }, [userName, router, hasHydrated, openDialog, setCompletedIndexList]);
 
   const currentMessages = currentPlan ? (messages[currentPlan.date] || []) : [];
 
@@ -117,9 +117,10 @@ const PrayerJournal = () => {
           myMessage: myMessage,
           prayForUser: prayForUser,
           daycnt: Number(currentPlan.daycount),
+          index: currentPlan.index,
         });
 
-        addCompleteDayCountList(Number(currentPlan.daycount));
+        addCompletedIndexList(currentPlan.index);
       })
       .catch((err) => {
         console.error("클립보드 복사에 실패했습니다: ", err);
@@ -165,73 +166,76 @@ const PrayerJournal = () => {
           </div>
         </div>
       </div>
-      <div id="userContent" className="p-4">
-        <div id="submitdata">
-          {isShowPlayForUserCheckBox && (
-            <div id="prayForUser">
-              💝앞사람을 위한 기도 :
-              <textarea
-                value={prayForUser}
-                id="prayForUserText"
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setPrayForUser(e.target.value)
-                }
-                className="w-full h-20 border border-black"
-              ></textarea>
-            </div>
-          )}
-          <div>
-            🌼 이름 : <span id="name">{userName}</span>
-          </div>
-          📖 오늘 내게 주신 말씀 : <br />
-          <div id="myMessage">
-            {sortedMessageEntries.map(([book, msgs], index) => (
-              <div key={index} className="mb-2">
-                <div className="font-bold">{book}</div>
-                {msgs.map(({ chapter, verse, content }, vIndex) => (
-                  <div key={vIndex}>
-                    {chapter}:{verse} {content}
-                  </div>
-                ))}
+
+      {currentPlan && (
+        <div id="userContent" className="p-4">
+          <div id="submitdata">
+            {isShowPlayForUserCheckBox && (
+              <div id="prayForUser">
+                💝앞사람을 위한 기도 :
+                <textarea
+                  value={prayForUser}
+                  id="prayForUserText"
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setPrayForUser(e.target.value)
+                  }
+                  className="w-full h-20 border border-black"
+                ></textarea>
               </div>
-            ))}
-          </div>
-          {isShowPray && (
-            <div id="prayBox">
-              🙏 한줄 기도 :
-              <textarea
-                value={pray}
-                id="pray"
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setPray(e.target.value)
-                }
-                className="w-full h-20 border border-black"
-              ></textarea>
+            )}
+            <div>
+              🌼 이름 : <span id="name">{userName}</span>
             </div>
-          )}
-          <div>
-            제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
+            📖 오늘 내게 주신 말씀 : <br />
+            <div id="myMessage">
+              {sortedMessageEntries.map(([book, msgs], index) => (
+                <div key={index} className="mb-2">
+                  <div className="font-bold">{book}</div>
+                  {msgs.map(({ chapter, verse, content }, vIndex) => (
+                    <div key={vIndex}>
+                      {chapter}:{verse} {content}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            {isShowPray && (
+              <div id="prayBox">
+                🙏 한줄 기도 :
+                <textarea
+                  value={pray}
+                  id="pray"
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setPray(e.target.value)
+                  }
+                  className="w-full h-20 border border-black"
+                ></textarea>
+              </div>
+            )}
+            <div>
+              제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
+            </div>
           </div>
+          <button
+            id="saveButton"
+            className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            type="button"
+            onClick={handleSaveButton}
+          >
+            복사하기
+          </button>
+          <button
+            id="changeName"
+            className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            type="button"
+            onClick={() => {
+              openDialog("login");
+            }}
+          >
+            이름바꾸기
+          </button>
         </div>
-        <button
-          id="saveButton"
-          className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-          type="button"
-          onClick={handleSaveButton}
-        >
-          복사하기
-        </button>
-        <button
-          id="changeName"
-          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-          type="button"
-          onClick={() => {
-            openDialog("login");
-          }}
-        >
-          이름바꾸기
-        </button>
-      </div>
+      )}
     </div>
   );
 };

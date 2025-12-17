@@ -4,9 +4,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 type userInfoParam = {
   userName: string;
   setUserName: (data: string) => void;
-  completedDayCountList: number[];
-  setCompleteDayCountList: (daycounts: number[]) => void;
-  addCompleteDayCountList: (daycount: number) => void;
+  completedIndexList: string[];
+  setCompletedIndexList: (indices: string[]) => void;
+  addCompletedIndexList: (index: string) => void;
   _hasHydrated: boolean;
   setHasHydrated: (data: boolean) => void;
 };
@@ -18,16 +18,16 @@ const useUserInfo = create<userInfoParam>()(
       setUserName: (userName: string) => {
         set({ userName: userName });
       },
-      completedDayCountList: [],
-      setCompleteDayCountList: (daycounts: number[]) => {
+      completedIndexList: [],
+      setCompletedIndexList: (indices: string[]) => {
         // 이름 변경 후 진입시 이전에 저장했던 정보가 남아 있음
         set(() => ({
-          completedDayCountList: [...daycounts],
+          completedIndexList: [...indices],
         }));
       },
-      addCompleteDayCountList: (daycount: number) => {
+      addCompletedIndexList: (index: string) => {
         set((state) => ({
-          completedDayCountList: [...state.completedDayCountList, daycount],
+          completedIndexList: [...state.completedIndexList, index],
         }));
       },
       _hasHydrated: false,

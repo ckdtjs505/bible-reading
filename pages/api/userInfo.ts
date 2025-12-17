@@ -31,17 +31,20 @@ export const setReadBible = ({
   name,
   myMessage,
   daycnt,
+  index,
   pray,
 }: {
   prayForUser: string;
   name: string;
   myMessage: string;
   daycnt: number;
+  index: string;
   pray: string;
 }) => {
   const queryParams = new URLSearchParams({
     name: name,
     daycnt: String(daycnt),
+    index: index,
     myMessage: myMessage,
     pray: pray,
     prayForUser: prayForUser,
