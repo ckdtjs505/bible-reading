@@ -76,9 +76,22 @@ function ScheduleContent() {
     });
 
     const handleAddRow = () => {
+        // Find the max index from all items, not just the last one (since they might be sorted alphabetically)
+        const maxIndex = schedule.reduce((max, item) => {
+            const current = Number(item.index);
+            return current > max ? current : max;
+        }, 0);
+
+        const newIndex = String(maxIndex + 1);
+
+        // Find the max daycount as well for consistency
+        const maxDayCount = schedule.reduce((max, item) => {
+            const current = Number(item.daycount);
+            return current > max ? current : max;
+        }, 0);
+        const newDayCount = String(maxDayCount + 1);
+
         const lastItem = schedule[schedule.length - 1];
-        const newIndex = lastItem ? String(Number(lastItem.index) + 1) : "1";
-        const newDayCount = lastItem ? String(Number(lastItem.daycount) + 1) : "1";
 
         // Auto-increment date if possible
         let newDate = "";
