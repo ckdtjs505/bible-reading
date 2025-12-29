@@ -91,7 +91,8 @@ function ScheduleContent() {
         }, 0);
         const newDayCount = String(maxDayCount + 1);
 
-        const lastItem = schedule[schedule.length - 1];
+        // Find the item with the max index to use as the previous item (for copying book, date, etc.)
+        const lastItem = schedule.find((item) => Number(item.index) === maxIndex);
 
         // Auto-increment date if possible
         let newDate = "";
