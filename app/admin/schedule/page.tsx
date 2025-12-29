@@ -30,7 +30,7 @@ function ScheduleContent() {
         key: keyof PlanItem;
         direction: 'asc' | 'desc';
     };
-    const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+    const [sortConfig, setSortConfig] = useState<SortConfig | null>({ key: 'index', direction: 'asc' });
 
     // Fetch initial data
     useEffect(() => {
