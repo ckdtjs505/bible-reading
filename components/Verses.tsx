@@ -1,5 +1,6 @@
 "use client";
 
+import { useSchedules } from "@/hooks/useSchedules";
 import { useDailyVerse } from "@/hooks/useDailyVerse";
 import { useFontLevel } from "@/stores/font";
 import { usePlans } from "@/stores/plan";
@@ -34,7 +35,7 @@ const Verses = () => {
     verse: number;
     content: string;
   }) => {
-    // Check if message exists based on ID (book, chapter, verse)
+    // ID(권, 장, 절)를 기반으로 메시지가 존재하는지 확인
     if (!currentPlan) return;
 
     const isSelected = messages?.[currentPlan.date]?.some(
@@ -49,13 +50,21 @@ const Verses = () => {
     }
   };
 
+  /* 
+   * 현재 연도의 일정 로딩 상태를 확인합니다.
+   * 이는 달력이 초기 데이터를 가져오는 동안 앱 로드 시 즉시 '일정 없음'이 표시되는 것을 방지하기 위함입니다.
+   */
+  const currentYear = new Date().getFullYear().toString();
+  const { isLoading: isScheduleLoading } = useSchedules(currentYear);
+
   if (isLoading) return <div className="p-4 text-center"> 말씀 가져오는 중 </div>;
 
-  if (currentPlan && currentPlan.index === "-1") {
-    return <div className="p-4 text-xl text-center"> 함온성이 없는 날 입니다. </div>;
+  // 계획이 없지만 현재 일정을 로딩 중이라면 로딩 메시지를 표시
+  if (!currentPlan && isScheduleLoading) {
+    return <div className="p-4 text-center"> 일정을 불러오는 중... </div>;
   }
 
-  if (!currentPlan) {
+  if (!currentPlan || currentPlan.index === "-1") {
     return <div className="p-4 text-xl text-center"> 함온성이 없는 날 입니다. </div>;
   }
 
