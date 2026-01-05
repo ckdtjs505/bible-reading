@@ -98,7 +98,7 @@ export default function AdminDashboardClient({
                 if (!log.myMessage.includes(book)) return false;
 
                 // Parse ref numbers
-                const [start, end] = ref.split('-');
+                const [start] = ref.split('-');
                 const [ch, v] = start.split(':');
 
                 // Construct regex: Chapter + separator + Verse
@@ -106,7 +106,7 @@ export default function AdminDashboardClient({
                 // EXCLUDES: "1:17" when searching for "1:1" (by ensuring no digit follows)
                 const pattern = new RegExp(`${ch}\\s*[:장]\\s*${v}(?!\\d)`);
                 return pattern.test(log.myMessage);
-            } catch (e) {
+            } catch {
                 return false;
             }
         })
@@ -175,8 +175,8 @@ export default function AdminDashboardClient({
                                                         <div
                                                             key={i}
                                                             className={`flex items-center justify-between text-xs px-2 py-1 rounded cursor-pointer transition-colors border ${selectedVerse === v.ref
-                                                                    ? 'bg-purple-100 text-purple-700 font-bold border-purple-200'
-                                                                    : 'bg-white text-gray-600 border-gray-100 hover:bg-gray-50 hover:border-gray-200'
+                                                                ? 'bg-purple-100 text-purple-700 font-bold border-purple-200'
+                                                                : 'bg-white text-gray-600 border-gray-100 hover:bg-gray-50 hover:border-gray-200'
                                                                 }`}
                                                             onClick={() => setSelectedVerse(selectedVerse === v.ref ? null : v.ref)}
                                                         >

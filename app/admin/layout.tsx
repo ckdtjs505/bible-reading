@@ -1,10 +1,12 @@
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import AdminSidebar from './components/AdminSidebar';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
     return (
         <div className="min-h-screen bg-gray-50">
-            <AdminSidebar />
+            <Suspense fallback={<div className="w-64 bg-white border-r border-gray-200 hidden md:block" />}>
+                <AdminSidebar />
+            </Suspense>
 
             {/* Main Content */}
             <main className="md:pl-64 transition-all duration-300">
