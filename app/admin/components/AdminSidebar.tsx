@@ -20,6 +20,10 @@ const MENU_ITEMS = [
         path: '/admin/schedule',
         year: '2026',
     },
+    {
+        name: '진행 현황',
+        path: '/admin/status',
+    },
 ];
 
 export default function AdminSidebar() {
@@ -27,7 +31,7 @@ export default function AdminSidebar() {
     const searchParams = useSearchParams();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Close mobile menu when route changes
+    // 라우트 변경 시 모바일 메뉴 닫기
     useEffect(() => {
         setIsMobileMenuOpen(false);
     }, [pathname, searchParams]);
@@ -66,7 +70,7 @@ export default function AdminSidebar() {
 
     return (
         <>
-            {/* Mobile Header */}
+            {/* 모바일 헤더 */}
             <header className="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-30">
                 <h2 className="text-xl font-bold text-gray-800">Admin</h2>
                 <button
@@ -92,7 +96,7 @@ export default function AdminSidebar() {
                 </button>
             </header>
 
-            {/* Mobile Sidebar (Overlay) */}
+            {/* 모바일 사이드바 (오버레이) */}
             {isMobileMenuOpen && (
                 <div className="relative z-40 md:hidden">
                     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
@@ -118,7 +122,7 @@ export default function AdminSidebar() {
                 </div>
             )}
 
-            {/* Desktop Sidebar */}
+            {/* 데스크탑 사이드바 */}
             <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-white border-r border-gray-200">
                 <div className="flex flex-col flex-grow pt-5">
                     <div className="flex items-center flex-shrink-0 px-6 mb-6">
@@ -127,7 +131,7 @@ export default function AdminSidebar() {
                     <div className="flex-1 flex flex-col px-2 pb-4 overflow-y-auto">
                         <NavLinks />
                     </div>
-                    {/* Optional: User info or logout at bottom */}
+                    {/* 선택 사항: 사용자 정보 또는 하단 로그아웃 */}
                     <div className="p-4 border-t border-gray-200">
                         <Link href="/" className="block px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
                             Exit Admin
