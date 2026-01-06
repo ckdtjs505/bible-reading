@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserProgressInfo, setReadBible } from "@/pages/api/userInfo";
+import { getUserProgressInfo, setReadBible } from "@/lib/google-api";
 import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useUserInfo from "@/stores/userInfo";

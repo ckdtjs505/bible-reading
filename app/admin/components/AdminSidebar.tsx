@@ -11,6 +11,10 @@ const MENU_ITEMS = [
         exact: true,
     },
     {
+        name: '진행 현황',
+        path: '/admin/status',
+    },
+    {
         name: '2025 함온성 일정',
         path: '/admin/schedule',
         year: '2025',
@@ -19,10 +23,6 @@ const MENU_ITEMS = [
         name: '2026 함온성 일정',
         path: '/admin/schedule',
         year: '2026',
-    },
-    {
-        name: '진행 현황',
-        path: '/admin/status',
     },
 ];
 

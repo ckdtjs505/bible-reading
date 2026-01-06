@@ -1,4 +1,4 @@
-import { getHamonDB, getCurrentDaycount } from "../../../lib/server-utils";
+import { getHamonDB } from "../../../lib/server-utils";
 import AdminStatusClient from "./status-client";
 
 // 최신성을 보장하기 위해 상태 페이지 캐싱 비활성화
@@ -6,10 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminStatusPage() {
     // 병렬 데이터 가져오기
-    const [db, currentDaycount] = await Promise.all([
-        getHamonDB(),
-        getCurrentDaycount()
-    ]);
+    const db = await getHamonDB();
 
     // 데이터 처리
     const userMap = new Map<string, Set<number>>();
