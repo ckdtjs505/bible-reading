@@ -2,6 +2,7 @@
 
 import Calendar from "@/components/Calendar";
 import LoginDialog from "@/components/LoginDialog";
+import MyWordsDialog from "@/components/MyWordsDialog";
 import PrayerJournal from "@/components/PrayerJournal";
 import ScrollButton from "@/components/ScrollUpButton";
 import SummeryImg from "@/components/summeryImg";
@@ -53,6 +54,7 @@ export default function Home() {
       <PrayerJournal />
 
       <LoginDialog />
+      <MyWordsDialog />
 
       <ScrollButton />
     </>

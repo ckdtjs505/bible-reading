@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type DialogType = "login" | null;
+type DialogType = "login" | "myWords" | null;
 
 interface DialogState {
   isOpen: boolean;
