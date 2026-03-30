@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import { useSchedules } from "@/hooks/useSchedules";
 import { useDailyVerse } from "@/hooks/useDailyVerse";
 import { useFontLevel } from "@/stores/font";
@@ -7,6 +8,8 @@ import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
 import useVerses from "@/stores/verses";
+import { useTTS } from "@/hooks/useTTS";
+import TTSPlayer from "@/components/TTSPlayer";
 
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
@@ -20,6 +23,31 @@ const Verses = () => {
     currentPlan,
     bible || "revised"
   );
+
+  const tts = useTTS();
+  const [showTTS, setShowTTS] = useState(false);
+  const [verseIndexMap, setVerseIndexMap] = useState<Map<string, { start: number; end: number }>>(new Map());
+  const activeVerseIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!tts.isPlaying) return;
+    
+    let foundId = null;
+    for (const [key, bounds] of verseIndexMap.entries()) {
+      if (tts.charIndex >= bounds.start && tts.charIndex < bounds.end) {
+        foundId = `verse-${key}`;
+        break;
+      }
+    }
+    
+    if (foundId && foundId !== activeVerseIdRef.current) {
+       activeVerseIdRef.current = foundId;
+       const el = document.getElementById(foundId);
+       if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+       }
+    }
+  }, [tts.charIndex, tts.isPlaying, verseIndexMap]);
 
   const messages = useStore(useReceivedMessages, (state) => state.messages);
   const { addMessage, removeMessage } = useReceivedMessages();
@@ -75,8 +103,9 @@ const Verses = () => {
         <div id="bibleType" className="flex text-[0.7rem]">
           <button
             id="kiv"
-            className={`rounded-full mr-2  border-none bg-transparent transition ${bible === "revised" ? "active" : ""}`}
+            className={`rounded-full mr-2 border-none transition ${bible === "revised" ? "active" : ""} ${tts.isPlaying && bible !== "revised" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
+              if (tts.isPlaying) return;
               setBible("revised");
             }}
           >
@@ -84,8 +113,9 @@ const Verses = () => {
           </button>
           <button
             id="korean"
-            className={`rounded-full  mr-2 border-none transition ${bible === "woorimal" ? "active" : ""}`}
+            className={`rounded-full mr-2 border-none transition ${bible === "woorimal" ? "active" : ""} ${tts.isPlaying && bible !== "woorimal" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
+              if (tts.isPlaying) return;
               setBible("woorimal");
             }}
           >
@@ -93,8 +123,9 @@ const Verses = () => {
           </button>
           <button
             id="newHangul"
-            className={`rounded-full  mr-2 border-none transition ${bible === "newHangul" ? "active" : ""}`}
+            className={`rounded-full mr-2 border-none transition ${bible === "newHangul" ? "active" : ""} ${tts.isPlaying && bible !== "newHangul" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
+              if (tts.isPlaying) return;
               setBible("newHangul");
             }}
           >
@@ -124,6 +155,53 @@ const Verses = () => {
             -
           </button>
         </div>
+
+        {/* 재생/중지 버튼 그룹 */}
+        <div id="tts" className="flex w-12 ml-2">
+          <button
+            className="btn cursor-pointer w-12 border border-blue-400 bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition rounded-md"
+            onClick={() => {
+              if (tts.isPlaying) {
+                tts.stop();
+                setShowTTS(false);
+              } else {
+                if (!content || content.length === 0) return;
+                let accumulatedText = "";
+                const newVerseIndexMap = new Map<string, { start: number; end: number }>();
+
+                content.forEach((c, cIdx) => {
+                  const bookIntro = c.book.replaceAll('\\n', '');
+                  accumulatedText += `${bookIntro}. `;
+                  
+                  c.verses?.forEach((v, vIdx) => {
+                    const startIdx = accumulatedText.length;
+                    const vText = `${v.message}`;
+                    accumulatedText += vText;
+                    
+                    newVerseIndexMap.set(`${c.book}-${v.chapter}-${v.verse}`, {
+                      start: startIdx,
+                      end: accumulatedText.length
+                    });
+                    
+                    if (vIdx !== c.verses.length - 1) {
+                      accumulatedText += " ";
+                    }
+                  });
+                  if (cIdx !== content.length - 1) {
+                    accumulatedText += " ";
+                  }
+                });
+
+                setVerseIndexMap(newVerseIndexMap);
+                setShowTTS(true);
+                tts.play(accumulatedText.trim());
+              }
+            }}
+            title={tts.isPlaying ? "듣기 중지" : "말씀 듣기"}
+          >
+            {tts.isPlaying ? "⏹️" : "🔊"}
+          </button>
+        </div>
       </div>
 
       <div className={fontLevel}>
@@ -137,20 +215,23 @@ const Verses = () => {
               <div key={idx}>
                 <div className="font-bold"> {book.replaceAll('\\n', '')}</div>
                 {verses?.map(({ chapter, verse, message }, index) => {
+                  const verseKey = `${book}-${chapter}-${verse}`;
+                  const bounds = verseIndexMap.get(verseKey);
+                  const isReading =
+                    tts.isPlaying &&
+                    bounds &&
+                    tts.charIndex >= bounds.start &&
+                    tts.charIndex < bounds.end;
+
                   return (
                     <div key={index}>
                       <div>
                         <span
-                          className={
-                            messages?.[currentPlan.date]?.some(
-                              (msg) =>
-                                msg.book === book &&
-                                msg.chapter === chapter &&
-                                msg.verse === verse,
-                            )
-                              ? "select"
-                              : ""
-                          }
+                          id={`verse-${verseKey}`}
+                          className={`
+                            ${messages?.[currentPlan.date]?.some((msg) => msg.book === book && msg.chapter === chapter && msg.verse === verse) ? "select" : ""}
+                            ${isReading ? "underline decoration-blue-500 decoration-2 underline-offset-4 bg-blue-50 transition-colors" : ""}
+                          `}
                           onClick={() =>
                             handleToggleMessage({
                               book,
@@ -172,6 +253,10 @@ const Verses = () => {
           })
         )}
       </div>
+
+      {showTTS && (
+        <TTSPlayer tts={tts} onClose={() => setShowTTS(false)} />
+      )}
     </div>
   );
 };
