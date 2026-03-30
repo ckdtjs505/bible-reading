@@ -7,7 +7,6 @@ import { useFontLevel } from "@/stores/font";
 import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
-import useUserInfo from "@/stores/userInfo";
 import useVerses from "@/stores/verses";
 import { useTTS } from "@/hooks/useTTS";
 import TTSPlayer from "@/components/TTSPlayer";
@@ -15,7 +14,6 @@ import TTSPlayer from "@/components/TTSPlayer";
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
   const level = useStore(useFontLevel, (state) => state.level) || 0;
-  const userName = useStore(useUserInfo, (state) => state.userName);
   const bible = useStore(useVerses, (state) => state.bible);
   const { setBible } = useVerses();
   const { setFontLevel } = useFontLevel();
@@ -40,7 +38,7 @@ const Verses = () => {
 
   useEffect(() => {
     if (!tts.isPlaying) return;
-    
+
     let foundId = null;
     for (const [key, bounds] of verseIndexMap.entries()) {
       if (tts.charIndex >= bounds.start && tts.charIndex < bounds.end) {
@@ -48,13 +46,13 @@ const Verses = () => {
         break;
       }
     }
-    
+
     if (foundId && foundId !== activeVerseIdRef.current) {
-       activeVerseIdRef.current = foundId;
-       const el = document.getElementById(foundId);
-       if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-       }
+      activeVerseIdRef.current = foundId;
+      const el = document.getElementById(foundId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }, [tts.charIndex, tts.isPlaying, verseIndexMap]);
 
@@ -188,25 +186,25 @@ const Verses = () => {
                     end: accumulatedText.length + introText.length
                   });
                   accumulatedText += introText;
-                  
+
                   c.verses?.forEach((v, vIdx) => {
                     const startIdx = accumulatedText.length;
                     let vText = `${v.message}`;
-                    
+
                     if (vIdx !== c.verses.length - 1) {
                       vText += " ";
                     } else if (cIdx !== content.length - 1) {
                       vText += " ";
                     }
-                    
+
                     ttsChunks.push({
                       text: vText,
                       start: startIdx,
                       end: startIdx + vText.length
                     });
-                    
+
                     accumulatedText += vText;
-                    
+
                     newVerseIndexMap.set(`${c.book}-${v.chapter}-${v.verse}`, {
                       start: startIdx,
                       end: accumulatedText.length
