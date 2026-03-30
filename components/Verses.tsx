@@ -31,6 +31,13 @@ const Verses = () => {
   const [verseIndexMap, setVerseIndexMap] = useState<Map<string, { start: number; end: number }>>(new Map());
   const activeVerseIdRef = useRef<string | null>(null);
 
+  // 날짜(currentPlan)나 성경 버전이 바뀔 때 기존 TTS 재생을 취소하고 컨트롤 바를 숨김처리합니다.
+  useEffect(() => {
+    tts.stop();
+    setShowTTS(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPlan?.date, bible]);
+
   useEffect(() => {
     if (!tts.isPlaying) return;
     
@@ -159,8 +166,7 @@ const Verses = () => {
         </div>
 
         {/* 재생/중지 버튼 그룹 */}
-        {userName === "오창선" && (
-          <div id="tts" className="flex w-12 ml-2">
+        <div id="tts" className="flex w-12 ml-2">
           <button
             className="btn cursor-pointer w-12 border border-blue-400 bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition rounded-md"
             onClick={() => {
@@ -209,8 +215,10 @@ const Verses = () => {
                 });
 
                 setVerseIndexMap(newVerseIndexMap);
-                setShowTTS(true);
-                tts.play(accumulatedText, ttsChunks);
+                const isSuccess = tts.play(accumulatedText, ttsChunks);
+                if (isSuccess) {
+                  setShowTTS(true);
+                }
               }
             }}
             title={tts.isPlaying ? "듣기 중지" : "말씀 듣기"}
@@ -218,7 +226,6 @@ const Verses = () => {
             {tts.isPlaying ? "⏹️" : "🔊"}
           </button>
         </div>
-        )}
       </div>
 
       <div className={fontLevel}>

@@ -88,15 +88,6 @@ export const useTTS = () => {
           const progressPercent = (clampedTime / totalTime) * 100;
           setProgress(progressPercent);
           
-          const textLen = fullTextRef.current.length;
-          const estimatedCharIndex = Math.floor((clampedTime / totalTime) * textLen);
-          
-          setCharIndex((prevIdx) => {
-            const newIdx = Math.max(prevIdx, estimatedCharIndex);
-            currentIndexRef.current = newIdx;
-            return newIdx;
-          });
-          
           return clampedTime;
         });
       }, 100);
@@ -109,11 +100,12 @@ export const useTTS = () => {
     return textLen / (CHARS_PER_SECOND * currentRate);
   };
 
-  const playFromIndex = (text: string, startIndex: number, currentRate: number) => {
+  const playFromIndex = (text: string, startIndex: number, currentRate: number, isContinuous = false) => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
     // iOS 버그: 아무것도 안 하고 있는데 cancel()을 호출하면 다음 speak()가 씹힘
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+    // isContinuous가 참일 때는 (문장 간 이어서 재생) 이전 문장의 onend 후 진행되므로 불필요한 cancel을 방지해 끊김 버그를 줄입니다.
+    if (!isContinuous && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
       if (currentUtteranceRef.current) {
         currentUtteranceRef.current._intentToStop = true;
       }
@@ -224,9 +216,11 @@ export const useTTS = () => {
         // 다음 청크 이어서 바로 재생
         const nextStartIndex = startIndex + chunkToPlay.text.length;
         currentIndexRef.current = nextStartIndex;
+        
+        // 안드로이드 크롬의 경우 너무 빠르게 speak()를 연달아 호출하면 무시되는 버그가 있으므로 50ms 여유를 줍니다.
         setTimeout(() => {
-          playFromIndex(fullTextRef.current, nextStartIndex, currentRate);
-        }, 10);
+          playFromIndex(fullTextRef.current, nextStartIndex, currentRate, true);
+        }, 50);
       } else {
         setIsPlaying(false);
         setIsPaused(false);
@@ -240,11 +234,12 @@ export const useTTS = () => {
     utterance.onerror = (e: SpeechSynthesisErrorEvent) => {
       console.log("TTS Error Event: ", e.error);
       
-      if (!utterance._intentToStop && (e.error === "canceled" || e.error === "interrupted")) {
+      // 안드로이드에서 종종 발생하는 구절 쪼개기 에러나 중단 에러 시 자동 재시도
+      if (!utterance._intentToStop && (e.error === "canceled" || e.error === "interrupted" || e.error === "synthesis-failed" || e.error === "network")) {
         console.warn("TTS was unexpectedly interrupted! Auto-resuming from index: ", currentIndexRef.current);
         setTimeout(() => {
-          playFromIndex(fullTextRef.current, currentIndexRef.current, currentRate);
-        }, 50);
+          playFromIndex(fullTextRef.current, currentIndexRef.current, currentRate, true);
+        }, 100);
         return; // 상태 변경 방지
       }
 
@@ -263,7 +258,7 @@ export const useTTS = () => {
     }
   };
 
-  const playToRead = (text: string, chunks?: TTSChunk[]) => {
+  const playToRead = (text: string, chunks?: TTSChunk[]): boolean => {
     if (typeof window !== "undefined") {
       const ua = navigator.userAgent.toLowerCase();
       // 카카오톡 인앱 브라우저 감지
@@ -271,12 +266,12 @@ export const useTTS = () => {
         const targetUrl = window.location.href;
         alert("카카오톡 내부에서는 음성이 지원되지 않습니다. 외부 브라우저(크롬/사파리)로 이동합니다.");
         window.location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(targetUrl);
-        return;
+        return false;
       }
 
       if (!window.speechSynthesis) {
         alert("현재 사용중인 브라우저는 음성 읽기 기능을 지원하지 않습니다. 크롬이나 사파리를 이용해주세요.");
-        return;
+        return false;
       }
     }
 
@@ -287,6 +282,7 @@ export const useTTS = () => {
     setCharIndex(0);
     setCurrentTime(0);
     playFromIndex(text, 0, rate);
+    return true;
   };
 
   const pause = () => {
