@@ -26,6 +26,12 @@ const safeCancel = () => {
   }
 };
 
+export interface TTSChunk {
+  text: string;
+  start: number;
+  end: number;
+}
+
 export const useTTS = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -39,6 +45,7 @@ export const useTTS = () => {
 
   // 전체 텍스트 보관
   const fullTextRef = useRef("");
+  const chunksRef = useRef<TTSChunk[]>([]);
   // 현재 읽고 있는 인덱스 (일시정지 후 속도변경 시 사용)
   const currentIndexRef = useRef(0);
   const currentUtteranceRef = useRef<any>(null);
@@ -113,31 +120,51 @@ export const useTTS = () => {
       safeCancel();
     }
 
-    const remainingText = text.substring(startIndex);
-    if (!remainingText) return;
-
-    // 모바일(특히 안드로이드 크롬)에서 텍스트가 너무 길면(대략 3000자 이상)
-    // "synthesis-failed" 에러가 발생하므로 청크(chunk) 단위로 잘라서 읽게 합니다.
-    const MAX_LENGTH = 1500;
-    let chunk = remainingText;
+    let chunkToPlay: { text: string; start: number; end: number } | null = null;
     let isLastChunk = true;
-    
-    if (chunk.length > MAX_LENGTH) {
-      isLastChunk = false;
-      let splitIndex = MAX_LENGTH;
-      // 안전하게 나눌 수 있는 구두점이나 공백을 찾습니다.
-      const safeTokens = [". ", "? ", "! ", "\n", ", ", " "];
-      for (const token of safeTokens) {
-        const lastIndex = chunk.lastIndexOf(token, MAX_LENGTH);
-        if (lastIndex > MAX_LENGTH * 0.5) { // 너무 짧게 잘라지는 것을 방지
-          splitIndex = lastIndex + token.length;
-          break;
+
+    if (chunksRef.current && chunksRef.current.length > 0) {
+      const chunkIdx = chunksRef.current.findIndex(c => startIndex >= c.start && startIndex < c.end);
+      if (chunkIdx !== -1) {
+        const originalChunk = chunksRef.current[chunkIdx];
+        isLastChunk = chunkIdx === chunksRef.current.length - 1;
+        
+        let chunkText = originalChunk.text;
+        if (startIndex > originalChunk.start) {
+          chunkText = chunkText.substring(startIndex - originalChunk.start);
         }
+        chunkToPlay = { text: chunkText, start: startIndex, end: originalChunk.end };
       }
-      chunk = chunk.substring(0, splitIndex);
     }
 
-    const utterance: any = new SpeechSynthesisUtterance(chunk);
+    if (!chunkToPlay) {
+      const remainingText = text.substring(startIndex);
+      if (!remainingText) return;
+
+      // 모바일(특히 안드로이드 크롬)에서 텍스트가 너무 길면(대략 3000자 이상)
+      // "synthesis-failed" 에러가 발생하므로 청크(chunk) 단위로 잘라서 읽게 합니다.
+      const MAX_LENGTH = 1500;
+      let chunkText = remainingText;
+      isLastChunk = true;
+      
+      if (chunkText.length > MAX_LENGTH) {
+        isLastChunk = false;
+        let splitIndex = MAX_LENGTH;
+        // 안전하게 나눌 수 있는 구두점이나 공백을 찾습니다.
+        const safeTokens = [". ", "? ", "! ", "\n", ", ", " "];
+        for (const token of safeTokens) {
+          const lastIndex = chunkText.lastIndexOf(token, MAX_LENGTH);
+          if (lastIndex > MAX_LENGTH * 0.5) { // 너무 짧게 잘라지는 것을 방지
+            splitIndex = lastIndex + token.length;
+            break;
+          }
+        }
+        chunkText = chunkText.substring(0, splitIndex);
+      }
+      chunkToPlay = { text: chunkText, start: startIndex, end: startIndex + chunkText.length };
+    }
+
+    const utterance: any = new SpeechSynthesisUtterance(chunkToPlay.text);
     utterance._intentToStop = false;
     currentUtteranceRef.current = utterance;
 
@@ -165,6 +192,18 @@ export const useTTS = () => {
     const totalEstTime = calculateEstimatedTotalTime(text.length, currentRate);
     setTotalTime(totalEstTime);
 
+    utterance.onstart = () => {
+      lastBoundaryTimeRef.current = Date.now();
+      currentIndexRef.current = startIndex;
+      setCharIndex(startIndex);
+
+      if (text.length > 0) {
+        const currentProgress = (startIndex / text.length) * 100;
+        setProgress(Math.min(currentProgress, 100));
+        setCurrentTime((currentProgress / 100) * totalEstTime);
+      }
+    };
+
     utterance.onboundary = (e: any) => {
       lastBoundaryTimeRef.current = Date.now();
       const globalIndex = startIndex + e.charIndex;
@@ -181,9 +220,9 @@ export const useTTS = () => {
     utterance.onend = () => {
       if (utterance._intentToStop) return;
 
-      if (!isLastChunk) {
+      if (!isLastChunk && chunkToPlay) {
         // 다음 청크 이어서 바로 재생
-        const nextStartIndex = startIndex + chunk.length;
+        const nextStartIndex = startIndex + chunkToPlay.text.length;
         currentIndexRef.current = nextStartIndex;
         setTimeout(() => {
           playFromIndex(fullTextRef.current, nextStartIndex, currentRate);
@@ -224,7 +263,7 @@ export const useTTS = () => {
     }
   };
 
-  const playToRead = (text: string) => {
+  const playToRead = (text: string, chunks?: TTSChunk[]) => {
     if (typeof window !== "undefined") {
       const ua = navigator.userAgent.toLowerCase();
       // 카카오톡 인앱 브라우저 감지
@@ -242,6 +281,7 @@ export const useTTS = () => {
     }
 
     fullTextRef.current = text;
+    chunksRef.current = chunks || [];
     currentIndexRef.current = 0;
     setProgress(0);
     setCharIndex(0);

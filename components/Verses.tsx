@@ -171,33 +171,46 @@ const Verses = () => {
                 if (!content || content.length === 0) return;
                 let accumulatedText = "";
                 const newVerseIndexMap = new Map<string, { start: number; end: number }>();
+                const ttsChunks: { text: string; start: number; end: number }[] = [];
 
                 content.forEach((c, cIdx) => {
                   const bookIntro = c.book.replaceAll('\\n', '');
-                  accumulatedText += `${bookIntro}. `;
+                  const introText = `${bookIntro}. `;
+                  ttsChunks.push({
+                    text: introText,
+                    start: accumulatedText.length,
+                    end: accumulatedText.length + introText.length
+                  });
+                  accumulatedText += introText;
                   
                   c.verses?.forEach((v, vIdx) => {
                     const startIdx = accumulatedText.length;
-                    const vText = `${v.message}`;
+                    let vText = `${v.message}`;
+                    
+                    if (vIdx !== c.verses.length - 1) {
+                      vText += " ";
+                    } else if (cIdx !== content.length - 1) {
+                      vText += " ";
+                    }
+                    
+                    ttsChunks.push({
+                      text: vText,
+                      start: startIdx,
+                      end: startIdx + vText.length
+                    });
+                    
                     accumulatedText += vText;
                     
                     newVerseIndexMap.set(`${c.book}-${v.chapter}-${v.verse}`, {
                       start: startIdx,
                       end: accumulatedText.length
                     });
-                    
-                    if (vIdx !== c.verses.length - 1) {
-                      accumulatedText += " ";
-                    }
                   });
-                  if (cIdx !== content.length - 1) {
-                    accumulatedText += " ";
-                  }
                 });
 
                 setVerseIndexMap(newVerseIndexMap);
                 setShowTTS(true);
-                tts.play(accumulatedText.trim());
+                tts.play(accumulatedText, ttsChunks);
               }
             }}
             title={tts.isPlaying ? "듣기 중지" : "말씀 듣기"}
