@@ -7,6 +7,7 @@ import { useFontLevel } from "@/stores/font";
 import { usePlans } from "@/stores/plan";
 import { useReceivedMessages } from "@/stores/todayMessage";
 import useStore from "@/stores/useStore";
+import useUserInfo from "@/stores/userInfo";
 import useVerses from "@/stores/verses";
 import { useTTS } from "@/hooks/useTTS";
 import TTSPlayer from "@/components/TTSPlayer";
@@ -14,6 +15,7 @@ import TTSPlayer from "@/components/TTSPlayer";
 const Verses = () => {
   const fontLevel = useStore(useFontLevel, (state) => state.fontLevel);
   const level = useStore(useFontLevel, (state) => state.level) || 0;
+  const userName = useStore(useUserInfo, (state) => state.userName);
   const bible = useStore(useVerses, (state) => state.bible);
   const { setBible } = useVerses();
   const { setFontLevel } = useFontLevel();
@@ -157,7 +159,8 @@ const Verses = () => {
         </div>
 
         {/* 재생/중지 버튼 그룹 */}
-        <div id="tts" className="flex w-12 ml-2">
+        {userName === "오창선" && (
+          <div id="tts" className="flex w-12 ml-2">
           <button
             className="btn cursor-pointer w-12 border border-blue-400 bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition rounded-md"
             onClick={() => {
@@ -202,6 +205,7 @@ const Verses = () => {
             {tts.isPlaying ? "⏹️" : "🔊"}
           </button>
         </div>
+        )}
       </div>
 
       <div className={fontLevel}>
