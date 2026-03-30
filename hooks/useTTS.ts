@@ -42,6 +42,7 @@ export const useTTS = () => {
   // 현재 읽고 있는 인덱스 (일시정지 후 속도변경 시 사용)
   const currentIndexRef = useRef(0);
   const currentUtteranceRef = useRef<any>(null);
+  const lastBoundaryTimeRef = useRef(0);
 
   useEffect(() => {
     // 안드로이드 크롬 등 비동기로 목소리 목록을 로딩하는 브라우저를 위해 사전 로드
@@ -59,6 +60,42 @@ export const useTTS = () => {
       // TTS가 의도치 않게 취소되는 버그를 막기 위해 언마운트 시 자동 cancel()을 제거합니다.
     };
   }, []);
+
+  // 안드로이드 등에서 onboundary 이벤트가 발생하지 않는 기기를 위한 타이머 폴백
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying && !isPaused && totalTime > 0 && fullTextRef.current) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        // 마지막 onboundary 발생 후 1초 이상 지났다면 이벤트를 지원하지 않거나 렉이 걸린 것으로 간주하여 타이머로 대체
+        const isBoundaryAlive = now - lastBoundaryTimeRef.current < 1000;
+        
+        if (isBoundaryAlive) {
+          return;
+        }
+
+        setCurrentTime((prev) => {
+          const newTime = prev + 0.1;
+          const clampedTime = newTime > totalTime ? totalTime : newTime;
+          
+          const progressPercent = (clampedTime / totalTime) * 100;
+          setProgress(progressPercent);
+          
+          const textLen = fullTextRef.current.length;
+          const estimatedCharIndex = Math.floor((clampedTime / totalTime) * textLen);
+          
+          setCharIndex((prevIdx) => {
+            const newIdx = Math.max(prevIdx, estimatedCharIndex);
+            currentIndexRef.current = newIdx;
+            return newIdx;
+          });
+          
+          return clampedTime;
+        });
+      }, 100);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, isPaused, totalTime]);
 
   // 전체 시간 예측 (텍스트 길이 / (기본 초당 글자 수 * 배속))
   const calculateEstimatedTotalTime = (textLen: number, currentRate: number) => {
@@ -129,6 +166,7 @@ export const useTTS = () => {
     setTotalTime(totalEstTime);
 
     utterance.onboundary = (e: any) => {
+      lastBoundaryTimeRef.current = Date.now();
       const globalIndex = startIndex + e.charIndex;
       currentIndexRef.current = globalIndex;
       setCharIndex(globalIndex);
@@ -179,6 +217,7 @@ export const useTTS = () => {
     };
 
     if (typeof window !== "undefined" && window.speechSynthesis) {
+      lastBoundaryTimeRef.current = Date.now(); // 재생 시작 시점 초기화
       window.speechSynthesis.speak(utterance);
       setIsPlaying(true);
       setIsPaused(false);
