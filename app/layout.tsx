@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hahmlet } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
+import { Analytics } from "@vercel/analytics/next";
 // Hahmlet
 const hahmlet = Hahmlet({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${hahmlet.className} antialiased`}>
         <QueryProvider>{children}</QueryProvider>
+        <Analytics />
       </body>
     </html>
   );
