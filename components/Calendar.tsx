@@ -107,7 +107,7 @@ const Calendar: React.FC = () => {
     }
 
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    const planItem = (schedules || []).find((p) => p.date === formattedDate);
+    const planItem = (schedules || []).findLast((p) => p.date === formattedDate);
 
     if (planItem) {
       if (completedIndexList.includes(planItem.index))
