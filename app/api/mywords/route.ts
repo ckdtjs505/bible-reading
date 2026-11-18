@@ -24,8 +24,8 @@ export async function GET(request: Request) {
         Timestamp: entry.Timestamp,
         myMessage: entry.myMessage,
       }))
-      // daycnt 기준으로 내림차순 정렬 (최신순)
-      .sort((a, b) => Number(b.daycnt) - Number(a.daycnt));
+      // 시트는 저장 순서대로 쌓이므로 뒤집으면 최신순 (daycnt는 계획마다 1부터 다시 시작해서 정렬 기준으로 못 씀)
+      .reverse();
 
     return NextResponse.json({ success: true, data: userWords });
   } catch (error) {
