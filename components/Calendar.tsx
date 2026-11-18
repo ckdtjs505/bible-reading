@@ -74,18 +74,26 @@ const Calendar: React.FC = () => {
 
     if (targetPlan.length === 0) return;
 
-    // 칸 높이를 일정하게 두려고 하루에 여러 권이면 첫 권만 보이고 나머지는 "외 N권"으로 줄인다
+    // 칸 높이가 일정하도록, 여러 권 읽는 날은 장 범위 없이 책 이름만 줄마다 보여준다
+    if (targetPlan.length > 1) {
+      return (
+        <div>
+          {targetPlan.map(({ book }, index) => (
+            <React.Fragment key={index}>
+              {book.split(/\\n|\n/)[0]}
+              {index !== targetPlan.length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    }
+
     const [{ book, start, end }] = targetPlan;
-    const firstBook = book.split(/\\n|\n/)[0];
     return (
       <div>
-        {firstBook}
+        {book.split(/\\n|\n/)[0]}
         <br />
-        {targetPlan.length > 1
-          ? `외 ${targetPlan.length - 1}권`
-          : start && end
-            ? `${start}-${end}장`
-            : ""}
+        {start && end ? `${start}-${end}장` : ""}
       </div>
     );
   };
