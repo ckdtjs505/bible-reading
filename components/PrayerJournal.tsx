@@ -184,14 +184,15 @@ const PrayerJournal = () => {
 
   return (
     <div className="border-t border-gray-200">
-      <section className="px-4 py-5" aria-labelledby="journalSettingTitle">
-        <h2 id="journalSettingTitle" className="text-lg font-bold">
-          함온성 설정
+      <section className="px-4 py-3" aria-labelledby="journalSettingTitle">
+        <h2 id="journalSettingTitle" className="font-bold">
+          ✔️ 함온성 설정
+          <span className="text-sm font-normal text-gray-600">
+            {" "}
+            (네모박스를 클릭하면 활성화됩니다)
+          </span>
         </h2>
-        <p className="mt-1 text-sm text-gray-600">
-          켜면 아래 글에 칸이 추가되고, 카톡으로 복사할 때도 함께 들어가요.
-        </p>
-        <div className="mt-3 space-y-2">
+        <div>
           {[
             {
               id: "prayForUserCheckBox",
@@ -214,39 +215,21 @@ const PrayerJournal = () => {
                 }),
             },
           ].map(({ id, label, checked, toggle }) => (
-            <button
+            // 줄 전체(44px)를 눌러도 체크되도록 label로 감싼다
+            <label
               key={id}
-              id={id}
-              type="button"
-              role="switch"
-              aria-checked={checked}
-              onClick={toggle}
-              className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-md border px-4 text-left text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${
-                checked
-                  ? "border-blue-600 bg-blue-50 font-semibold"
-                  : "border-gray-300 bg-white hover:bg-gray-50"
-              }`}
+              htmlFor={id}
+              className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
             >
-              <span>{label}</span>
-              <span className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
-                  {checked ? "켜짐" : "꺼짐"}
-                </span>
-                {/* 휴대폰 설정 앱에서 익숙한 스위치 모양 */}
-                <span
-                  aria-hidden="true"
-                  className={`relative h-7 w-12 rounded-full transition-colors motion-reduce:transition-none ${
-                    checked ? "bg-blue-600" : "bg-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`absolute top-1 left-1 size-5 rounded-full bg-white shadow transition-transform motion-reduce:transition-none ${
-                      checked ? "translate-x-5" : "translate-x-0"
-                    }`}
-                  />
-                </span>
-              </span>
-            </button>
+              <input
+                type="checkbox"
+                id={id}
+                className="size-6 accent-blue-600"
+                checked={checked}
+                onChange={toggle}
+              />
+              {label}
+            </label>
           ))}
         </div>
       </section>
