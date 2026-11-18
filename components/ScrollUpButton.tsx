@@ -30,7 +30,7 @@ const ScrollButton = () => {
     <div>
       {showButton && (
         <button
-          className="fixed bottom-5 right-5 bg-gray-200 text-white p-3  rounded-3xl shadow-lg"
+          className="fixed bottom-24 right-5 z-40 bg-gray-200 text-white p-3  rounded-3xl shadow-lg"
           onClick={() =>
             window.scrollTo({
               top: 0,

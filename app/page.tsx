@@ -5,6 +5,7 @@ import LoginDialog from "@/components/LoginDialog";
 import MyWordsDialog from "@/components/MyWordsDialog";
 import PrayerJournal from "@/components/PrayerJournal";
 import ScrollButton from "@/components/ScrollUpButton";
+import TodayRecordBar from "@/components/TodayRecordBar";
 import SummeryImg from "@/components/summeryImg";
 import Verses from "@/components/Verses";
 import { YoutubeVideo } from "@/components/YoutubeVideo";
@@ -57,6 +58,9 @@ export default function Home() {
       <MyWordsDialog />
 
       <ScrollButton />
+      <TodayRecordBar />
+      {/* 하단 고정 기록 바가 마지막 내용을 가리지 않도록 */}
+      <div className="h-24" aria-hidden="true" />
     </>
   );
 }
