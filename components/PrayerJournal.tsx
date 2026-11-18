@@ -184,15 +184,12 @@ const PrayerJournal = () => {
 
   return (
     <div className="border-t border-gray-200">
-      <section className="px-4 py-3" aria-labelledby="journalSettingTitle">
-        <h2 id="journalSettingTitle" className="font-bold">
-          ✔️ 함온성 설정
-          <span className="text-sm font-normal text-gray-600">
-            {" "}
-            (네모박스를 클릭하면 활성화됩니다)
-          </span>
+      {/* 한 번 정하면 거의 안 바꾸는 설정이라 작고 조용하게, 두 항목을 한 줄에 */}
+      <section className="px-4 pt-3 pb-1" aria-labelledby="journalSettingTitle">
+        <h2 id="journalSettingTitle" className="text-sm text-gray-600">
+          ✔️ 함온성 설정 (네모박스를 클릭하면 활성화됩니다)
         </h2>
-        <div>
+        <div className="flex flex-wrap gap-x-5">
           {[
             {
               id: "prayForUserCheckBox",
@@ -219,12 +216,12 @@ const PrayerJournal = () => {
             <label
               key={id}
               htmlFor={id}
-              className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
+              className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-gray-800"
             >
               <input
                 type="checkbox"
                 id={id}
-                className="size-6 accent-blue-600"
+                className="size-5 accent-blue-600"
                 checked={checked}
                 onChange={toggle}
               />
