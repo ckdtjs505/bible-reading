@@ -28,13 +28,6 @@ body {
   top: 0;
 }
 
-#name {
-}
-
-#name:hover {
-  border-bottom: 1px solid;
-  cursor: pointer;
-}
 
 #nameInput {
 }

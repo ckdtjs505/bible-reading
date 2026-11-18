@@ -183,14 +183,19 @@ const PrayerJournal = () => {
   const isError = saveStatus === "saveFailed" || saveStatus === "noName";
 
   return (
-    <div>
-      <div className="p-4 border-b border-t border-black">
-        <div className="font-bold">
-          ✔️ 함온성 설정
-          <span className="text-xs"> (네모박스를 클릭하면 활성화됩니다) </span>
-        </div>
-        <div>
-          <div className="flex min-h-11 items-center gap-2">
+    <div className="border-t border-gray-200">
+      <section className="px-4 py-5" aria-labelledby="journalSettingTitle">
+        <h2 id="journalSettingTitle" className="text-lg font-bold">
+          함온성 설정
+        </h2>
+        <p className="mt-1 text-sm text-gray-600">
+          체크하면 아래에 입력칸이 생기고, 복사하는 글에도 들어가요.
+        </p>
+        <div className="mt-2">
+          <label
+            htmlFor="prayForUserCheckBox"
+            className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
+          >
             <input
               type="checkbox"
               className="size-6 accent-blue-600"
@@ -204,9 +209,12 @@ const PrayerJournal = () => {
                 })
               }
             />
-            <label htmlFor="prayForUserCheckBox"> 💝앞사람을 위한 기도</label>
-          </div>
-          <div className="flex min-h-11 items-center gap-2">
+            💝 앞사람을 위한 기도
+          </label>
+          <label
+            htmlFor="prayCheckBox"
+            className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
+          >
             <input
               type="checkbox"
               className="size-6 accent-blue-600"
@@ -219,76 +227,95 @@ const PrayerJournal = () => {
                 })
               }
             />
-            <label htmlFor="prayCheckBox"> 🙏 한줄 기도하기</label>
-          </div>
+            🙏 한줄 기도하기
+          </label>
         </div>
-      </div>
+      </section>
 
       {currentPlan && (
-        <div id="userContent" className="p-4">
-          <div id="submitdata">
+        <div id="userContent" className="border-t border-gray-200 px-4 py-5">
+          <div id="submitdata" className="space-y-5 text-base">
             {isShowPlayForUserCheckBox && (
               <div id="prayForUser">
-                💝앞사람을 위한 기도 :
+                <label htmlFor="prayForUserText" className="block font-semibold">
+                  💝 앞사람을 위한 기도
+                </label>
                 <textarea
                   value={prayForUser}
                   id="prayForUserText"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setPrayForUser(e.target.value)
                   }
-                  className="w-full h-20 border border-black"
+                  className="mt-2 block h-24 w-full rounded-md border border-gray-300 p-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 ></textarea>
               </div>
             )}
-            <div className="flex flex-wrap items-center gap-x-2">
-              <span>
-                🌸 이름 : <span id="name">{userName}</span>
-              </span>
-              <button
-                id="changeName"
-                type="button"
-                onClick={() => openDialog("login")}
-                className="min-h-11 px-1 text-sm text-gray-600 underline underline-offset-4 hover:text-gray-900"
+
+            <div>
+              <div className="font-semibold">🌸 이름</div>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3">
+                <span id="name" className="text-lg">
+                  {userName}
+                </span>
+                <button
+                  id="changeName"
+                  type="button"
+                  onClick={() => openDialog("login")}
+                  className="min-h-11 px-1 text-sm text-gray-600 underline underline-offset-4 hover:text-gray-900"
+                >
+                  이름 바꾸기
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold">📖 오늘 내게 주신 말씀</div>
+              <div
+                id="myMessage"
+                className="mt-2 rounded-md bg-gray-50 p-3 leading-relaxed"
               >
-                이름 바꾸기
-              </button>
+                {sortedMessageEntries.length === 0 && (
+                  <div className="text-sm text-gray-600">
+                    (선택) 본문에서 마음에 닿은 구절을 누르면 여기에 담겨요.
+                  </div>
+                )}
+                {sortedMessageEntries.map(([book, msgs], index) => (
+                  <div key={index} className="mb-3 last:mb-0">
+                    <div className="font-bold">{book}</div>
+                    {msgs.map(({ chapter, verse, content }, vIndex) => (
+                      <div key={vIndex} className="mt-1">
+                        <span className="text-gray-600">
+                          {chapter}:{verse}
+                        </span>{" "}
+                        {content}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-            📖 오늘 내게 주신 말씀 : <br />
-            <div id="myMessage">
-              {sortedMessageEntries.length === 0 && (
-                <div className="text-sm text-gray-600">
-                  (선택) 본문에서 마음에 닿은 구절을 누르면 여기에 담겨요.
-                </div>
-              )}
-              {sortedMessageEntries.map(([book, msgs], index) => (
-                <div key={index} className="mb-2">
-                  <div className="font-bold">{book}</div>
-                  {msgs.map(({ chapter, verse, content }, vIndex) => (
-                    <div key={vIndex}>
-                      {chapter}:{verse} {content}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
+
             {isShowPray && (
               <div id="prayBox">
-                🙏 한줄 기도 :
+                <label htmlFor="pray" className="block font-semibold">
+                  🙏 한줄 기도
+                </label>
                 <textarea
                   value={pray}
                   id="pray"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setPray(e.target.value)
                   }
-                  className="w-full h-20 border border-black"
+                  className="mt-2 block h-24 w-full rounded-md border border-gray-300 p-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 ></textarea>
               </div>
             )}
-            <div>
-              제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
-            </div>
+
+            <p className="text-lg font-bold">
+              제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span>일차 완료했습니다.
+            </p>
           </div>
-          <div className="mt-4 flex flex-col gap-2">
+          <div className="mt-5 flex flex-col gap-2">
             <button
               id="saveButton"
               className="min-h-14 w-full rounded-md bg-blue-600 px-4 text-lg font-bold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:opacity-70"
