@@ -46,6 +46,8 @@ export default function Home() {
       </div>
       <Calendar></Calendar>
 
+      <TodayRecordBar />
+
       <YoutubeVideo />
 
       <SummeryImg />
@@ -58,9 +60,6 @@ export default function Home() {
       <MyWordsDialog />
 
       <ScrollButton />
-      <TodayRecordBar />
-      {/* 하단 고정 기록 바가 마지막 내용을 가리지 않도록 */}
-      <div className="h-24" aria-hidden="true" />
     </>
   );
 }

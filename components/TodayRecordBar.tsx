@@ -2,30 +2,18 @@
 
 import { usePlans } from "@/stores/plan";
 import useUserInfo from "@/stores/userInfo";
-import { useEffect, useState } from "react";
 
-// 기록 영역(기도일기)이 화면 밖에 있을 때 하단에 고정되어 바로 데려다주는 바
+// 달력 바로 아래에서 기록 영역(기도일기)으로 데려다주는 버튼. 본문을 가리지 않도록 고정하지 않는다
 const TodayRecordBar = () => {
   const { currentPlan } = usePlans();
   const { completedIndexList } = useUserInfo();
-  const [isRecordVisible, setIsRecordVisible] = useState(false);
 
-  useEffect(() => {
-    const target = document.getElementById("userContent");
-    if (!target) return;
-    const observer = new IntersectionObserver(([entry]) =>
-      setIsRecordVisible(entry.isIntersecting),
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [currentPlan?.index]);
-
-  if (!currentPlan || isRecordVisible) return null;
+  if (!currentPlan) return null;
 
   const isDone = completedIndexList.includes(currentPlan.index);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 bg-white/95 px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-gray-200">
+    <div className="px-4 pt-4">
       <button
         type="button"
         onClick={() =>
@@ -36,7 +24,7 @@ const TodayRecordBar = () => {
         className={`block min-h-14 w-full rounded-md px-4 text-lg font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${
           isDone
             ? "bg-[#cbf1f5] text-[#171717]"
-            : "bg-blue-600 text-white hover:bg-blue-700"
+            : "border border-blue-600 bg-white text-blue-700 hover:bg-blue-50"
         }`}
       >
         {isDone
