@@ -145,6 +145,11 @@
   background: #ffffa9;
 }
 
+/* 오늘 읽기 완료 표시(globals .active)가 --now 노란색에 덮이지 않게 */
+.react-calendar__tile--now.active:not(.react-calendar__tile--active) {
+  background: #cbf1f5;
+}
+
 .react-calendar__tile--hasActive {
   background: #76baff;
 }
