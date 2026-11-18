@@ -189,46 +189,65 @@ const PrayerJournal = () => {
           함온성 설정
         </h2>
         <p className="mt-1 text-sm text-gray-600">
-          체크하면 아래에 입력칸이 생기고, 복사하는 글에도 들어가요.
+          켜면 아래 글에 칸이 추가되고, 카톡으로 복사할 때도 함께 들어가요.
         </p>
-        <div className="mt-2">
-          <label
-            htmlFor="prayForUserCheckBox"
-            className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
-          >
-            <input
-              type="checkbox"
-              className="size-6 accent-blue-600"
-              id="prayForUserCheckBox"
-              checked={isShowPlayForUserCheckBox}
-              onChange={() =>
+        <div className="mt-3 space-y-2">
+          {[
+            {
+              id: "prayForUserCheckBox",
+              label: "💝 앞사람을 위한 기도",
+              checked: isShowPlayForUserCheckBox,
+              toggle: () =>
                 setIsShowPlayForUserCheckBox((isShow: boolean) => {
                   setLocalStorage("isShowPlayForUserCheckBox", !isShow);
-
                   return !isShow;
-                })
-              }
-            />
-            💝 앞사람을 위한 기도
-          </label>
-          <label
-            htmlFor="prayCheckBox"
-            className="flex min-h-11 cursor-pointer items-center gap-3 text-base"
-          >
-            <input
-              type="checkbox"
-              className="size-6 accent-blue-600"
-              id="prayCheckBox"
-              checked={isShowPray}
-              onChange={() =>
+                }),
+            },
+            {
+              id: "prayCheckBox",
+              label: "🙏 한줄기도",
+              checked: isShowPray,
+              toggle: () =>
                 setIsShowPray((isShow: boolean) => {
                   setLocalStorage("isShowPray", !isShow);
                   return !isShow;
-                })
-              }
-            />
-            🙏 한줄 기도하기
-          </label>
+                }),
+            },
+          ].map(({ id, label, checked, toggle }) => (
+            <button
+              key={id}
+              id={id}
+              type="button"
+              role="switch"
+              aria-checked={checked}
+              onClick={toggle}
+              className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-md border px-4 text-left text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${
+                checked
+                  ? "border-blue-600 bg-blue-50 font-semibold"
+                  : "border-gray-300 bg-white hover:bg-gray-50"
+              }`}
+            >
+              <span>{label}</span>
+              <span className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">
+                  {checked ? "켜짐" : "꺼짐"}
+                </span>
+                {/* 휴대폰 설정 앱에서 익숙한 스위치 모양 */}
+                <span
+                  aria-hidden="true"
+                  className={`relative h-7 w-12 rounded-full transition-colors motion-reduce:transition-none ${
+                    checked ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 left-1 size-5 rounded-full bg-white shadow transition-transform motion-reduce:transition-none ${
+                      checked ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </span>
+              </span>
+            </button>
+          ))}
         </div>
       </section>
 
