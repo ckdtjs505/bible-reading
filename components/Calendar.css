@@ -101,6 +101,12 @@
 }
 
 .react-calendar__tile {
+  /* 내용과 상관없이 모든 날짜 칸을 같은 높이로 */
+  height: 5.25rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: 100%;
   padding: 10px 2px;
   text-align: center;

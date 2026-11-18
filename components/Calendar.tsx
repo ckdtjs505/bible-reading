@@ -72,20 +72,22 @@ const Calendar: React.FC = () => {
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     const targetPlan = (schedules || []).filter((p) => p.date === formattedDate);
 
-    return targetPlan.map(({ book, start, end }, index) => {
-      return (
-        <div key={index}>
-          {book.split(/\\n|\n/).map((line, i) => (
-            <React.Fragment key={i}>
-              {line}
-              {i !== book.split(/\\n|\n/).length - 1 && <br />}
-            </React.Fragment>
-          ))}
-          <br />
-          {(start && end ? `${start}-${end}장` : '')}
-        </div>
-      );
-    });
+    if (targetPlan.length === 0) return;
+
+    // 칸 높이를 일정하게 두려고 하루에 여러 권이면 첫 권만 보이고 나머지는 "외 N권"으로 줄인다
+    const [{ book, start, end }] = targetPlan;
+    const firstBook = book.split(/\\n|\n/)[0];
+    return (
+      <div>
+        {firstBook}
+        <br />
+        {targetPlan.length > 1
+          ? `외 ${targetPlan.length - 1}권`
+          : start && end
+            ? `${start}-${end}장`
+            : ""}
+      </div>
+    );
   };
 
   const handleTileClassName = ({

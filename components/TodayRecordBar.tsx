@@ -12,6 +12,16 @@ const TodayRecordBar = () => {
 
   const isDone = completedIndexList.includes(currentPlan.index);
 
+  if (isDone) {
+    return (
+      <div className="flex justify-center px-4 pt-3">
+        <span className="inline-flex items-center rounded-full bg-[#cbf1f5] px-3 py-1 text-sm font-semibold text-[#171717]">
+          ✓ 제 {currentPlan.daycount}일차 기록했어요
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="px-4 pt-4">
       <button
@@ -21,15 +31,9 @@ const TodayRecordBar = () => {
             .getElementById("userContent")
             ?.scrollIntoView({ behavior: "smooth", block: "start" })
         }
-        className={`block min-h-14 w-full rounded-md px-4 text-lg font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${
-          isDone
-            ? "bg-[#cbf1f5] text-[#171717]"
-            : "border border-blue-600 bg-white text-blue-700 hover:bg-blue-50"
-        }`}
+        className="block min-h-14 w-full rounded-md border border-blue-600 bg-white px-4 text-lg font-bold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
       >
-        {isDone
-          ? `✓ 제 ${currentPlan.daycount}일차 기록했어요`
-          : `제 ${currentPlan.daycount}일차 기록하러 가기 ↓`}
+        제 {currentPlan.daycount}일차 기록하러 가기 ↓
       </button>
     </div>
   );
