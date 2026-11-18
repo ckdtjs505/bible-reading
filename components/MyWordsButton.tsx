@@ -15,7 +15,7 @@ const MyWordsButton = () => {
 
   return (
     <button
-      className="fixed bottom-20 right-5 bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg transition-colors z-40 flex items-center justify-center"
+      className="fixed bottom-20 right-5 bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-full shadow-lg transition-colors z-40 flex items-center justify-center"
       onClick={() => openDialog("myWords")}
       title="내게 주신 말씀 모아보기"
     >

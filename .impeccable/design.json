@@ -1,0 +1,417 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T00:48:24.879490+00:00",
+  "title": "Design System: 함온성",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "먹색",
+        "canonical": "#171717",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "종이 흰색",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "action-blue": {
+        "role": "primary",
+        "displayName": "함온성 파랑",
+        "canonical": "#2563eb",
+        "tonalRamp": [
+          "#031e49",
+          "#063581",
+          "#084bb9",
+          "#0b62f0",
+          "#3f85f6",
+          "#77a8f9",
+          "#afccfb",
+          "#e7effe"
+        ]
+      },
+      "action-blue-tint": {
+        "role": "primary",
+        "displayName": "연파랑 바탕",
+        "canonical": "#eff6ff",
+        "tonalRamp": [
+          "#00214c",
+          "#003b87",
+          "#0054c1",
+          "#006efb",
+          "#378eff",
+          "#71afff",
+          "#abd0ff",
+          "#e5f1ff"
+        ]
+      },
+      "action-blue-ink": {
+        "role": "primary",
+        "displayName": "진파랑 글자",
+        "canonical": "#2563eb",
+        "tonalRamp": [
+          "#061a46",
+          "#0b2e7b",
+          "#1043b1",
+          "#1557e6",
+          "#477cee",
+          "#7da2f3",
+          "#b2c8f8",
+          "#e8eefd"
+        ]
+      },
+      "selected-day": {
+        "role": "secondary",
+        "displayName": "선택한 날 파랑",
+        "canonical": "#006edc",
+        "tonalRamp": [
+          "#00264c",
+          "#004387",
+          "#0061c1",
+          "#007efb",
+          "#379bff",
+          "#71b8ff",
+          "#abd5ff",
+          "#e5f2ff"
+        ]
+      },
+      "selected-day-hover": {
+        "role": "secondary",
+        "displayName": "선택한 날 hover",
+        "canonical": "#1087ff",
+        "tonalRamp": [
+          "#00264c",
+          "#004387",
+          "#0060c1",
+          "#007dfb",
+          "#379aff",
+          "#71b8ff",
+          "#abd5ff",
+          "#e5f2ff"
+        ]
+      },
+      "weekday-teal": {
+        "role": "secondary",
+        "displayName": "요일 띠 청록",
+        "canonical": "#71c9ce",
+        "tonalRamp": [
+          "#143739",
+          "#236164",
+          "#328a90",
+          "#40b4bb",
+          "#6ac6cc",
+          "#95d7db",
+          "#c1e7ea",
+          "#ecf8f8"
+        ]
+      },
+      "today-yellow": {
+        "role": "tertiary",
+        "displayName": "오늘 노랑",
+        "canonical": "#ffff76",
+        "tonalRamp": [
+          "#4c4c00",
+          "#878700",
+          "#c1c100",
+          "#fbfb00",
+          "#ffff37",
+          "#ffff71",
+          "#ffffab",
+          "#ffffe5"
+        ]
+      },
+      "today-yellow-hover": {
+        "role": "tertiary",
+        "displayName": "오늘 노랑 hover",
+        "canonical": "#ffffa9",
+        "tonalRamp": [
+          "#4c4c00",
+          "#878700",
+          "#c1c100",
+          "#fbfb00",
+          "#ffff37",
+          "#ffff71",
+          "#ffffab",
+          "#ffffe5"
+        ]
+      },
+      "read-mint": {
+        "role": "tertiary",
+        "displayName": "읽음 민트",
+        "canonical": "#cbf1f5",
+        "tonalRamp": [
+          "#0c3b40",
+          "#166871",
+          "#1f95a2",
+          "#29c3d3",
+          "#57d2df",
+          "#88dfe8",
+          "#b9ecf1",
+          "#eaf9fb"
+        ]
+      },
+      "verse-mark": {
+        "role": "tertiary",
+        "displayName": "말씀 표시 노랑",
+        "canonical": "#ffff00",
+        "tonalRamp": [
+          "#4c4c00",
+          "#878700",
+          "#c1c100",
+          "#fbfb00",
+          "#ffff37",
+          "#ffff71",
+          "#ffffab",
+          "#ffffe5"
+        ]
+      },
+      "sunday-red": {
+        "role": "tertiary",
+        "displayName": "주일 빨강",
+        "canonical": "#d10000",
+        "tonalRamp": [
+          "#4c0000",
+          "#870000",
+          "#c10000",
+          "#fb0000",
+          "#ff3737",
+          "#ff7171",
+          "#ffabab",
+          "#ffe5e5"
+        ]
+      },
+      "muted-text": {
+        "role": "neutral",
+        "displayName": "흐린 회색 글자",
+        "canonical": "#6b7280",
+        "tonalRamp": [
+          "#23252a",
+          "#3d4149",
+          "#585e69",
+          "#727a89",
+          "#9298a4",
+          "#b2b6be",
+          "#d1d4d9",
+          "#f1f2f3"
+        ]
+      },
+      "quiet-surface": {
+        "role": "neutral",
+        "displayName": "조용한 회색 바탕",
+        "canonical": "#f3f4f6",
+        "tonalRamp": [
+          "#21242c",
+          "#3a404d",
+          "#535c6e",
+          "#6c7890",
+          "#8d96a9",
+          "#aeb5c2",
+          "#cfd3db",
+          "#f0f2f4"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "가는 선 회색",
+        "canonical": "#d1d5db",
+        "tonalRamp": [
+          "#22252b",
+          "#3b424c",
+          "#555e6c",
+          "#6e7b8d",
+          "#8f98a7",
+          "#afb6c1",
+          "#d0d4da",
+          "#f1f2f4"
+        ]
+      },
+      "action-blue-hover": {
+        "role": "primary",
+        "displayName": "함온성 파랑 hover",
+        "canonical": "#1d4ed8",
+        "tonalRamp": []
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "상단 '함 온 성' 제목."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "책 이름, 구역 머리."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "성경 본문, 기도일기. 사용자가 text-xs~text-5xl 9단계로 조절."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "버튼, 작은 안내."
+      },
+      "calendar-note": {
+        "displayName": "Calendar Note",
+        "purpose": "달력 칸 안의 분량 표기."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "맨 위로 버튼 등 화면 위에 떠 있는 요소."
+      },
+      {
+        "name": "inner-glint",
+        "value": "inset 0 2px 4px 0 rgb(255 255 255 / 0.1)",
+        "purpose": "Headless UI 기본 버튼의 약한 안쪽 하이라이트."
+      }
+    ],
+    "motion": [
+      {
+        "name": "color-transition",
+        "value": "color, background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "버튼 hover 색 전환(Tailwind transition-colors)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "로그인, 저장 등 주요 행동.",
+      "html": "<button class=\"ds-btn-primary\">저장하기</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#2563eb;color:#fff;min-height:44px;padding:0 16px;border:none;border-radius:6px;font-family:Hahmlet,serif;font-size:16px;line-height:24px;font-weight:600;box-shadow:inset 0 2px 4px 0 rgb(255 255 255 / .1);cursor:pointer;transition:background-color .15s}.ds-btn-primary:hover{background:#1d4ed8}.ds-btn-primary:focus-visible{outline:1px solid #fff;outline-offset:0}.ds-btn-primary:active{background:#374151}"
+    },
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "말씀 모아보기 등 보조 동작.",
+      "html": "<button class=\"ds-btn-icon\" aria-label=\"내 말씀\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 19.5A2.5 2.5 0 0 1 6.5 17H20\"/><path d=\"M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z\"/></svg></button>",
+      "css": ".ds-btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:12px;border:none;border-radius:9999px;background:#eff6ff;color:#2563eb;cursor:pointer;transition:background-color .15s}.ds-btn-icon:hover{background:#dbeafe}.ds-btn-icon:focus-visible{outline:2px solid #2563eb;outline-offset:2px}"
+    },
+    {
+      "name": "Scroll Top Button",
+      "kind": "button",
+      "refersTo": "button-scroll-top",
+      "description": "화면 위에 떠 있는 맨 위로 버튼.",
+      "html": "<button class=\"ds-btn-fab\" aria-label=\"맨 위로\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 15l7-7 7 7\"/></svg></button>",
+      "css": ".ds-btn-fab{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:none;border-radius:9999px;background:#2563eb;color:#fff;box-shadow:0 10px 15px -3px rgb(0 0 0 / .1),0 4px 6px -4px rgb(0 0 0 / .1);cursor:pointer;transition:background-color .15s}.ds-btn-fab:hover{background:#2563eb}.ds-btn-fab:focus-visible{outline:2px solid #2563eb;outline-offset:2px}"
+    },
+    {
+      "name": "Font Size Button",
+      "kind": "button",
+      "refersTo": null,
+      "description": "본문 글자 크기 −/+ 버튼.",
+      "html": "<button class=\"ds-btn-outline\">+</button>",
+      "css": ".ds-btn-outline{width:48px;border:1px solid #d1d5db;background:#fff;color:#171717;text-align:center;font-family:Hahmlet,serif;font-size:14px;cursor:pointer;transition:background-color .15s}.ds-btn-outline:hover{background:#f3f4f6}.ds-btn-outline:focus-visible{outline:2px solid #2563eb;outline-offset:2px}"
+    },
+    {
+      "name": "Translation Chip",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "번역본 선택 칩. 선택되면 민트.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip--on\">개역개정</button><button class=\"ds-chip\">우리말</button><button class=\"ds-chip\">새한글</button></div>",
+      "css": ".ds-chips{display:flex;gap:8px}.ds-chip{border:none;border-radius:9999px;background:transparent;min-height:44px;padding:0 12px;font-family:Hahmlet,serif;font-size:14px;color:#171717;cursor:pointer;transition:background-color .15s}.ds-chip:hover{background:#f3f4f6}.ds-chip--on{background:#cbf1f5}.ds-chip:focus-visible{outline:2px solid #2563eb;outline-offset:2px}"
+    },
+    {
+      "name": "Name Input",
+      "kind": "input",
+      "refersTo": null,
+      "description": "이름 입력칸.",
+      "html": "<input class=\"ds-input\" placeholder=\"이름\" />",
+      "css": ".ds-input{height:40px;padding:0 12px;border:1px solid #d1d5db;border-radius:6px;font-family:Hahmlet,serif;font-size:16px;color:#171717;background:#fff}.ds-input:focus-visible{outline:2px solid #2563eb;outline-offset:1px}"
+    },
+    {
+      "name": "Calendar",
+      "kind": "custom",
+      "refersTo": "calendar-tile",
+      "description": "청록 요일 띠와 상태별 날짜 칸.",
+      "html": "<div class=\"ds-cal\"><div class=\"ds-cal-head\"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div class=\"ds-cal-row\"><button class=\"ds-tile ds-sun\">02<small>레위기<br>1-5장</small></button><button class=\"ds-tile ds-read\">03<small>레위기<br>6-10장</small></button><button class=\"ds-tile ds-sel\">04<small>레위기<br>11-15장</small></button><button class=\"ds-tile ds-today\">05<small>레위기<br>16-20장</small></button><button class=\"ds-tile\">06<small>민수기<br>1-6장</small></button><button class=\"ds-tile\">07<small>민수기<br>7-12장</small></button><button class=\"ds-tile ds-sat\">08<small>민수기<br>13-18장</small></button></div></div>",
+      "css": ".ds-cal{font-family:Hahmlet,serif;width:100%;max-width:420px}.ds-cal-head{display:grid;grid-template-columns:repeat(7,1fr);background:#71c9ce;font-weight:700;text-align:center;padding:12px 0}.ds-cal-row{display:grid;grid-template-columns:repeat(7,1fr);padding:8px 0}.ds-tile{border:none;background:#fff;border-radius:12.8px;padding:10px 4px;font-size:16px;font-weight:700;color:#171717;cursor:pointer;display:flex;flex-direction:column;align-items:center}.ds-tile small{font-size:10px;word-break:keep-all;overflow-wrap:anywhere;font-weight:400;line-height:1.4}.ds-tile:hover{background:#e6e6e6}.ds-tile:focus-visible{outline:2px solid #006edc;outline-offset:1px}.ds-sun{color:#d10000}.ds-sat{color:blue}.ds-today{background:#ffff76}.ds-today:hover{background:#ffffa9}.ds-read{background:#cbf1f5}.ds-sel{background:#006edc;color:#fff}.ds-sel:hover{background:#1087ff}"
+    },
+    {
+      "name": "Verse Line",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "구절 한 줄. 담은 구절은 노랑, 읽는 중인 구절은 파란 밑줄.",
+      "html": "<div class=\"ds-verses\"><p><span>1:1 태초에 하나님이 천지를 창조하시니라</span></p><p><span class=\"ds-mark\">1:2 땅이 혼돈하고 공허하며</span></p><p><span class=\"ds-reading\">1:3 하나님이 이르시되 빛이 있으라 하시니</span></p></div>",
+      "css": ".ds-verses{font-family:Hahmlet,serif;font-size:18px;line-height:1.75;color:#171717}.ds-verses p{margin:0 0 1.5em}.ds-verses span{cursor:pointer}.ds-mark{background:#ffff00}.ds-reading{background:#eff6ff;text-decoration:underline;text-decoration-color:#2563eb;text-decoration-thickness:2px;text-underline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "함께 펴는 성경 달력",
+    "overview": "화면의 중심은 달력이다. 멤버는 매일 같은 달력을 펴고, 오늘 칸(노랑)과 내가 읽은 칸(민트)을 확인한 뒤, 바로 아래에서 그날 본문을 읽거나 듣는다. 모든 요소는 \"오늘 분량을 읽고 기록한다\"는 하루의 흐름을 위에서 아래로 한 줄로 따라간다.\n\n흰 바탕에 Hahmlet 세리프 한 가지로 쓰고, 색은 달력의 상태를 알리는 데 주로 쓴다. 장식은 거의 없고, 크고 단순한 조작을 우선한다. 어르신도 설명 없이 쓸 수 있어야 하므로 화려함보다 알아보기 쉬움을 고른다.",
+    "keyCharacteristics": [
+      "한 열로 쌓이는 모바일 화면. 달력 → 영상 → 요약 이미지 → 본문 → 기도일기 순서.",
+      "색은 상태 신호(오늘, 읽음, 선택, 주일)다.",
+      "본문 글자 크기는 사용자가 9단계로 바꾼다.",
+      "그림자와 층은 거의 없는 평평한 화면."
+    ],
+    "rules": [
+      {
+        "name": "The Calendar Speaks Rule",
+        "body": "노랑·민트·선택 파랑은 달력 상태 전용이다. 다른 요소의 장식이나 강조에 빌려 쓰지 않는다.",
+        "section": "colors"
+      },
+      {
+        "name": "The Read Wins Rule",
+        "body": "한 칸에 오늘과 읽음이 겹치면 읽음(민트)이 보인다. 기록을 마쳤다는 신호가 \"오늘\"이라는 사실보다 중요하다.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reader Sets The Size Rule",
+        "body": "본문 크기는 `stores/font.ts`의 단계로만 바꾼다. 본문에 고정 글자 크기를 박지 않는다. 쓰는 단계들은 Tailwind `safelist`에 들어 있어야 한다.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Page Rule",
+        "body": "페이지에 붙어 있는 요소에는 그림자를 주지 않는다. 그림자는 위에 떠 있다는 뜻으로만 쓴다.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** 새 화면도 흰 바탕, Hahmlet 한 가지, 한 열 구성으로 만든다.",
+      "**Do** 달력 상태는 노랑(오늘), 민트(읽음), 선택 파랑으로만 표시한다.",
+      "**Do** 본문 크기는 글자 크기 단계를 따르게 만든다.",
+      "**Do** 누르는 영역은 높이 44px 이상(min-h-11)으로 잡는다. 체크박스처럼 표시가 작은 요소는 줄 전체를 44px로 잡는다.",
+      "**Do** 주요 행동 하나에만 함온성 파랑 바탕을 쓴다."
+    ],
+    "donts": [
+      "**Don't** 노랑·민트·선택 파랑을 달력과 말씀 표시 밖의 장식에 쓰지 않는다.",
+      "**Don't** 두 번째 글꼴을 들이지 않는다.",
+      "**Don't** 페이지에 붙은 카드나 구역에 그림자를 주지 않는다.",
+      "**Don't** 본문에 고정 글자 크기를 주지 않는다."
+    ]
+  }
+}

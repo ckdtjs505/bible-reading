@@ -5,6 +5,7 @@ import LoginDialog from "@/components/LoginDialog";
 import MyWordsDialog from "@/components/MyWordsDialog";
 import PrayerJournal from "@/components/PrayerJournal";
 import ScrollButton from "@/components/ScrollUpButton";
+import TodayRecordBar from "@/components/TodayRecordBar";
 import SummeryImg from "@/components/summeryImg";
 import Verses from "@/components/Verses";
 import { YoutubeVideo } from "@/components/YoutubeVideo";
@@ -44,6 +45,8 @@ export default function Home() {
         함 온 성
       </div>
       <Calendar></Calendar>
+
+      <TodayRecordBar />
 
       <YoutubeVideo />
 

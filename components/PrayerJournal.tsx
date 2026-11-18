@@ -12,6 +12,31 @@ import useDialogStore from "@/stores/dialogStore";
 
 import { bookKeyNumber } from "@/constants/bibleNumber";
 
+type SaveStatus = "idle" | "saving" | "done" | "copyFailed" | "saveFailed" | "noName";
+
+// 카카오톡 인앱 브라우저 등 Clipboard API가 막힌 곳을 위해 execCommand로 한 번 더 시도한다
+const copyText = async (text: string) => {
+  try {
+    // 권한 창 등으로 writeText가 끝나지 않으면 "기록하는 중"에 갇히므로 2초에서 끊는다
+    await Promise.race([
+      navigator.clipboard.writeText(text),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("copy timeout")), 2000)),
+    ]);
+    return;
+  } catch {
+    const el = document.createElement("textarea");
+    el.value = text;
+    el.setAttribute("readonly", "");
+    el.style.position = "fixed";
+    el.style.opacity = "0";
+    document.body.appendChild(el);
+    el.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(el);
+    if (!ok) throw new Error("copy failed");
+  }
+};
+
 const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
@@ -27,6 +52,13 @@ const PrayerJournal = () => {
   const [isShowPray, setIsShowPray] = useState(false);
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [lastCopyData, setLastCopyData] = useState("");
+
+  // 다른 날을 보거나 이름을 바꾸면 이전 기록 결과 안내는 지운다
+  useEffect(() => {
+    setSaveStatus("idle");
+  }, [currentPlan?.index, userName]);
 
   const formatDay = (daycount: number): number => {
     return daycount;
@@ -42,9 +74,7 @@ const PrayerJournal = () => {
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated) {
-      console.log("loading ");
-    } else {
+    if (hasHydrated) {
       if (userName === "") {
         openDialog("login");
       } else {
@@ -86,9 +116,13 @@ const PrayerJournal = () => {
   });
 
 
-  const handleSaveButton = () => {
-    if (!currentPlan) return;
-    console.log(messages, currentPlan)
+  const handleSaveButton = async () => {
+    if (!currentPlan || saveStatus === "saving") return;
+    if (!userName) {
+      setSaveStatus("noName");
+      openDialog("login");
+      return;
+    }
     const myMessage = sortedMessageEntries
       .map(([book, msgs]) => {
         const verses = msgs.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`).join("\n");
@@ -104,146 +138,219 @@ const PrayerJournal = () => {
       (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
       `제 ${formatDay(Number(currentPlan.daycount))}일차 완료했습니다.`;
 
-    navigator.clipboard
-      .writeText(copyData)
-      .then(() => {
-        console.log("클립보드에 복사되었습니다: \n" + copyData);
-        if (!userName) return;
-        if (!myMessage) return;
+    setLastCopyData(copyData);
+    setSaveStatus("saving");
 
-        setReadBible({
-          name: userName || "",
-          pray: pray,
-          myMessage: myMessage,
-          prayForUser: prayForUser,
-          daycnt: Number(currentPlan.daycount),
-          index: currentPlan.index,
-        });
+    // 복사는 사용자 클릭 직후에 시작해야 브라우저가 허용하므로 기록 요청보다 먼저 시작한다
+    const copying = copyText(copyData);
+    // 구절을 담지 않아도 읽음은 기록한다 (no-cors라 네트워크 실패만 알 수 있다)
+    const saving = setReadBible({
+      name: userName,
+      pray: pray,
+      myMessage: myMessage,
+      prayForUser: prayForUser,
+      daycnt: Number(currentPlan.daycount),
+      index: currentPlan.index,
+    });
 
-        addCompletedIndexList(currentPlan.index);
-      })
-      .catch((err) => {
-        console.error("클립보드 복사에 실패했습니다: ", err);
-      });
+    const [copied, saved] = await Promise.allSettled([copying, saving]);
+
+    if (saved.status === "rejected") {
+      setSaveStatus("saveFailed");
+      return;
+    }
+    addCompletedIndexList(currentPlan.index);
+    setSaveStatus(copied.status === "fulfilled" ? "done" : "copyFailed");
   };
 
+  const handleRetryCopy = async () => {
+    try {
+      await copyText(lastCopyData);
+      setSaveStatus("done");
+    } catch {
+      setSaveStatus("copyFailed");
+    }
+  };
+
+  const day = formatDay(Number(currentPlan?.daycount || 0));
+  const statusMessage: Record<Exclude<SaveStatus, "idle">, string> = {
+    saving: "기록하는 중이에요…",
+    done: `✓ 제 ${day}일차 기록 완료! 복사된 글을 카톡 단톡방에 붙여넣어 주세요.`,
+    copyFailed: `✓ 제 ${day}일차 기록은 완료됐어요. 글 복사가 안 돼서, 아래 '다시 복사하기'를 눌러 주세요.`,
+    saveFailed: "기록이 되지 않았어요. 인터넷 연결을 확인하고 '기록하고 복사하기'를 다시 눌러 주세요.",
+    noName: "이름을 먼저 입력해 주세요.",
+  };
+  const isError = saveStatus === "saveFailed" || saveStatus === "noName";
+
   return (
-    <div>
-      <div className="p-4 border-b border-t border-black">
-        <div className="font-bold">
-          ✔️ 함온성 설정
-          <span className="text-xs"> (네모박스를 클릭하면 활성화됩니다) </span>
-        </div>
-        <div>
-          <div>
-            <input
-              type="checkbox"
-              id="prayForUserCheckBox"
-              checked={isShowPlayForUserCheckBox}
-              onChange={() =>
+    <div className="border-t border-gray-200">
+      {/* 한 번 정하면 거의 안 바꾸는 설정이라 작고 조용하게, 두 항목을 한 줄에 */}
+      <section className="px-4 pt-3 pb-1" aria-labelledby="journalSettingTitle">
+        <h2 id="journalSettingTitle" className="text-sm text-gray-600">
+          ✔️ 함온성 설정 (네모박스를 클릭하면 활성화됩니다)
+        </h2>
+        <div className="flex flex-wrap gap-x-5">
+          {[
+            {
+              id: "prayForUserCheckBox",
+              label: "💝 앞사람을 위한 기도",
+              checked: isShowPlayForUserCheckBox,
+              toggle: () =>
                 setIsShowPlayForUserCheckBox((isShow: boolean) => {
                   setLocalStorage("isShowPlayForUserCheckBox", !isShow);
-
                   return !isShow;
-                })
-              }
-            />
-            <label htmlFor="prayForUserCheckBox"> 💝앞사람을 위한 기도</label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              id="prayCheckBox"
-              checked={isShowPray}
-              onChange={() =>
+                }),
+            },
+            {
+              id: "prayCheckBox",
+              label: "🙏 한줄기도",
+              checked: isShowPray,
+              toggle: () =>
                 setIsShowPray((isShow: boolean) => {
                   setLocalStorage("isShowPray", !isShow);
                   return !isShow;
-                })
-              }
-            />
-            <label htmlFor="prayCheckBox"> 🌼 한줄 기도하기</label>
-          </div>
+                }),
+            },
+          ].map(({ id, label, checked, toggle }) => (
+            // 줄 전체(44px)를 눌러도 체크되도록 label로 감싼다
+            <label
+              key={id}
+              htmlFor={id}
+              className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-gray-800"
+            >
+              <input
+                type="checkbox"
+                id={id}
+                className="size-5 accent-blue-600"
+                checked={checked}
+                onChange={toggle}
+              />
+              {label}
+            </label>
+          ))}
         </div>
-      </div>
+      </section>
 
       {currentPlan && (
-        <div id="userContent" className="p-4">
-          <div id="submitdata">
+        <div id="userContent" className="border-t border-gray-200 px-4 py-5">
+          {/* 카톡에 붙여넣을 글과 같은 모양으로 미리 보여준다 */}
+          <div
+            id="submitdata"
+            className="space-y-5 rounded-md bg-gray-50 p-4 text-base leading-relaxed"
+          >
             {isShowPlayForUserCheckBox && (
               <div id="prayForUser">
-                💝앞사람을 위한 기도 :
+                <label htmlFor="prayForUserText" className="block">
+                  💝앞사람을 위한 기도
+                </label>
                 <textarea
                   value={prayForUser}
                   id="prayForUserText"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setPrayForUser(e.target.value)
                   }
-                  className="w-full h-20 border border-black"
+                  className="mt-1 block h-20 w-full rounded-md border border-gray-300 bg-white p-2 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 ></textarea>
               </div>
             )}
+
+            <div className="flex flex-wrap items-center gap-x-3">
+              <span>
+                🌸 이름 : <span id="name">{userName}</span>
+              </span>
+              <button
+                id="changeName"
+                type="button"
+                onClick={() => openDialog("login")}
+                className="min-h-11 px-1 text-sm text-gray-600 underline underline-offset-4 hover:text-gray-900"
+              >
+                이름 바꾸기
+              </button>
+            </div>
+
             <div>
-              🌼 이름 : <span id="name">{userName}</span>
+              <div>📖 오늘 내게 주신 말씀</div>
+              <div id="myMessage">
+                {sortedMessageEntries.length === 0 && (
+                  <div className="text-sm text-gray-600">
+                    (선택) 본문에서 마음에 닿은 구절을 누르면 여기에 담겨요.
+                  </div>
+                )}
+                {sortedMessageEntries.map(([book, msgs], index) => (
+                  <div key={index} className="mt-3 first:mt-0">
+                    <div>{book}</div>
+                    {msgs.map(({ chapter, verse, content }, vIndex) => (
+                      <div key={vIndex}>
+                        {chapter}:{verse} {content}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-            📖 오늘 내게 주신 말씀 : <br />
-            <div id="myMessage">
-              {sortedMessageEntries.map(([book, msgs], index) => (
-                <div key={index} className="mb-2">
-                  <div className="font-bold">{book}</div>
-                  {msgs.map(({ chapter, verse, content }, vIndex) => (
-                    <div key={vIndex}>
-                      {chapter}:{verse} {content}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
+
             {isShowPray && (
               <div id="prayBox">
-                🙏 한줄 기도 :
+                <label htmlFor="pray" className="block">
+                  🙏 한줄기도
+                </label>
                 <textarea
                   value={pray}
                   id="pray"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setPray(e.target.value)
                   }
-                  className="w-full h-20 border border-black"
+                  className="mt-1 block h-20 w-full rounded-md border border-gray-300 bg-white p-2 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 ></textarea>
               </div>
             )}
-            <div>
-              제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
-            </div>
+
+            <p>
+              제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span>일차 완료했습니다.
+            </p>
           </div>
-          <button
-            id="saveButton"
-            className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={handleSaveButton}
-          >
-            복사하기
-          </button>
-          <button
-            id="changeName"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={() => {
-              openDialog("login");
-            }}
-          >
-            이름바꾸기
-          </button>
-          <button
-            id="openMyWords"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 ml-2 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={() => {
-              openDialog("myWords");
-            }}
-          >
-            📜 말씀 모아보기
-          </button>
+          <div className="mt-5 flex flex-col gap-2">
+            <button
+              id="saveButton"
+              className="min-h-14 w-full rounded-md bg-blue-600 px-4 text-lg font-bold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:opacity-70"
+              type="button"
+              onClick={handleSaveButton}
+              disabled={saveStatus === "saving"}
+              aria-busy={saveStatus === "saving"}
+            >
+              {saveStatus === "saving" ? "기록하는 중…" : "기록하고 복사하기"}
+            </button>
+            <button
+              id="openMyWords"
+              className="min-h-11 w-full rounded-md border border-blue-600 bg-white px-4 text-base font-semibold text-blue-700 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              type="button"
+              onClick={() => {
+                openDialog("myWords");
+              }}
+            >
+              📜 말씀 모아보기
+            </button>
+          </div>
+          <div role="status" aria-live="polite">
+            {saveStatus !== "idle" && (
+              <div
+                className={`mt-3 rounded-md p-4 text-base font-semibold ${
+                  isError ? "bg-red-50 text-red-700" : "bg-[#cbf1f5] text-[#171717]"
+                }`}
+              >
+                {statusMessage[saveStatus]}
+                {saveStatus === "copyFailed" && (
+                  <button
+                    type="button"
+                    onClick={handleRetryCopy}
+                    className="mt-3 block min-h-11 w-full rounded-md bg-white px-4 text-base font-semibold text-[#171717] ring-1 ring-gray-300"
+                  >
+                    다시 복사하기
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
