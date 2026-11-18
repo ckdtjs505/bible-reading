@@ -192,9 +192,10 @@ const PrayerJournal = () => {
           <span className="text-xs"> (네모박스를 클릭하면 활성화됩니다) </span>
         </div>
         <div>
-          <div>
+          <div className="flex min-h-11 items-center gap-2">
             <input
               type="checkbox"
+              className="size-6 accent-blue-600"
               id="prayForUserCheckBox"
               checked={isShowPlayForUserCheckBox}
               onChange={() =>
@@ -207,9 +208,10 @@ const PrayerJournal = () => {
             />
             <label htmlFor="prayForUserCheckBox"> 💝앞사람을 위한 기도</label>
           </div>
-          <div>
+          <div className="flex min-h-11 items-center gap-2">
             <input
               type="checkbox"
+              className="size-6 accent-blue-600"
               id="prayCheckBox"
               checked={isShowPray}
               onChange={() =>
@@ -275,7 +277,7 @@ const PrayerJournal = () => {
           </div>
           <button
             id="saveButton"
-            className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            className="m-2 inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
             type="button"
             onClick={handleSaveButton}
             disabled={saveStatus === "saving"}
@@ -285,7 +287,7 @@ const PrayerJournal = () => {
           </button>
           <button
             id="changeName"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            className="inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
             type="button"
             onClick={() => {
               openDialog("login");
@@ -295,7 +297,7 @@ const PrayerJournal = () => {
           </button>
           <button
             id="openMyWords"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 ml-2 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            className="ml-2 inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
             type="button"
             onClick={() => {
               openDialog("myWords");

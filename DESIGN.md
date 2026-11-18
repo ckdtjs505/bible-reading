@@ -4,10 +4,10 @@ description: 함께하는 온라인 성경일독. 공동체가 같은 날 같은
 colors:
   ink: "#171717"
   paper: "#ffffff"
-  action-blue: "#3b82f6"
+  action-blue: "#2563eb"
+  action-blue-hover: "#1d4ed8"
   action-blue-tint: "#eff6ff"
   action-blue-ink: "#2563eb"
-  hover-slate: "#4b5563"
   selected-day: "#006edc"
   selected-day-hover: "#1087ff"
   weekday-teal: "#71c9ce"
@@ -42,7 +42,7 @@ typography:
     lineHeight: 1.5
   calendar-note:
     fontFamily: "Hahmlet, serif"
-    fontSize: "0.5rem"
+    fontSize: "0.625rem"
     fontWeight: 400
     lineHeight: 1.4
 rounded:
@@ -61,9 +61,10 @@ components:
     textColor: "{colors.paper}"
     typography: "{typography.label}"
     rounded: "{rounded.md}"
-    padding: "6px 12px"
+    padding: "0 16px"
+    height: "44px"
   button-primary-hover:
-    backgroundColor: "{colors.hover-slate}"
+    backgroundColor: "{colors.action-blue-hover}"
   button-icon:
     backgroundColor: "{colors.action-blue-tint}"
     textColor: "{colors.action-blue-ink}"
@@ -78,7 +79,7 @@ components:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.tile}"
-    padding: "10px 6.67px"
+    padding: "10px 2px"
   calendar-tile-today:
     backgroundColor: "{colors.today-yellow}"
   calendar-tile-read:
@@ -148,7 +149,7 @@ components:
 - **Title**: 본문의 책 이름, 빈 날 안내 같은 구역 머리.
 - **Body**: 성경 본문과 기도일기. 기본값은 글자 크기 4단계(text-lg)이고, 사용자가 text-xs부터 text-5xl까지 9단계로 바꾼다.
 - **Label**: 버튼과 작은 안내.
-- **Calendar Note**: 달력 칸 안의 "레위기 1-5장" 같은 분량 표기. 칸이 좁아서 아주 작다.
+- **Calendar Note**: 달력 칸 안의 "레위기 1-5장" 같은 분량 표기. 10px 아래로 내리지 않고, 단어 단위로 줄을 바꾸되 칸보다 긴 책 이름만 끊는다.
 
 ### Named Rules
 **The Reader Sets The Size Rule.** 본문 크기는 `stores/font.ts`의 단계로만 바꾼다. 본문에 고정 글자 크기를 박지 않는다. 쓰는 단계들은 Tailwind `safelist`에 들어 있어야 한다.
@@ -178,12 +179,13 @@ components:
 크고 단순하게 누르는 버튼을 목표로 한다.
 - **Shape:** 살짝 둥근 모서리.
 - **Primary:** 함온성 파랑 바탕, 흰 글자, 굵은 label.
-- **Hover / Focus:** 지금 코드는 hover 시 회색(hover-slate)으로 바뀐다. Headless UI의 `data-[hover]`, `data-[focus]`로 상태를 준다.
+- **Hover / Focus:** hover 시 한 단계 진한 파랑(action-blue-hover)으로 바뀐다. 흰 글자 대비 4.5:1 이상을 지키려고 Tailwind blue-500이 아닌 blue-600을 쓴다.
+- **Size:** 높이 44px 이상(min-h-11), 글자 16px.
 - **Icon:** 연파랑 원형 버튼. 보조 동작(말씀 모아보기 등)에 쓴다.
 - **Outline:** 회색 가는 선 사각 버튼. 글자 크기 −/+에 쓴다.
 
 ### Chips
-- **Style:** 번역본 선택(개역개정, 우리말, 새한글)용 알약 모양 버튼. 테두리 없이 작은 글자로 쓴다.
+- **Style:** 번역본 선택(개역개정, 우리말, 새한글)용 알약 모양 버튼. 테두리 없이 14px 글자, 높이 44px.
 - **State:** 선택되면 민트 바탕. TTS 재생 중에는 다른 번역본을 반투명(opacity 50%)으로 막는다.
 
 ### Inputs / Fields
@@ -194,7 +196,7 @@ components:
 함온성의 얼굴이다. react-calendar를 `components/Calendar.css`로 덮어써서 쓴다.
 - 청록 요일 띠 아래에 7열 날짜 칸이 있다. 칸마다 큰 날짜 숫자와 아주 작은 분량 표기(책 이름, 장 범위)를 둔다.
 - 상태: 오늘 노랑, 읽음 민트, 선택 파랑(흰 글자), hover 회색, 비활성 회색.
-- 일요일은 빨강, 토요일은 파랑 글자. 이전·다음 달 칸은 흐린 회색이다.
+- 일요일은 주일 빨강, 토요일은 파랑 글자. 이전·다음 달 칸은 흐린 회색이다.
 - 년 단위 이동 버튼(« »)은 숨기고, 달 이동(‹ ›)만 남긴다.
 
 ### Verse Line
@@ -208,7 +210,7 @@ components:
 - **Do** 새 화면도 흰 바탕, Hahmlet 한 가지, 한 열 구성으로 만든다.
 - **Do** 달력 상태는 노랑(오늘), 민트(읽음), 선택 파랑으로만 표시한다.
 - **Do** 본문 크기는 글자 크기 단계를 따르게 만든다.
-- **Do** 누르는 영역을 크게 잡는다. 새로 만드는 버튼과 칩은 높이 44px 이상을 목표로 한다. 지금 기본 버튼(약 36px)과 번역본 칩은 이보다 작다.
+- **Do** 누르는 영역은 높이 44px 이상(min-h-11)으로 잡는다. 체크박스처럼 표시가 작은 요소는 줄 전체를 44px로 잡는다.
 - **Do** 주요 행동 하나에만 함온성 파랑 바탕을 쓴다.
 
 ### Don't:

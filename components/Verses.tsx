@@ -105,12 +105,12 @@ const Verses = () => {
 
   return (
     <div className="p-4 text-2xl">
-      <div className="flex justify-end text-sm h-8">
+      <div className="flex flex-wrap justify-end gap-2 text-sm">
         {/* 성경 타입 버튼 그룹 */}
-        <div id="bibleType" className="flex text-[0.7rem]">
+        <div id="bibleType" className="flex gap-2">
           <button
             id="kiv"
-            className={`rounded-full mr-2 border-none transition ${bible === "revised" ? "active" : ""} ${tts.isPlaying && bible !== "revised" ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`min-h-11 rounded-full px-3 border-none transition ${bible === "revised" ? "active" : ""} ${tts.isPlaying && bible !== "revised" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
               if (tts.isPlaying) return;
               setBible("revised");
@@ -120,7 +120,7 @@ const Verses = () => {
           </button>
           <button
             id="korean"
-            className={`rounded-full mr-2 border-none transition ${bible === "woorimal" ? "active" : ""} ${tts.isPlaying && bible !== "woorimal" ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`min-h-11 rounded-full px-3 border-none transition ${bible === "woorimal" ? "active" : ""} ${tts.isPlaying && bible !== "woorimal" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
               if (tts.isPlaying) return;
               setBible("woorimal");
@@ -130,7 +130,7 @@ const Verses = () => {
           </button>
           <button
             id="newHangul"
-            className={`rounded-full mr-2 border-none transition ${bible === "newHangul" ? "active" : ""} ${tts.isPlaying && bible !== "newHangul" ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`min-h-11 rounded-full px-3 border-none transition ${bible === "newHangul" ? "active" : ""} ${tts.isPlaying && bible !== "newHangul" ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
               if (tts.isPlaying) return;
               setBible("newHangul");
@@ -142,10 +142,10 @@ const Verses = () => {
         </div>
 
         {/* 글꼴 크기 버튼 그룹 */}
-        <div id="fontSize" className="flex w-20">
+        <div id="fontSize" className="flex">
           <button
             id="larger"
-            className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
+            className="btn cursor-pointer min-h-11 w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
             onClick={() => {
               setFontLevel(level + 1);
             }}
@@ -154,7 +154,7 @@ const Verses = () => {
           </button>
           <button
             id="smaller"
-            className="btn cursor-pointer w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
+            className="btn cursor-pointer min-h-11 w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
             onClick={() => {
               setFontLevel(level - 1);
             }}
@@ -164,9 +164,9 @@ const Verses = () => {
         </div>
 
         {/* 재생/중지 버튼 그룹 */}
-        <div id="tts" className="flex w-12 ml-2">
+        <div id="tts" className="flex">
           <button
-            className="btn cursor-pointer w-12 border border-blue-400 bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition rounded-md"
+            className="btn cursor-pointer min-h-11 w-12 border border-blue-400 bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition rounded-md"
             onClick={() => {
               if (tts.isPlaying) {
                 tts.stop();

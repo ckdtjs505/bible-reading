@@ -157,7 +157,7 @@ const ReadingStatus = () => {
         />
         <button
           onClick={handleClick}
-          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner"
+          className="inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner"
         >
           불러오기
         </button>
@@ -196,7 +196,7 @@ const ReadingStatus = () => {
         </div>
         <button
           onClick={handleCopyClick}
-          className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner"
+          className="inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner"
         >
           복사 하기
         </button>

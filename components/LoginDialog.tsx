@@ -70,7 +70,7 @@ const LoginDialog: React.FC = () => {
 
               <div className="mt-4 text-center">
                 <Button
-                  className="inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                  className="inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                   onClick={enter}
                 >
                   입력하기

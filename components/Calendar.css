@@ -102,7 +102,7 @@
 
 .react-calendar__tile {
   max-width: 100%;
-  padding: 10px 6.6667px;
+  padding: 10px 2px;
   text-align: center;
   font: inherit;
   font-size: 1rem;
@@ -111,7 +111,9 @@
 }
 
 .react-calendar__tile div {
-  font-size: 0.5rem;
+  font-size: 0.625rem;
+  word-break: keep-all;
+  overflow-wrap: anywhere; /* 칸보다 긴 책 이름만 줄바꿈 */
   justify-content: "center";
   text-align: "center";
   line-height: 1.4;
@@ -187,5 +189,5 @@
 }
 
 .react-calendar__tile.sunday {
-  color: red;
+  color: #d10000;
 }
