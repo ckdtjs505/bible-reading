@@ -12,6 +12,27 @@ import useDialogStore from "@/stores/dialogStore";
 
 import { bookKeyNumber } from "@/constants/bibleNumber";
 
+type SaveStatus = "idle" | "saving" | "done" | "copyFailed" | "saveFailed" | "noName";
+
+// 카카오톡 인앱 브라우저 등 Clipboard API가 막힌 곳을 위해 execCommand로 한 번 더 시도한다
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const el = document.createElement("textarea");
+    el.value = text;
+    el.setAttribute("readonly", "");
+    el.style.position = "fixed";
+    el.style.opacity = "0";
+    document.body.appendChild(el);
+    el.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(el);
+    if (!ok) throw new Error("copy failed");
+  }
+};
+
 const PrayerJournal = () => {
   const { currentPlan } = usePlans();
   const { messages } = useReceivedMessages();
@@ -27,6 +48,13 @@ const PrayerJournal = () => {
   const [isShowPray, setIsShowPray] = useState(false);
   const [prayForUser, setPrayForUser] = useState("");
   const [pray, setPray] = useState("");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [lastCopyData, setLastCopyData] = useState("");
+
+  // 다른 날을 보거나 이름을 바꾸면 이전 기록 결과 안내는 지운다
+  useEffect(() => {
+    setSaveStatus("idle");
+  }, [currentPlan?.index, userName]);
 
   const formatDay = (daycount: number): number => {
     return daycount;
@@ -86,9 +114,13 @@ const PrayerJournal = () => {
   });
 
 
-  const handleSaveButton = () => {
-    if (!currentPlan) return;
-    console.log(messages, currentPlan)
+  const handleSaveButton = async () => {
+    if (!currentPlan || saveStatus === "saving") return;
+    if (!userName) {
+      setSaveStatus("noName");
+      openDialog("login");
+      return;
+    }
     const myMessage = sortedMessageEntries
       .map(([book, msgs]) => {
         const verses = msgs.map(({ chapter, verse, content }) => `${chapter}:${verse} ${content}`).join("\n");
@@ -104,28 +136,49 @@ const PrayerJournal = () => {
       (isShowPray ? `🙏 한줄기도 \n${pray} \n\n` : "") +
       `제 ${formatDay(Number(currentPlan.daycount))}일차 완료했습니다.`;
 
-    navigator.clipboard
-      .writeText(copyData)
-      .then(() => {
-        console.log("클립보드에 복사되었습니다: \n" + copyData);
-        if (!userName) return;
-        if (!myMessage) return;
+    setLastCopyData(copyData);
+    setSaveStatus("saving");
 
-        setReadBible({
-          name: userName || "",
-          pray: pray,
-          myMessage: myMessage,
-          prayForUser: prayForUser,
-          daycnt: Number(currentPlan.daycount),
-          index: currentPlan.index,
-        });
+    // 복사는 사용자 클릭 직후에 시작해야 브라우저가 허용하므로 기록 요청보다 먼저 시작한다
+    const copying = copyText(copyData);
+    // 구절을 담지 않아도 읽음은 기록한다 (no-cors라 네트워크 실패만 알 수 있다)
+    const saving = setReadBible({
+      name: userName,
+      pray: pray,
+      myMessage: myMessage,
+      prayForUser: prayForUser,
+      daycnt: Number(currentPlan.daycount),
+      index: currentPlan.index,
+    });
 
-        addCompletedIndexList(currentPlan.index);
-      })
-      .catch((err) => {
-        console.error("클립보드 복사에 실패했습니다: ", err);
-      });
+    const [copied, saved] = await Promise.allSettled([copying, saving]);
+
+    if (saved.status === "rejected") {
+      setSaveStatus("saveFailed");
+      return;
+    }
+    addCompletedIndexList(currentPlan.index);
+    setSaveStatus(copied.status === "fulfilled" ? "done" : "copyFailed");
   };
+
+  const handleRetryCopy = async () => {
+    try {
+      await copyText(lastCopyData);
+      setSaveStatus("done");
+    } catch {
+      setSaveStatus("copyFailed");
+    }
+  };
+
+  const day = formatDay(Number(currentPlan?.daycount || 0));
+  const statusMessage: Record<Exclude<SaveStatus, "idle">, string> = {
+    saving: "기록하는 중이에요…",
+    done: `✓ 제 ${day}일차 기록 완료! 복사된 글을 카톡 단톡방에 붙여넣어 주세요.`,
+    copyFailed: `✓ 제 ${day}일차 기록은 완료됐어요. 글 복사가 안 돼서, 아래 '다시 복사하기'를 눌러 주세요.`,
+    saveFailed: "기록이 되지 않았어요. 인터넷 연결을 확인하고 '기록하고 복사하기'를 다시 눌러 주세요.",
+    noName: "이름을 먼저 입력해 주세요.",
+  };
+  const isError = saveStatus === "saveFailed" || saveStatus === "noName";
 
   return (
     <div>
@@ -221,8 +274,10 @@ const PrayerJournal = () => {
             className="m-2 inline-flex items-center gap-2 rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
             type="button"
             onClick={handleSaveButton}
+            disabled={saveStatus === "saving"}
+            aria-busy={saveStatus === "saving"}
           >
-            복사하기
+            {saveStatus === "saving" ? "기록하는 중…" : "기록하고 복사하기"}
           </button>
           <button
             id="changeName"
@@ -244,6 +299,26 @@ const PrayerJournal = () => {
           >
             📜 말씀 모아보기
           </button>
+          <div role="status" aria-live="polite">
+            {saveStatus !== "idle" && (
+              <div
+                className={`mx-2 mt-3 rounded-md p-4 text-base font-semibold ${
+                  isError ? "bg-red-50 text-red-700" : "bg-[#cbf1f5] text-[#171717]"
+                }`}
+              >
+                {statusMessage[saveStatus]}
+                {saveStatus === "copyFailed" && (
+                  <button
+                    type="button"
+                    onClick={handleRetryCopy}
+                    className="mt-3 block min-h-11 w-full rounded-md bg-white px-4 text-base font-semibold text-[#171717] ring-1 ring-gray-300"
+                  >
+                    다시 복사하기
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
