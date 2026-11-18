@@ -17,7 +17,11 @@ type SaveStatus = "idle" | "saving" | "done" | "copyFailed" | "saveFailed" | "no
 // 카카오톡 인앱 브라우저 등 Clipboard API가 막힌 곳을 위해 execCommand로 한 번 더 시도한다
 const copyText = async (text: string) => {
   try {
-    await navigator.clipboard.writeText(text);
+    // 권한 창 등으로 writeText가 끝나지 않으면 "기록하는 중"에 갇히므로 2초에서 끊는다
+    await Promise.race([
+      navigator.clipboard.writeText(text),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("copy timeout")), 2000)),
+    ]);
     return;
   } catch {
     const el = document.createElement("textarea");
