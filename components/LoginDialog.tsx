@@ -51,11 +51,11 @@ const LoginDialog: React.FC = () => {
           <div className="flex min-h-full items-center justify-center p-2">
             <DialogPanel
               transition
-              className="border bg-white w-full max-w-md rounded-xl  p-6 backdrop-blur-2xl uration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+              className="border bg-white w-full max-w-md rounded-xl  p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
             >
               <DialogTitle className="text-2xl font-bold m-3 text-center">
                 함 온 성
-                <div className="text-lg font-mono">
+                <div className="text-lg">
                   함께하는 온라인 성경일독
                 </div>
               </DialogTitle>

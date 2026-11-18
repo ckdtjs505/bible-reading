@@ -11,7 +11,7 @@ export const YoutubeVideo = () => {
         height="315"
         className="p-4 "
         src={`https://www.youtube.com/embed/${currentPlan.videoId}`}
-        title="함온성"
+        title="오늘의 성경 해설 영상"
       ></iframe>
     )
   );

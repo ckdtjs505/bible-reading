@@ -144,22 +144,24 @@ const Verses = () => {
         {/* 글꼴 크기 버튼 그룹 */}
         <div id="fontSize" className="flex">
           <button
+            id="smaller"
+            aria-label="글자 작게"
+            className="btn cursor-pointer min-h-11 w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
+            onClick={() => {
+              setFontLevel(level - 1);
+            }}
+          >
+            −
+          </button>
+          <button
             id="larger"
+            aria-label="글자 크게"
             className="btn cursor-pointer min-h-11 w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
             onClick={() => {
               setFontLevel(level + 1);
             }}
           >
             +
-          </button>
-          <button
-            id="smaller"
-            className="btn cursor-pointer min-h-11 w-12 border border-gray-300 text-center hover:bg-gray-100 transition"
-            onClick={() => {
-              setFontLevel(level - 1);
-            }}
-          >
-            -
           </button>
         </div>
 
@@ -220,6 +222,7 @@ const Verses = () => {
               }
             }}
             title={tts.isPlaying ? "듣기 중지" : "말씀 듣기"}
+            aria-label={tts.isPlaying ? "듣기 중지" : "말씀 듣기"}
           >
             {tts.isPlaying ? "⏹️" : "🔊"}
           </button>

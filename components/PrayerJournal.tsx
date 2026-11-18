@@ -74,9 +74,7 @@ const PrayerJournal = () => {
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated) {
-      console.log("loading ");
-    } else {
+    if (hasHydrated) {
       if (userName === "") {
         openDialog("login");
       } else {
@@ -221,7 +219,7 @@ const PrayerJournal = () => {
                 })
               }
             />
-            <label htmlFor="prayCheckBox"> 🌼 한줄 기도하기</label>
+            <label htmlFor="prayCheckBox"> 🙏 한줄 기도하기</label>
           </div>
         </div>
       </div>
@@ -242,11 +240,26 @@ const PrayerJournal = () => {
                 ></textarea>
               </div>
             )}
-            <div>
-              🌼 이름 : <span id="name">{userName}</span>
+            <div className="flex flex-wrap items-center gap-x-2">
+              <span>
+                🌸 이름 : <span id="name">{userName}</span>
+              </span>
+              <button
+                id="changeName"
+                type="button"
+                onClick={() => openDialog("login")}
+                className="min-h-11 px-1 text-sm text-gray-600 underline underline-offset-4 hover:text-gray-900"
+              >
+                이름 바꾸기
+              </button>
             </div>
             📖 오늘 내게 주신 말씀 : <br />
             <div id="myMessage">
+              {sortedMessageEntries.length === 0 && (
+                <div className="text-sm text-gray-600">
+                  (선택) 본문에서 마음에 닿은 구절을 누르면 여기에 담겨요.
+                </div>
+              )}
               {sortedMessageEntries.map(([book, msgs], index) => (
                 <div key={index} className="mb-2">
                   <div className="font-bold">{book}</div>
@@ -275,40 +288,32 @@ const PrayerJournal = () => {
               제 <span id="day">{formatDay(Number(currentPlan?.daycount || 0))}</span> 일차 완료했습니다.
             </div>
           </div>
-          <button
-            id="saveButton"
-            className="m-2 inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={handleSaveButton}
-            disabled={saveStatus === "saving"}
-            aria-busy={saveStatus === "saving"}
-          >
-            {saveStatus === "saving" ? "기록하는 중…" : "기록하고 복사하기"}
-          </button>
-          <button
-            id="changeName"
-            className="inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={() => {
-              openDialog("login");
-            }}
-          >
-            이름바꾸기
-          </button>
-          <button
-            id="openMyWords"
-            className="ml-2 inline-flex items-center gap-2 min-h-11 rounded-md bg-blue-600 px-4 text-base font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-blue-700 data-[hover]:bg-blue-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-            type="button"
-            onClick={() => {
-              openDialog("myWords");
-            }}
-          >
-            📜 말씀 모아보기
-          </button>
+          <div className="mt-4 flex flex-col gap-2">
+            <button
+              id="saveButton"
+              className="min-h-14 w-full rounded-md bg-blue-600 px-4 text-lg font-bold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:opacity-70"
+              type="button"
+              onClick={handleSaveButton}
+              disabled={saveStatus === "saving"}
+              aria-busy={saveStatus === "saving"}
+            >
+              {saveStatus === "saving" ? "기록하는 중…" : "기록하고 복사하기"}
+            </button>
+            <button
+              id="openMyWords"
+              className="min-h-11 w-full rounded-md border border-blue-600 bg-white px-4 text-base font-semibold text-blue-700 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              type="button"
+              onClick={() => {
+                openDialog("myWords");
+              }}
+            >
+              📜 말씀 모아보기
+            </button>
+          </div>
           <div role="status" aria-live="polite">
             {saveStatus !== "idle" && (
               <div
-                className={`mx-2 mt-3 rounded-md p-4 text-base font-semibold ${
+                className={`mt-3 rounded-md p-4 text-base font-semibold ${
                   isError ? "bg-red-50 text-red-700" : "bg-[#cbf1f5] text-[#171717]"
                 }`}
               >
